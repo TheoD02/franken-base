@@ -30,5 +30,9 @@ function init(): void
         'Symfony project has been installed',
         'You can now run `castor start` to start the project',
     ]);
-    //fs()->remove(__FILE__); // Delete this file, we don't need it anymore
+    // Remove init(); call from castor.php
+    $content = file_get_contents(context()->currentDirectory . '/castor.php');
+    $content = str_replace('init();', '', $content);
+    file_put_contents(context()->currentDirectory . '/castor.php', $content);
+    fs()->remove(__FILE__); // Delete this file, we don't need it anymore
 }
