@@ -1,12 +1,14 @@
 <?php
 
+use function Castor\context;
 use function Castor\fs;
 use function Castor\io;
 
 function init(): void
 {
-    if (fs()->exists('composer.json')) {
-        return;
+    $appDir = context()->currentDirectory . '/app';
+    if (fs()->exists("$appDir/composer.json")) {
+        // return;
     }
 
     $symfonyVersionToInstall = io()->choice(
@@ -17,14 +19,16 @@ function init(): void
 
     Composer::cmd("create-project symfony/skeleton:\"^$symfonyVersionToInstall\" sf");
 
-    fs()->mirror('./sf/', './app');
-    fs()->remove('sf');
+    fs()->mirror("$appDir/sf", $appDir);
+    fs()->remove("$appDir/sf");
+
+    $installedPhpVersion = Docker::exec('php -r "echo PHP_VERSION;"', tty: false)->getOutput();
+    Composer::cmd("require \"php:>=$installedPhpVersion\" runtime/frankenphp-symfony");
+    Composer::cmd('config --json extra.symfony.docker \'false\'');
 
     io()->success([
         'Symfony project has been installed',
         'You can now run `castor start` to start the project',
-        '',
-        'You can now remove the `init.php` file located at ./castor/init.php.',
-        'This file is now useless and can be removed.'
     ]);
+    //fs()->remove(__FILE__); // Delete this file, we don't need it anymore
 }
