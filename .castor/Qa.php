@@ -67,4 +67,10 @@ class Qa
     {
         return self::runTool('rector process src');
     }
+
+    #[AsTaskMethod]
+    public static function test(): Process
+    {
+        return Composer::runVendorBin('phpunit');
+    }
 }
