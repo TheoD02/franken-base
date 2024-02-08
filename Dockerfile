@@ -32,7 +32,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 
 FROM frankenphp as dev-base
 
-ENV APP_ENV=dev XDEBUG_MODE=off
+ENV APP_ENV=dev
 
 COPY ./docker/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 

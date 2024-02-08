@@ -24,7 +24,7 @@ do
 done
 
 chmod +x /tools/bin/*
-ln -s /tools/bin/* /usr/local/bin/
+ln -s /tools/bin/* /usr/local/bin/ || true
 
 # Add /tools/bin to PATH
 export PATH=$PATH:/tools/bin
