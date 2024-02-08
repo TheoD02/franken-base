@@ -56,7 +56,7 @@ function start(bool $force = false): void
 #[AsTask(description: 'Stop project')]
 function stop(): void
 {
-    Docker::compose()->down();
+    Docker::compose(['app', 'worker'])->down();
 }
 
 #[AsTask(description: 'Restart project')]
@@ -68,7 +68,7 @@ function restart(): void
 
 function build(bool $force = false): void
 {
-    fingerprint(fn() => Docker::compose()->build(noCache: true), fingerprint: dockerfile_fingerprint(), force: $force);
+    fingerprint(fn() => Docker::compose(['app'])->build(noCache: true), fingerprint: dockerfile_fingerprint(), force: $force);
 }
 
 #[AsTask(description: 'Install project')]
