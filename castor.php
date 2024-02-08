@@ -1,6 +1,7 @@
 <?php
 
 use Castor\Attribute\AsContext;
+use Castor\Attribute\AsOption;
 use Castor\Attribute\AsTask;
 use Castor\Context;
 
@@ -24,18 +25,32 @@ function default_context(): Context
             'docker' => [
                 'container' => 'sf-franken-app-1',
                 'user' => capture('id -u'),
-                'group' => capture('id -g')
+                'group' => capture('id -g'),
+                'workdir' => '/app',
             ]
-        ]
+        ],
+        currentDirectory: __DIR__ . '/app'
     );
+}
+
+#[AsContext]
+function qa(): Context
+{
+    return default_context()
+        ->withData([
+            'docker' => [
+                'workdir' => '/tools',
+            ]
+        ])
+        ->withPath(__DIR__ . '/tools');
 }
 
 #[AsTask(description: 'Start project')]
 function start(bool $force = false): void
 {
     build(force: $force);
-    Docker::compose()->up(detach: true, wait: true);
-    init();
+    Docker::compose(['app'])->up(detach: true, wait: true);
+    Docker::compose(['worker'])->up(detach: true, wait: false);
 }
 
 #[AsTask(description: 'Stop project')]
@@ -64,8 +79,10 @@ function install(bool $force = false): void
 }
 
 #[AsTask(description: 'Open shell in the container (default: fish)', aliases: ['sh', 'fish'])]
-function shell(): void
-{
+function shell(
+    #[AsOption(description: 'If run as root')]
+    bool $root = false
+): void {
     $shell = input()->getArgument('command') === 'shell' ? 'fish' : input()->getArgument('command');
-    Docker::exec(cmd: $shell);
+    Docker::exec(cmd: $shell, user: $root ? 'root' : 'www-data');
 }
