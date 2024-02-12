@@ -1,16 +1,33 @@
 import React from 'react';
+import {Button, Card, CardBody, CardFooter, CardHeader, Text} from '@chakra-ui/react'
+import {useModals} from '@saas-ui/react'
 
 export default function (props) {
-    return <div className="card">
-        <div className="card-header">
-            <h5 className="card-title">Card Title</h5>
-            <p className="card-description">Card Description</p>
-        </div>
-        <div className="card-content">
-            <p>Card Content</p>
-        </div>
-        <div className="card-footer">
-            <p>Card Footer</p>
-        </div>
-    </div>;
+    const modals = useModals()
+
+    return (
+        <Card>
+            <CardHeader>
+                <Text>Card Title</Text>
+                <Text>Card Description</Text>
+            </CardHeader>
+            <CardBody>
+                <Text>Card Content</Text>
+                <Button
+                    onClick={() =>
+                        modals.open({
+                            title: 'Modal',
+                            body: 'Body',
+                            footer: 'Footer',
+                        })
+                    }
+                >
+                    Open modal
+                </Button>
+            </CardBody>
+            <CardFooter>
+                <Text>Card Footer</Text>
+            </CardFooter>
+        </Card>
+    )
 }
