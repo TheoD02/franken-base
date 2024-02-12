@@ -13,6 +13,7 @@ x-worker-template:
 
 services:
   app:
+    container_name: franken-base-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -24,8 +25,8 @@ services:
       TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
       TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|php$$
       # Run "composer require symfony/mercure-bundle" to install and configure the Mercure integration
-      MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
-      MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
+      MERCURE_URL: ${CADDY_MERCURE_URL:-http://app/.well-known/mercure}
+      MERCURE_PUBLIC_URL: https://${SERVER_NAME:-sf-franken.web.localhost}/.well-known/mercure
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
     volumes:
       - ./app:/app
@@ -35,6 +36,7 @@ services:
       - caddy_config:/config
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
       - "traefik.http.routers.php-sf-franken.rule=Host(`sf-franken.web.localhost`)"
       - "traefik.http.routers.php-sf-franken.tls=true"
       - "traefik.http.services.php-sf-franken.loadbalancer.server.port=80"
@@ -43,9 +45,9 @@ services:
     profiles:
       - app
 
-  scheduler:
-    <<: *worker_template
-    command: php /app/bin/console messenger:consume scheduler_default -vv
+  #scheduler:
+  #  <<: *worker_template
+  #  command: php /app/bin/console messenger:consume scheduler_default -vv
 
 networks:
   traefik:

@@ -5,7 +5,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "2.10",
-            "ref": "310a02a22033e35640468f48ff6bf31a25891537"
+            "ref": "c170ded8fc587d6bd670550c43dafcf093762245"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -38,21 +38,6 @@
             ".env.test",
             "phpunit.xml.dist",
             "tests/bootstrap.php"
-        ]
-    },
-    "symfony/asset-mapper": {
-        "version": "6.4",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "6.4",
-            "ref": "4ff49f66191ce9356098e588684c27b935958b33"
-        },
-        "files": [
-            "assets/app.js",
-            "assets/styles/app.css",
-            "config/packages/asset_mapper.yaml",
-            "importmap.php"
         ]
     },
     "symfony/console": {
@@ -248,6 +233,18 @@
             "templates/base.html.twig"
         ]
     },
+    "symfony/ux-react": {
+        "version": "2.14",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.9",
+            "ref": "e970076b31d602ae6e2106cf91a82c7e1f7ddff2"
+        },
+        "files": [
+            "assets/react/controllers/Hello.jsx"
+        ]
+    },
     "symfony/ux-turbo": {
         "version": "v2.14.2"
     },
@@ -274,6 +271,22 @@
         "files": [
             "config/packages/web_profiler.yaml",
             "config/routes/web_profiler.yaml"
+        ]
+    },
+    "symfony/webpack-encore-bundle": {
+        "version": "2.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.0",
+            "ref": "082d754b3bd54b3fc669f278f1eea955cfd23cf5"
+        },
+        "files": [
+            "assets/app.js",
+            "assets/styles/app.css",
+            "config/packages/webpack_encore.yaml",
+            "package.json",
+            "webpack.config.js"
         ]
     },
     "twig/extra-bundle": {

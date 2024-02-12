@@ -1,0 +1,66 @@
+{
+    "app": {
+        "path": "\/assets\/app-5d80c8695f8c4dbfd8a080754e2c119e.js",
+        "type": "js"
+    },
+    "\/assets\/@symfony\/ux-react\/components.js": {
+        "path": "\/assets\/@symfony\/ux-react\/components-e8db0628666b0647a8760c373cbcc67b.js",
+        "type": "js"
+    },
+    "\/assets\/react\/controllers\/Hello.jsx": {
+        "path": "\/assets\/react\/controllers\/Hello-2059fe6badbfb0af3d047832d57143f1.jsx",
+        "type": "js"
+    },
+    "\/assets\/bootstrap.js": {
+        "path": "\/assets\/bootstrap-c423b8bbc1f9cae218c105ca8ca9f767.js",
+        "type": "js"
+    },
+    "\/assets\/@symfony\/stimulus-bundle\/controllers.js": {
+        "path": "\/assets\/@symfony\/stimulus-bundle\/controllers-188ff7e85a168fc0ecaa9c89dbc2b5a7.js",
+        "type": "js"
+    },
+    "\/assets\/@symfony\/ux-react\/render_controller.js": {
+        "path": "\/assets\/@symfony\/ux-react\/render_controller-0e1ac9ab76cef3a8e5f7f21c90688b38.js",
+        "type": "js"
+    },
+    "\/assets\/@symfony\/ux-turbo\/turbo_controller.js": {
+        "path": "\/assets\/@symfony\/ux-turbo\/turbo_controller-ce5e32dafdec0b7752f02e3e2cb25751.js",
+        "type": "js"
+    },
+    "\/assets\/controllers\/hello_controller.js": {
+        "path": "\/assets\/controllers\/hello_controller-55882fcad241d2bea50276ea485583bc.js",
+        "type": "js"
+    },
+    "\/assets\/styles\/app.css": {
+        "path": "\/assets\/styles\/app-713d9828d7058036a44786836080554c.css",
+        "type": "css"
+    },
+    "@hotwired\/stimulus": {
+        "path": "\/assets\/vendor\/@hotwired\/stimulus\/stimulus.index-b5b1d00e42695b8959b4a1e94e3bc92a.js",
+        "type": "js"
+    },
+    "@symfony\/stimulus-bundle": {
+        "path": "\/assets\/@symfony\/stimulus-bundle\/loader-e1ee9ace0562f2e6a52301e4ccc8627d.js",
+        "type": "js"
+    },
+    "@hotwired\/turbo": {
+        "path": "\/assets\/vendor\/@hotwired\/turbo\/turbo.index-810f44ef1a202a441e4866b7a4c72d11.js",
+        "type": "js"
+    },
+    "react": {
+        "path": "\/assets\/vendor\/react\/react.index-e906bcf7c42a02091f2d1d8bd66f12d1.js",
+        "type": "js"
+    },
+    "react-dom": {
+        "path": "\/assets\/vendor\/react-dom\/react-dom.index-1a01f62339ad200ce0748868870cc359.js",
+        "type": "js"
+    },
+    "scheduler": {
+        "path": "\/assets\/vendor\/scheduler\/scheduler.index-6837072ad63403c35bb26459f0b0a818.js",
+        "type": "js"
+    },
+    "@symfony\/ux-react": {
+        "path": "\/assets\/@symfony\/ux-react\/loader-9cc4aeb4ca7b5bb0ddbdbf9563a3a5e2.js",
+        "type": "js"
+    }
+}

@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:latest-php8.3-alpine as frankenphp
+FROM dunglas/frankenphp:1-alpine as frankenphp
 
 WORKDIR /app
 USER root
@@ -9,13 +9,16 @@ RUN apk update --no-cache && apk add --no-cache \
     acl \
     file \
     gettext \
-    openssh-client
+    openssh-client \
+    nodejs \
+    npm
+
+RUN npm install -g pnpm
 
 # Install PHP extensions
 RUN set -eux; \
     install-php-extensions \
         @composer \
-        gd \
         apcu \
         intl \
         opcache \
@@ -32,7 +35,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 
 FROM frankenphp as dev-base
 
-ENV APP_ENV=dev
+ENV APP_ENV=dev XDEBUG_MODE=off
 
 COPY ./docker/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
@@ -66,10 +69,7 @@ RUN deluser www-data || true \
 RUN addgroup -g 1000 www-data \
     && adduser -D -H -u 1000 -s /bin/bash www-data -G www-data
 
-## Caddy requires an additional capability to bind to port 80 and 443
-RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp \
-    && chown -R ${USER}:${USER} /data/caddy && chown -R ${USER}:${USER} /config/caddy \
-    && chown -R ${USER}:${USER} /home /tmp /app /home/${USER} ${XDG_CONFIG_HOME} ${XDG_DATA_HOME}
+RUN chown -R ${USER}:${USER} /home /tmp /app /home/${USER} ${XDG_CONFIG_HOME} ${XDG_DATA_HOME}
 
 # Install castor
 RUN curl "https://github.com/jolicode/castor/releases/latest/download/castor.linux-amd64.phar" -L -o castor.phar && \
@@ -83,6 +83,8 @@ FROM dev-base as dev
 COPY --link --chmod=755 ./docker/dev-entrypoint.sh /usr/local/bin/docker-entrypoint
 
 ENTRYPOINT ["docker-entrypoint"]
+
+USER root
 
 CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--watch" ]
 

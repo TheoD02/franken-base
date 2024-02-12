@@ -6,6 +6,7 @@ if [ -f "/app/composer.json" ]; then
     echo "Installing project dependencies"
     cd /app
     composer install
+    chown -R www-data:www-data /app
 fi
 
 
@@ -20,6 +21,7 @@ do
         echo "Installing $tool"
         cd "$tool_directory"
         composer install
+        chown -R www-data:www-data /tools
     fi
 done
 

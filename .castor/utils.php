@@ -38,7 +38,7 @@ function import_from_git_remote(string $url): void
             callback: function () use ($repositoryDir) {
                 run('git pull', path: $repositoryDir);
             },
-            fingerprint: prevent_update($url)
+            fingerprint: prevent_update($url),
         );
         return;
     }

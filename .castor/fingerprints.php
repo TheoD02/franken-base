@@ -2,6 +2,7 @@
 
 namespace fingerprints;
 
+use function Castor\context;
 use function Castor\hasher;
 
 function dockerfile_fingerprint(): string
@@ -12,7 +13,7 @@ function dockerfile_fingerprint(): string
 function composer_fingerprint(): string
 {
     return hasher()
-        ->writeFile('composer.json')
-        ->writeFile('composer.lock')
+        ->writeFile(context()->currentDirectory. '/composer.json')
+        ->writeFile(context()->currentDirectory. '/composer.lock')
         ->finish();
 }
