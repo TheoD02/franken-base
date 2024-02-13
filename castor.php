@@ -126,3 +126,12 @@ function init(): void
 
     io()->success('Project initialized');
 }
+
+#[AsTask(name: 'db:reset', description: 'Reset database')]
+function db_reset(): void
+{
+    Symfony::console('doctrine:database:drop --force --if-exists');
+    Symfony::console('doctrine:database:create');
+    Symfony::console('doctrine:schema:create');
+    Symfony::console('doctrine:fixtures:load --no-interaction');
+}

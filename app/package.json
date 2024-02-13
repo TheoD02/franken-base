@@ -7,6 +7,8 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@tanstack/router-devtools": "^1.16.0",
+        "@tanstack/router-vite-plugin": "^1.16.1",
         "@types/react": "^18.2.35",
         "@types/react-dom": "^18.2.14",
         "@typescript-eslint/eslint-plugin": "^6.9.1",
@@ -40,16 +42,20 @@
         "@mantine/spotlight": "^7.5.2",
         "@mantine/tiptap": "^7.5.2",
         "@mantine/vanilla-extract": "^7.5.2",
+        "@mantinex/mantine-logo": "^1.0.1",
         "@tabler/icons-react": "^2.47.0",
         "@tanstack/react-query": "^5.20.2",
-        "@tanstack/react-table": "^8.11.8",
+        "@tanstack/react-router": "^1.16.0",
         "@tiptap/extension-link": "^2.2.2",
         "@tiptap/react": "^2.2.2",
         "@tiptap/starter-kit": "^2.2.2",
         "@vanilla-extract/css": "^1.14.0",
         "@vitejs/plugin-react": "^4.2.1",
+        "clsx": "^2.1.0",
         "dayjs": "^1.11.10",
         "embla-carousel-react": "8.0.0-rc22",
+        "jwt-decode": "^4.0.0",
+        "mantine-react-table": "2.0.0-alpha.17",
         "recharts": "2"
     }
 }

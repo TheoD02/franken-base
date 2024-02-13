@@ -51,6 +51,19 @@ services:
   #  <<: *worker_template
   #  command: php /app/bin/console messenger:consume scheduler_default -vv
 
+  database:
+    image: mariadb:10.5
+    container_name: franken-base-database
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: franken
+      MYSQL_USER: franken
+      MYSQL_PASSWORD: franken
+    networks:
+      - traefik
+
 networks:
   traefik:
     external: true
