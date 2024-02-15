@@ -1,5 +1,9 @@
-import { startStimulusApp } from '@symfony/stimulus-bundle';
+import {registerControllers, startStimulusApp} from "vite-plugin-symfony/stimulus/helpers"
+import {registerReactControllerComponents} from "vite-plugin-symfony/stimulus/helpers/react"
 
 const app = startStimulusApp();
-// register any custom, 3rd party controllers here
-// app.register('some_controller_name', SomeImportedController);
+registerControllers(
+    app,
+    import.meta.glob('./controllers/*_(lazy)\?controller.[jt]s(x)\?')
+)
+registerReactControllerComponents(import.meta.glob('./react/controllers/**/*.[jt]s(x)\?'));

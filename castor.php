@@ -23,7 +23,7 @@ function default_context(): Context
     return new Context(
         data: [
             'docker' => [
-                'container' => 'sf-franken-app-1',
+                'container' => 'my-wtb-app-1',
                 'user' => capture('id -u'),
                 'group' => capture('id -g'),
                 'workdir' => '/app',
@@ -50,13 +50,13 @@ function start(bool $force = false): void
 {
     build(force: $force);
     Docker::compose(['app'])->up(detach: true, wait: true);
-    Docker::compose(['worker'])->up(detach: true, wait: false);
+    //Docker::compose(['worker'])->up(detach: true, wait: false);
 }
 
 #[AsTask(description: 'Stop project')]
 function stop(): void
 {
-    Docker::compose(['app', 'worker'])->down();
+    Docker::compose(['app'])->down();
 }
 
 #[AsTask(description: 'Restart project')]
