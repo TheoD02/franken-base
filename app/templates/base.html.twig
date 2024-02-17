@@ -9,16 +9,11 @@
         {{ vite_entry_link_tags('app') }}
     {% endblock %}
 
-    {% block javascripts %}
-        {{ vite_entry_script_tags('app', {
-            dependency: 'react'
-        }) }}
-    {% endblock %}
 </head>
 <body>
-<h1 {{ stimulus_controller('hello') }}></h1>
-<div {{ react_component('Hello', { 'fullName': 'Vite & Stimulus' }) }}></div>
-
-{% block body %}{% endblock %}
+<div id="root"></div>
+{% block javascripts %}
+    {{ vite_entry_script_tags('app', { dependency: 'react' }) }}
+{% endblock %}
 </body>
 </html>
