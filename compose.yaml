@@ -12,12 +12,13 @@ x-worker-template:
       - worker
 
 services:
-  app:
+  wtb:
     build:
       context: .
       dockerfile: Dockerfile
       target: dev
     environment:
+      APP_ID: "wtb"
       SERVER_NAME: ":80"
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
@@ -31,32 +32,130 @@ services:
       - ./app:/app
       - ./tools:/tools
       - ~/.ssh:/home/www-data/.ssh:ro
-      - caddy_data:/data
-      - caddy_config:/config
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.php-sf-franken.rule=Host(`sf-franken.web.localhost`)"
-      - "traefik.http.routers.php-sf-franken.tls=true"
-      - "traefik.http.services.php-sf-franken.loadbalancer.server.port=80"
+      - "traefik.http.routers.php-wtb.rule=Host(`wtb.web.localhost`)"
+      - "traefik.http.routers.php-wtb.tls=true"
+      - "traefik.http.services.php-wtb.loadbalancer.server.port=80"
     networks:
       - traefik
+      - service
     profiles:
       - app
 
-  scheduler:
-    <<: *worker_template
-    command: php /app/bin/console messenger:consume scheduler_default -vv
+  suppliers:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    environment:
+      APP_ID: "suppliers"
+      SERVER_NAME: ":80"
+      MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|php$$
+      # Run "composer require symfony/mercure-bundle" to install and configure the Mercure integration
+      MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
+      MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
+      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+    volumes:
+      - ./app:/app
+      - ./tools:/tools
+      - ~/.ssh:/home/www-data/.ssh:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.php-suppliers.rule=Host(`suppliers.web.localhost`)"
+      - "traefik.http.routers.php-suppliers.tls=true"
+      - "traefik.http.services.php-suppliers.loadbalancer.server.port=80"
+    networks:
+      - traefik
+      - service
+    profiles:
+      - app
+
+  settings:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    environment:
+      APP_ID: "settings"
+      SERVER_NAME: ":80"
+      MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      TRUSTED_HOSTS: ^${SERVER_NAME:-example\.com|localhost}|php$$
+      # Run "composer require symfony/mercure-bundle" to install and configure the Mercure integration
+      MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
+      MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
+      MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+    volumes:
+      - ./app:/app
+      - ./tools:/tools
+      - ~/.ssh:/home/www-data/.ssh:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.php-settings.rule=Host(`settings.web.localhost`)"
+      - "traefik.http.routers.php-settings.tls=true"
+      - "traefik.http.services.php-settings.loadbalancer.server.port=80"
+    networks:
+      - traefik
+      - service
+    profiles:
+      - app
+
+  #scheduler:
+  #  <<: *worker_template
+  #  command: php /app/bin/console messenger:consume scheduler_default -vv
+
+  wyzapi-database:
+    image: mariadb:10.3
+    networks:
+      - service
+    ports:
+      - '3310:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - database:/var/lib/mysql
+    profiles:
+      - app
+
+  db-mongodb:
+    # In production, you may want to use a managed database service
+    image: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=wtb
+      - MONGO_INITDB_ROOT_USERNAME=root
+      # You should definitely change the password in production
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    volumes:
+      - db-data:/data/db:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/data/db:rw
+    ports:
+      - "27018:27017"
+    networks:
+      - service
+    profiles:
+      - app
 
 networks:
   traefik:
     external: true
+  service:
+    external: true
+
+volumes:
+  database:
+    driver: local
+  db-data:
+    driver: local
 
 # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
 
-volumes:
-  caddy_data:
-  caddy_config:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###

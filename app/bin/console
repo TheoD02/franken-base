@@ -3,15 +3,25 @@
 
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
-if (!is_file(dirname(__DIR__).'/vendor/autoload_runtime.php')) {
+if (!is_file(dirname(__DIR__) . '/vendor/autoload_runtime.php')) {
     throw new LogicException('Symfony Runtime is missing. Try running "composer require symfony/runtime".');
 }
 
-require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
 
-return function (array $context) {
-    $kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+return function (InputInterface $input, array $context) {
+    $kernel = new Kernel(
+        $context['APP_ENV'],
+        (bool)$context['APP_DEBUG'],
+        $input->getParameterOption(['--app-id', '-a'], $context['APP_ID'])
+    );
 
-    return new Application($kernel);
+    $application = new Application($kernel);
+    $application->getDefinition()
+        ->addOption(new InputOption('--app-id', '-a', InputOption::VALUE_REQUIRED, 'The App ID'));
+
+    return $application;
 };
