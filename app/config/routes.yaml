@@ -1,12 +1,5 @@
-auth:
-  path: /auth
-  methods: [ 'POST' ]
-
-home:
-  path: /{path?}
-  controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
-  defaults:
-    template: base.html.twig
-  requirements:
-    path: ".+"
-
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute

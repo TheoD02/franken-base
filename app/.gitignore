@@ -9,11 +9,9 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-###> pentatrion/vite-bundle ###
+###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
-###< pentatrion/vite-bundle ###
-
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###

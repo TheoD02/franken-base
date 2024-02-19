@@ -12,8 +12,6 @@ class AppFixtures extends Fixture
     {
         UserFactory::createOne([
             'email' => 'admin@domain.tld',
-            'password' => '$2y$13$uqmpfwsknuy/gxjjuIHUSufdhl8bltOOX7xBp1Fs1HKFJrKUPNGAi', // admin
         ]);
-        UserFactory::createMany(100);
     }
 }

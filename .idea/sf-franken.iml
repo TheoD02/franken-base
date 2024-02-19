@@ -104,6 +104,19 @@
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/zenstruck/assert" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/zenstruck/callback" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/zenstruck/foundry" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/gehrisandro/tailwind-merge-php" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/psr/simple-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/options-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/stimulus-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/ux-live-component" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/ux-turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/ux-twig-component" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/web-profiler-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/webpack-encore-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfonycasts/verify-email-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/tales-from-a-dev/flowbite-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/tales-from-a-dev/twig-tailwind-extra" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/twig/extra-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

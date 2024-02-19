@@ -29,39 +29,15 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class UserFactory extends ModelFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     protected function getDefaults(): array
     {
         return [
             'email' => self::faker()->email(),
-            'password' => '$2y$13$uqmpfwsknuy/gxjjuIHUSufdhl8bltOOX7xBp1Fs1HKFJrKUPNGAi', // admin
-            'roles' => [],
+            'password' => '$2y$13$IPfbpI0wkH8bV3jkvmG4nuMysqJ9.Zfwz5rdIQnBil9fyRzMT8LRa', // admin
+            'roles' => ['ROLE_USER'],
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
-    protected function initialize(): self
-    {
-        return $this
-            // ->afterInstantiate(function(User $user): void {})
-        ;
-    }
 
     protected static function getClass(): string
     {

@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}React App{% endblock %}</title>
-    <link rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-    {% block stylesheets %}
-        {{ vite_entry_link_tags('app') }}
-    {% endblock %}
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
 
-    {% block javascripts %}
-        {{ vite_entry_script_tags('app', { dependency: 'react' }) }}
-    {% endblock %}
-</head>
-<body>
-<div id="root"></div>
-</body>
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+    <body class="dark">
+        {% block body %}
+            <div class="antialiased bg-gray-50 dark:bg-gray-900">
+
+                {% include 'layout/partials/_navbar.html.twig' %}
+                {# {% include 'layout/partials/_sidebar.html.twig' %} #} <!-- for admin panel -->
+
+                <main class="p-4 md:ml-64 pt-20">
+                    {% block content %}{% endblock %}
+                </main>
+            </div>
+        {% endblock %}
+    </body>
 </html>

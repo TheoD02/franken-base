@@ -11,9 +11,7 @@ RUN apk update --no-cache && apk add --no-cache \
     gettext \
     openssh-client \
     nodejs \
-    npm
-
-RUN npm install -g pnpm
+    yarn
 
 # Install PHP extensions
 RUN set -eux; \
