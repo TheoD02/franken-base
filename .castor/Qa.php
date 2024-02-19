@@ -1,5 +1,6 @@
 <?php
 
+use Castor\Attribute\AsOption;
 use Castor\Extras\DockerUtils;
 use Symfony\Component\Process\Process;
 
@@ -8,6 +9,7 @@ use function Castor\fingerprint;
 use function Castor\fs;
 use function Castor\hasher;
 use function Castor\io;
+use function utils\add_param_if;
 
 #[AsTaskClass]
 class Qa
@@ -51,21 +53,25 @@ class Qa
     }
 
     #[AsTaskMethod]
-    public static function ecs(): Process
+    public static function ecs(
+        #[AsOption] bool $fix = false,
+    ): Process
     {
-        return self::runTool('ecs check src');
+        $params = ['ecs', 'check', '--clear-cache', '--ansi'];
+        add_param_if($params, $fix, '--fix');
+        return self::runTool(implode(' ', $params));
     }
 
     #[AsTaskMethod]
     public static function phpstan(): Process
     {
-        return self::runTool('phpstan analyse src');
+        return self::runTool('phpstan analyse');
     }
 
     #[AsTaskMethod]
     public static function rector(): Process
     {
-        return self::runTool('rector process src');
+        return self::runTool('rector process');
     }
 
     #[AsTaskMethod]

@@ -23,7 +23,7 @@ do
     fi
 done
 
-chmod +x /tools/bin/*
+chmod +x /tools/bin/* || true
 ln -s /tools/bin/* /usr/local/bin/ || true
 
 # Add /tools/bin to PATH

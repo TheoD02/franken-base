@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-include_once 'base.ecs.php';
+require_once dirname(__DIR__) . '/tools/ecs/BaseECSConfig.php';
 
-return base_ecs_config();
+return BaseECSConfig::config();

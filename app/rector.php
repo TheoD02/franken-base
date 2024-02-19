@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-include_once 'base.rector.php';
+require_once dirname(__DIR__) . '/tools/rector/BaseRectorConfig.php';
 
-return base_rector_config();
+return BaseRectorConfig::config();

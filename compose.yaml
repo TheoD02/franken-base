@@ -17,6 +17,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: dev
+    ports:
+      - "3150:3150"
     environment:
       SERVER_NAME: ":80"
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
@@ -43,9 +45,9 @@ services:
     profiles:
       - app
 
-  scheduler:
-    <<: *worker_template
-    command: php /app/bin/console messenger:consume scheduler_default -vv
+  #scheduler:
+  #  <<: *worker_template
+  #  command: php /app/bin/console messenger:consume scheduler_default -vv
 
 networks:
   traefik:
