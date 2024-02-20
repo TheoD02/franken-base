@@ -26,7 +26,7 @@ function default_context(): Context
     return new Context(
         data: [
             'docker' => [
-                'container' => 'sf-franken-app-1',
+                'container' => 'franken-base-app-1',
                 'user' => capture('id -u'),
                 'group' => capture('id -g'),
                 'workdir' => '/app',
@@ -133,7 +133,7 @@ PHP;
     file_put_contents("{$dir}/rector.php", $rectorContent);
 
     Docker::exec(cmd: 'composer require --dev symfony/debug-pack symfony/maker-bundle');
-    /*Docker::exec(cmd: 'composer require twig-bundle');
+    Docker::exec(cmd: 'composer require twig-bundle');
 
     $front = io()->choice('Use webpack-encore or vite ?', ['webpack-encore', 'vite'], 'webpack-encore');
 
@@ -141,5 +141,5 @@ PHP;
         Docker::exec(cmd: 'composer require symfony/webpack-encore-bundle');
     } else {
         Docker::exec(cmd: 'composer require pentatrion/vite-bundle');
-    }*/
+    }
 }
