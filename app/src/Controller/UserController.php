@@ -3,29 +3,27 @@
 namespace App\Controller;
 
 use App\Api\ApiResponse;
-use App\Api\SuccessResponse;
+use App\Api\Attribut\ApiRoute;
+use App\Api\Attribut\BadRequestResponse;
+use App\Api\Attribut\OpenApiMeta;
+use App\Api\Attribut\OpenApiResponse;
+use App\Api\Enum\HttpMethod;
+use App\Api\Enum\ResponseType;
 use App\User\User;
 use App\User\UserCollection;
 use App\User\UserFilterQuery;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Attributes\Get;
-use OpenApi\Attributes\JsonContent;
-use OpenApi\Attributes\Response;
+use App\User\UserMeta;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
 class UserController
 {
-    /**
-     * @param UserFilterQuery|null $filterQuery
-     * @return ApiResponse<{UserCollection<User>}>
-     */
-    #[Route('/api/users', name: 'api_users', methods: ['GET'])]
-    #[SuccessResponse(class: User::class)]
-    /*#[Response(response: 200, description: 'coucou', content: new JsonContent(ref: new Model(type: UserCollection::class)))]*/
+    #[ApiRoute('/api/users', method: HttpMethod::GET)]
+    #[OpenApiResponse(User::class, type: ResponseType::COLLECTION)]
+    #[OpenApiMeta(UserMeta::class)]
+    #[BadRequestResponse]
     public function index(#[MapQueryString] ?UserFilterQuery $filterQuery): ApiResponse
     {
         return new ApiResponse(
@@ -36,7 +34,38 @@ class UserController
         );
     }
 
-    #[Route('/api/users/{id}', name: 'api_users_get', methods: ['GET'])]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * @return ApiResponse<User>
+     */
+    #[ApiRoute('/api/users/{id}', method: HttpMethod::GET)]
     public function show(int $id): ApiResponse
     {
         return new ApiResponse(
@@ -44,19 +73,30 @@ class UserController
         );
     }
 
-    #[Route('/api/users', name: 'api_create_user', methods: ['POST'])]
+    /**
+     * @return ApiResponse<User>
+     */
+    #[ApiRoute('/api/users', method: HttpMethod::POST)]
+    #[BadRequestResponse]
     public function create(#[MapRequestPayload] User $user): ApiResponse
     {
         return new ApiResponse($user);
     }
 
-    #[Route('/api/users/{id}', name: 'api_update_user', methods: ['PUT'])]
+    /**
+     * @return ApiResponse<User>
+     */
+    #[ApiRoute('/api/users/{id}', method: HttpMethod::PUT)]
+    #[BadRequestResponse]
     public function update(int $id, #[MapRequestPayload] User $user): ApiResponse
     {
         return new ApiResponse($user);
     }
 
-    #[Route('/api/users/{id}', name: 'api_delete_user', methods: ['DELETE'])]
+    /**
+     * @return ApiResponse<User>
+     */
+    #[ApiRoute('/api/users/{id}', method: HttpMethod::DELETE)]
     public function delete(int $id): ApiResponse
     {
         return new ApiResponse(null, status: 204);

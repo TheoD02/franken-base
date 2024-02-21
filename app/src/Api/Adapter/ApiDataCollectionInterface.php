@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api;
+namespace App\Api\Adapter;
 
 use loophp\collection\Contract\Collection;
 

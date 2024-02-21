@@ -65,7 +65,7 @@ class Qa
     #[AsTaskMethod]
     public static function phpstan(): Process
     {
-        return self::runTool('phpstan analyse');
+        return self::runTool('phpstan analyse src/Controller -l 8');
     }
 
     #[AsTaskMethod]

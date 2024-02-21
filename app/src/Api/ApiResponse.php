@@ -2,10 +2,24 @@
 
 namespace App\Api;
 
+use App\Api\Adapter\ApiDataCollectionInterface;
+use App\Api\Adapter\ApiDataInterface;
+use App\Api\Adapter\ApiMetadataInterface;
+
+/**
+ * @template T
+ * @template M of object|null
+ */
 readonly class ApiResponse
 {
     public function __construct(
+        /**
+         * @phpstan-var T
+         */
         public null|ApiDataInterface|ApiDataCollectionInterface $data,
+        /**
+         * @phpstan-var M
+         */
         public ?ApiMetadataInterface $meta = null,
         public int $status = 200,
     ) {
