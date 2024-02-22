@@ -51,6 +51,20 @@ services:
   #  <<: *worker_template
   #  command: php /app/bin/console messenger:consume scheduler_default -vv
 
+  mkdocs:
+    image: squidfunk/mkdocs-material:9.5.10
+    volumes:
+      - ./:/docs
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mkdocs.rule=Host(`mkdocs.web.localhost`)"
+      - "traefik.http.routers.mkdocs.tls=true"
+      - "traefik.http.services.mkdocs.loadbalancer.server.port=8000"
+    networks:
+      - traefik
+    profiles:
+      - app
+
 networks:
   traefik:
     external: true
