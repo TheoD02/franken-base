@@ -3,14 +3,11 @@
 namespace App\User;
 
 use App\Api\Adapter\ApiDataInterface;
-use App\Enum\UserRole;
+use App\User\Enum\UserRoleEnum;
 use loophp\collection\Collection;
-use Nelmio\ApiDocBundle\Model\Model;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\Response;
-use OpenApi\Attributes\Schema;
-use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Response]
@@ -24,15 +21,15 @@ class User implements ApiDataInterface
     private string $email;
 
     /**
-     * @var Collection<UserRole>
+     * @var Collection<UserRoleEnum>
      */
     #[Property(
         description: 'The roles of the user.',
         type: 'array',
         items: new Items(
             description: 'The role of the user.',
-            enum: UserRole::class,
-            example: UserRole::ADMIN,
+            enum: UserRoleEnum::class,
+            example: UserRoleEnum::ADMIN,
         ),
     )]
     private Collection $roles;

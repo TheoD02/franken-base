@@ -16,7 +16,7 @@ readonly class ApiResponse
         /**
          * @phpstan-var T
          */
-        public null|ApiDataInterface|ApiDataCollectionInterface $data,
+        public null|ApiDataInterface|ApiDataCollectionInterface|bool $data,
         /**
          * @phpstan-var M
          */

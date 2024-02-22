@@ -1,16 +1,13 @@
 <?php
 
-namespace App\EventListener;
+namespace App\Api\EventListener;
 
+use App\Api\ApiResponse;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use App\Controller\UserController;
-use function dd;
 
 #[AsEventListener(event: KernelEvents::VIEW)]
 class KernelViewListener
@@ -22,6 +19,9 @@ class KernelViewListener
 
     public function onKernelView(ViewEvent $event): void
     {
+        /**
+         * @var ApiResponse $controllerResult
+         */
         $controllerResult = $event->getControllerResult();
 
         $context = [

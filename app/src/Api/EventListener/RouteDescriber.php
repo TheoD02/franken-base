@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace App\Api\EventListener;
 
 use App\Api\Attribut\BadRequestResponse;
 use App\Api\Attribut\OpenApiMeta;
@@ -18,7 +18,6 @@ use OpenApi\Annotations\Response;
 use OpenApi\Annotations\Schema;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
-use OpenApi\Generator;
 use ReflectionProperty;
 use RuntimeException;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
@@ -27,8 +26,6 @@ use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Routing\Route;
 
 use function count;
-use function dd;
-use function dump;
 use function sprintf;
 
 class RouteDescriber implements RouteDescriberInterface, ModelRegistryAwareInterface

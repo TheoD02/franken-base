@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Enum;
+namespace App\Api\Enum;
 
-enum AssertErrorCode: string
+enum ValidationErrorCode: string
 {
     case ERR_VALUE_SHOULD_BE_FALSE = 'ERR_VALUE_SHOULD_BE_FALSE';
     case ERR_VALUE_SHOULD_BE_TRUE = 'ERR_VALUE_SHOULD_BE_TRUE';

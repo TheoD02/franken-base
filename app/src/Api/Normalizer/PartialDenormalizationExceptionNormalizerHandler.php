@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Api\Normalizer;
+
+use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
+
+class PartialDenormalizationExceptionNormalizerHandler
+{
+    public static function normalize(PartialDenormalizationException $exception): array
+    {
+        $errors = [];
+
+        foreach ($exception->getErrors() as $error) {
+            $errors[] = ViolationNormalizerHelper::createViolation(
+                propertyPath: $error->getPath(),
+                code: $error->getCode(),
+                // TODO: Find a way to get the value from the error, for now we just put 'Unkown value'
+                value: 'Unkown value',
+                message: $error->canUseMessageForUser() ? $error->getMessage() : 'An error occurred',
+            );
+        }
+
+        return $errors;
+    }
+}

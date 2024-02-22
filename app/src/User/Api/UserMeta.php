@@ -1,8 +1,6 @@
 <?php
 
-namespace App\User;
-
-use OpenApi\Attributes\Property;
+namespace App\User\Api;
 
 class UserMeta
 {
