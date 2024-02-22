@@ -33,7 +33,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 
 FROM frankenphp as dev-base
 
-ENV APP_ENV=dev XDEBUG_MODE=off
+ENV APP_ENV=dev
 
 COPY ./docker/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
@@ -55,6 +55,10 @@ RUN set -eux; \
     install-php-extensions \
         xdebug \
     ;
+
+RUN echo "xdebug.mode=debug" >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.client_host=host.docker.internal" >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+
 
 # Init non-root user
 ARG USER=www-data

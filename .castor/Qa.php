@@ -55,8 +55,7 @@ class Qa
     #[AsTaskMethod]
     public static function ecs(
         #[AsOption] bool $fix = false,
-    ): Process
-    {
+    ): Process {
         $params = ['ecs', 'check', '--clear-cache', '--ansi'];
         add_param_if($params, $fix, '--fix');
         return self::runTool(implode(' ', $params));
@@ -76,6 +75,12 @@ class Qa
 
     #[AsTaskMethod]
     public static function test(): Process
+    {
+        return Composer::runVendorBin('phpunit');
+    }
+
+    #[AsTaskMethod]
+    public static function phpunit(): Process
     {
         return Composer::runVendorBin('phpunit');
     }

@@ -246,6 +246,16 @@
       </interpreter>
     </phpInfoCache>
   </component>
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="sf-franken.web.localhost" id="fb227922-37b5-4673-87ac-0509f56e9ae4" name="sf-franken.web.localhost" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$/app" remote-root="/app" />
+          <mapping local-root="$PROJECT_DIR$/app/public" remote-root="/app/public" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.3" />
   <component name="PhpStan">
     <PhpStan_settings>

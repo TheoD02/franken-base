@@ -44,6 +44,8 @@ services:
       - traefik
     profiles:
       - app
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   #scheduler:
   #  <<: *worker_template
