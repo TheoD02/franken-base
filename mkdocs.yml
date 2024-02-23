@@ -19,6 +19,7 @@ theme:
     - search.suggest
     - search.highlight
     - search.share
+    - content.code.copy
   icon:
     setup: fontawesome/solid/person-breastfeeding
   palette:
@@ -40,6 +41,9 @@ nav:
   - Home: home.md
   - Setup:
       - 'Setup xdebug': 'xdebug/setup_xdebug.md'
+  - Symfony:
+      - 'Use scheduler': 'symfony/use_scheduler.md'
+      - 'Create API endpoint': 'symfony/create_api_endpoint.md'
 
 extra:
   status:
@@ -53,3 +57,25 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.highlight:
+      auto_title: true
+      linenums: true
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+
+extra_javascript:
+  - assets/javascripts/highlight.min.js
+extra_css:
+  - assets/stylesheets/highlight-github.min.css

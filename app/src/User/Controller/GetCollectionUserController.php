@@ -29,8 +29,9 @@ class GetCollectionUserController
         return new ApiResponse(
             UserCollection::fromIterable([
                 (new User())->setName('John Doe')->setEmail('john@doe.fr'),
-                (new User())->setName('Jane Doe')->setEmail('jane@doe.fr'),
+                (new User())->setName('Alice Cooper')->setEmail('alice@cooper.fr'),
             ]),
+
         );
     }
 }

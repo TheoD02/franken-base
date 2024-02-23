@@ -1,38 +1,105 @@
 ---
-title: Setting up xdebug on phpstorm
-subtitle: A guide on how to setup xdebug on phpstorm
-summary: This is a guide on how to setup xdebug on phpstorm for debugging your code
-authors:
-    - Theo
-date: 2024-02-22
+title: Setting up Xdebug on PhpStorm
+subtitle: Using Docker as the server
+description: Step-by-step guide to configure Xdebug on PhpStorm with Docker as the server on a Linux system.
 status: draft
+tags:
+    - PhpStorm
+    - Xdebug
+    - Docker
+author: Your Name
 ---
 
-# How to setup xdebug on phpstorm
+# Setting up Xdebug on PhpStorm
 
-## Step 1: Open phpstorm and go to settings
+---
 
-## Step 2: Go to PHP and click on the + icon to add a new interpreter
-![img_1.png](img_1.png)
+## Description
+This documentation provides a comprehensive guide on configuring Xdebug in PhpStorm with Docker as the server. It is tailored for users operating on a Linux system.
 
-## Step 3: Add docker as the server and select the compose file of the project (select the container service named "app")
-![img_2.png](img_2.png)
+## Context
+Configuring Xdebug is essential for efficient debugging of PHP code.
 
-## Step 4: Ensure that port on phpstorm is listening to the same port as the xdebug port on the container generally in the range of 9000-9005
-![img_3.png](img_3.png)
+By integrating it with PhpStorm and Docker, developers can streamline the debugging process, ensuring a smoother and more effective development workflow.
 
-## Step 5: Ensure you have xdebug extension installed on your browser, and click on the debug icon on the browser to start debugging
-![img_4.png](img_4.png)
+## Prerequisites
+Before you proceed, ensure the following prerequisites are met:
 
-## Step 6: Set a breakpoint on the code you want to debug and refresh the page on the browser, it show you a popup to select the server you want to debug on, just click on accept
-![img_5.png](img_5.png)
+- [PhpStorm](https://www.jetbrains.com/fr-fr/phpstorm/) is installed on your system.
+- [Docker](https://www.docker.com/) is installed and running.
+- The Docker Compose file related to your project is available.
 
-** By default the server add mapping for public folder, you should add the mapping like this on app folder or root depending on your project structure
-![img_6.png](img_6.png)
+## Documentation
+
+### Step 1: Opening PhpStorm and Navigating to Settings
+Open PhpStorm. Navigate to File > Settings to access the settings page. 
+> You can use shortcut keys ++ctrl+alt+s++
+
+??? note "Screenshot"
+    ![Docker Server](images/Configuration_de_XDEBUG_1.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_2.png)
+
+### Step 2: Adding a New PHP Interpreter
+In the settings, go to `Languages & Frameworks` > `PHP`. Click the `+` icon at the top-right corner to add a new CLI interpreter.
+
+??? note "Screenshot"
+    ![Docker Server](images/Configuration_de_XDEBUG_3.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_4.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_5.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_6.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_7.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_8.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_9.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_10.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_11.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_12.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_13.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_14.png)
+
+### Step 3: Align PhpStorm and Xdebug Ports
+Check that PhpStorm listens to the same port as Xdebug in your Docker container. Typically, ports are in the range of `9000-9005`.
+
+??? note "Screenshot"
+    ![Docker Server](images/Configuration_de_XDEBUG_15.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_16.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_17.png)
+
+### Step 4: Install Xdebug Extension on Browser and Initiate Debugging
+Install the Xdebug extension on your browser. Activate the extension, then click on the debug icon to begin debugging.
+
+You can find debugging extensions here: [Xdebug Browser Extensions](https://www.jetbrains.com/help/phpstorm/browser-debugging-extensions.html)
+
+??? note "Screenshot"
+    ![Docker Server](images/Configuration_de_XDEBUG_18.png)
+    ![Docker Server](images/Configuration_de_XDEBUG_19.png)
+
+### Step 5: Listening to Debugging and Setting Breakpoints
+Start listening to the debugging process. Choose a line of code for debugging, set a breakpoint in PhpStorm. Refresh the browser page. PhpStorm will display a pop-up to select the server for debugging. Click on "accept."
+
+??? note "Screenshot"
+    ![Docker Server](images/Configuration_de_XDEBUG_20.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_21.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_22.png) 
+
+### Mapping The App Folder or Root
+PhpStorm maps the public folder by default. Depending on your project structure, manually add the mapping for the 'app' folder or the root directory.
+
+??? note "Screenshot"
+    ![Docker Server](images/Configuration_de_XDEBUG_23.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_24.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_25.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_26.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_27.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_28.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_29.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_30.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_31.png) 
+    ![Docker Server](images/Configuration_de_XDEBUG_32.png) 
 
 
-!!!note
-    
-Some time the server mapping is not correct ensure that the server mapping is correct
+## Conclusion
+By following these steps, you have successfully configured Xdebug on PhpStorm with Docker as the server. This integration enhances your ability to debug PHP code effectively.
 
-![img.png](img.png)
+## References
+- [PhpStorm Documentation](https://www.jetbrains.com/help/phpstorm/configuring-xdebug.html)
+- [Xdebug Documentation](https://xdebug.org/docs/)
