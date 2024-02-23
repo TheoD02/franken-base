@@ -60,7 +60,8 @@ function start(bool $force = false): void
 #[AsTask(description: 'Stop project')]
 function stop(): void
 {
-    Docker::compose(['app', 'worker'])->down();
+    Docker::compose(['app'])->down();
+    Docker::compose(['worker'])->down();
 }
 
 #[AsTask(description: 'Restart project')]

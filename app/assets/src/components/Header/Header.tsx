@@ -28,6 +28,7 @@ import {
     IconChevronDown,
 } from '@tabler/icons-react';
 import classes from './Header.module.css';
+import {Link} from "@tanstack/react-router";
 
 const mockdata = [
     {
@@ -150,8 +151,12 @@ export function Header() {
                     </Group>
 
                     <Group visibleFrom="sm">
-                        <Button variant="default">Log in</Button>
-                        <Button>Sign up</Button>
+                        <Link to="/auth/login">
+                            <Button variant="default">Log in</Button>
+                        </Link>
+                        <Link to="/auth/register">
+                            <Button>Sign up</Button>
+                        </Link>
                     </Group>
 
                     <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm"/>

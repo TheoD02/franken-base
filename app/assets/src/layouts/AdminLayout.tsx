@@ -1,9 +1,11 @@
-import React, {useState} from 'react'
-import {AppShell, Burger, Button, Combobox} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
-import {Header} from "./components/Header/Header";
+import {AppShell} from "@mantine/core";
+import {Header} from "../components/Header/Header";
+import React from "react";
+import {Outlet} from "@tanstack/react-router";
+import {NotFoundPage} from "../pages/NotFound/NotFoundPage";
 
-function App() {
+export default function AdminLayout({isNotFound}) {
     const [opened, {toggle}] = useDisclosure();
 
     return (
@@ -22,9 +24,9 @@ function App() {
 
             <AppShell.Navbar p="md">Navbar</AppShell.Navbar>
 
-            <AppShell.Main>Main</AppShell.Main>
+            <AppShell.Main>
+                {isNotFound ? <NotFoundPage/> : <Outlet/>}
+            </AppShell.Main>
         </AppShell>
     )
 }
-
-export default App
