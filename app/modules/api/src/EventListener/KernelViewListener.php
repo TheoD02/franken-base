@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Api\EventListener;
+namespace Module\Api\EventListener;
 
-use App\Api\ApiResponse;
+use Module\Api\ApiResponse;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
@@ -10,19 +10,22 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[AsEventListener(event: KernelEvents::VIEW)]
-class KernelViewListener
+readonly class KernelViewListener
 {
     public function __construct(
-        private readonly SerializerInterface $serializer,
+        private SerializerInterface $serializer,
     ) {
     }
 
     public function onKernelView(ViewEvent $event): void
     {
-        /**
-         * @var ApiResponse $controllerResult
-         */
         $controllerResult = $event->getControllerResult();
+
+        if ($controllerResult instanceof ApiResponse === false) {
+            // Do nothing for non-ApiResponse controller results (but maybe we should throw an exception here if we expect all controller results to be ApiResponse?)
+            return;
+        }
+
 
         $context = [
             'json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS,

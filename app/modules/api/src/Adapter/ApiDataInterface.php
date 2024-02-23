@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Adapter;
+namespace Module\Api\Adapter;
 
 interface ApiDataInterface
 {

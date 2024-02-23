@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Attribut;
+namespace Module\Api\Attribut;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 class ArrayProperty

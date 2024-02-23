@@ -2,7 +2,7 @@
 
 namespace App\User;
 
-use App\Api\Adapter\ApiDataCollectionInterface;
+use Module\Api\Adapter\ApiDataCollectionInterface;
 use loophp\collection\CollectionDecorator;
 
 /**

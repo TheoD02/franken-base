@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Api\Normalizer;
+namespace Module\Api\Normalizer;
 
-use App\Api\AbstractHttpException;
+use Module\Api\AbstractHttpException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -14,14 +14,7 @@ use Symfony\Component\Serializer\SerializerAwareTrait;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-use function array_keys;
-use function array_map;
-use function dd;
-use function dump;
-use function implode;
 use function sprintf;
-use function str_replace;
-use function trigger_deprecation;
 
 class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterface
 {

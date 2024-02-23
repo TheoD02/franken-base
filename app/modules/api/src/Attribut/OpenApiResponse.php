@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Api\Attribut;
+namespace Module\Api\Attribut;
 
-use App\Api\Enum\ResponseType;
+use Module\Api\Enum\ResponseType;
 
 use function class_exists;
 use function sprintf;

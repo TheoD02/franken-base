@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Api\Attribut;
+namespace Module\Api\Attribut;
 
-use App\Api\Enum\HttpMethod;
+use Module\Api\Enum\HttpMethod;
 use Symfony\Component\Routing\Attribute\Route;
 
 use function strtolower;

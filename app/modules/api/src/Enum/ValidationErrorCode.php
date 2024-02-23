@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api\Enum;
+namespace Module\Api\Enum;
 
 enum ValidationErrorCode: string
 {

@@ -2,7 +2,7 @@
 
 namespace App\Tests;
 
-use App\Api\Attribut\ApiRoute;
+use Module\Api\Attribut\ApiRoute;
 use Exception;
 use JsonException;
 use ReflectionException;

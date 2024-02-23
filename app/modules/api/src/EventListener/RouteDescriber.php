@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Api\EventListener;
+namespace Module\Api\EventListener;
 
-use App\Api\Attribut\BadRequestResponse;
-use App\Api\Attribut\OpenApiMeta;
-use App\Api\Attribut\OpenApiResponse;
 use loophp\collection\Collection;
+use Module\Api\Attribut\BadRequestResponse;
+use Module\Api\Attribut\OpenApiMeta;
+use Module\Api\Attribut\OpenApiResponse;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareInterface;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareTrait;
 use Nelmio\ApiDocBundle\Model\Model;

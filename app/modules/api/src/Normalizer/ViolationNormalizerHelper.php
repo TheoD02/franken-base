@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Normalizer;
+namespace Module\Api\Normalizer;
 
 class ViolationNormalizerHelper
 {

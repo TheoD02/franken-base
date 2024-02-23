@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api;
+namespace Module\Api;
 
-use App\Api\Adapter\ApiDataCollectionInterface;
-use App\Api\Adapter\ApiDataInterface;
-use App\Api\Adapter\ApiMetadataInterface;
+use Module\Api\Adapter\ApiDataCollectionInterface;
+use Module\Api\Adapter\ApiDataInterface;
+use Module\Api\Adapter\ApiMetadataInterface;
 
 /**
  * @template T

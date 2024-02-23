@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Normalizer;
+namespace Module\Api\Normalizer;
 
 use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
 

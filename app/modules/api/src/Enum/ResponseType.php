@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Api\Enum;
-
-use function enum;
+namespace Module\Api\Enum;
 
 enum ResponseType
 {

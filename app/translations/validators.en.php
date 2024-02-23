@@ -1,6 +1,6 @@
 <?php
 
-use App\Api\Enum\ValidationErrorCode;
+use Module\Api\Enum\ValidationErrorCode;
 
 return array(
     'This value should be false.' => ValidationErrorCode::ERR_VALUE_SHOULD_BE_FALSE->value,

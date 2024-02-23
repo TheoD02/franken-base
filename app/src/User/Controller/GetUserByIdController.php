@@ -2,13 +2,13 @@
 
 namespace App\User\Controller;
 
-use App\Api\ApiResponse;
-use App\Api\Attribut\ApiRoute;
-use App\Api\Attribut\BadRequestResponse;
-use App\Api\Attribut\OpenApiMeta;
-use App\Api\Attribut\OpenApiResponse;
-use App\Api\Enum\HttpMethod;
-use App\Api\Enum\ResponseType;
+use Module\Api\ApiResponse;
+use Module\Api\Attribut\ApiRoute;
+use Module\Api\Attribut\BadRequestResponse;
+use Module\Api\Attribut\OpenApiMeta;
+use Module\Api\Attribut\OpenApiResponse;
+use Module\Api\Enum\HttpMethod;
+use Module\Api\Enum\ResponseType;
 use App\User\Api\UserFilterQuery;
 use App\User\Api\UserMeta;
 use App\User\Exception\UserProcessingException;

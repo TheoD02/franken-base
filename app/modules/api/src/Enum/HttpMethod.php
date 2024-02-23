@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Enum;
+namespace Module\Api\Enum;
 
 enum HttpMethod: string
 {

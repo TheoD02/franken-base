@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Attribut;
+namespace Module\Api\Attribut;
 
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\JsonContent;

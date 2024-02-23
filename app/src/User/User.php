@@ -2,7 +2,7 @@
 
 namespace App\User;
 
-use App\Api\Adapter\ApiDataInterface;
+use Module\Api\Adapter\ApiDataInterface;
 use App\User\Enum\UserRoleEnum;
 use loophp\collection\Collection;
 use OpenApi\Attributes\Items;

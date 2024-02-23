@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Api;
+namespace Module\Api;
 
-use App\Api\Enum\ApiErrorType;
 use BackedEnum;
+use Module\Api\Enum\ApiErrorType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

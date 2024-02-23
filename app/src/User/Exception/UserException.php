@@ -2,7 +2,7 @@
 
 namespace App\User\Exception;
 
-use App\Api\AbstractHttpException;
+use Module\Api\AbstractHttpException;
 
 abstract class UserException extends AbstractHttpException
 {
