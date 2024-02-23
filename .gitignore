@@ -5,3 +5,4 @@ tools/*/vendor
 .idea/usage.statistics.xml
 .idea/shelf
 .idea/*.iml
+yarn-error.log
