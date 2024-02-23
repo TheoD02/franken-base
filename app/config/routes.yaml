@@ -1,3 +1,11 @@
+home:
+    path: /{path?}
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: base.html.twig
+    requirements:
+        path: ".+"
+
 controllers:
     resource:
         path: ../src/User/Controller/
