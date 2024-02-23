@@ -1,28 +1,23 @@
 import React, {useState} from 'react'
-import {AppShell, Burger, Button} from "@mantine/core";
+import {AppShell, Burger, Button, Combobox} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
+import {Header} from "./components/Header/Header";
 
 function App() {
-    const [opened, { toggle }] = useDisclosure();
+    const [opened, {toggle}] = useDisclosure();
 
     return (
         <AppShell
-            header={{ height: 60 }}
+            header={{height: 60}}
             navbar={{
                 width: 300,
                 breakpoint: 'sm',
-                collapsed: { mobile: !opened },
+                collapsed: {mobile: !opened},
             }}
             padding="md"
         >
             <AppShell.Header>
-                <Burger
-                    opened={opened}
-                    onClick={toggle}
-                    hiddenFrom="sm"
-                    size="sm"
-                />
-                <div>Logo</div>
+                <Header/>
             </AppShell.Header>
 
             <AppShell.Navbar p="md">Navbar</AppShell.Navbar>
