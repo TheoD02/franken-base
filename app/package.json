@@ -6,6 +6,8 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@tanstack/router-devtools": "^1.16.6",
+        "@tanstack/router-vite-plugin": "^1.16.5",
         "@types/react": "^18.2.55",
         "@types/react-dom": "^18.2.19",
         "@typescript-eslint/eslint-plugin": "^6.21.0",
@@ -37,6 +39,7 @@
         "@mantine/spotlight": "^7.5.3",
         "@mantine/tiptap": "^7.5.3",
         "@tabler/icons-react": "^2.47.0",
+        "@tanstack/react-router": "^1.16.6",
         "@tiptap/extension-link": "^2.2.3",
         "@tiptap/react": "^2.2.3",
         "@tiptap/starter-kit": "^2.2.3",
