@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Module\Api\Attribut;
 
+/**
+ * This class permit to define the metadata of an API response based on class and groups.
+ */
 #[\Attribute(\Attribute::TARGET_METHOD)]
 readonly class OpenApiMeta
 {

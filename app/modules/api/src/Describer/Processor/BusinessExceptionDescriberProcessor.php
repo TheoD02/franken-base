@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Module\Api\Describer\Processor;
 
-use Module\Api\AbstractHttpException;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Describer\Trait\JsonContentDescriberProcessTrait;
 use Module\Api\Enum\ApiErrorType;
+use Module\Api\Enum\HttpStatus;
+use Module\Api\Exception\AbstractHttpException;
 use Nelmio\ApiDocBundle\OpenApiPhp\Util;
 use OpenApi\Annotations as OAnnotations;
 use OpenApi\Attributes as OAttributes;
 use OpenApi\Attributes\Property;
 use OpenApi\Generator;
 use Symfony\Component\Routing\Route;
-
-use function dd;
 
 class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
 {
@@ -56,25 +55,21 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
             \ReflectionAttribute::IS_INSTANCEOF
         );
 
-        /**
-         * @var array<int, AbstractHttpException> $exceptionByStatusCode
-         */
+        /** @var array<int, AbstractHttpException> $exceptionByStatusCode */
         $exceptionByStatusCode = [];
         foreach ($apiExceptionsAttributes as $reflectionAttribute) {
             /** @var ApiException $attributeInstance */
             $attributeInstance = $reflectionAttribute->newInstance();
-            /**
-             * @var AbstractHttpException $exceptionInstance
-             */
+            /** @var AbstractHttpException $exceptionInstance */
             $exceptionInstance = new $attributeInstance->exceptionFqcn();
-            $exceptionByStatusCode[$exceptionInstance->getHttpStatusCode()][] = $exceptionInstance;
+            $exceptionByStatusCode[$exceptionInstance->getHttpStatusCode()->value][] = $exceptionInstance;
         }
 
         foreach ($exceptionByStatusCode as $statusCode => $exceptionList) {
             /** @var OAnnotations\Response $response */
             $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
             if ($response->description === Generator::UNDEFINED) {
-                $response->description = 'Bad request.';
+                $response->description = HttpStatus::from($statusCode)->getShortName() . ' response.';
             }
             $jsonContent = $this->getJsonContent($response);
             foreach ($exceptionList as $exception) {

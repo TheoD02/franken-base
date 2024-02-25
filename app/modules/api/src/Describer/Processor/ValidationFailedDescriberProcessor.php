@@ -6,6 +6,7 @@ namespace Module\Api\Describer\Processor;
 
 use Module\Api\Describer\Trait\JsonContentDescriberProcessTrait;
 use Module\Api\Enum\ApiErrorType;
+use Module\Api\Enum\HttpStatus;
 use Nelmio\ApiDocBundle\OpenApiPhp\Util;
 use OpenApi\Annotations as OAnnotations;
 use OpenApi\Attributes as OAttributes;
@@ -15,8 +16,6 @@ use OpenApi\Generator;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Route;
-
-use function dd;
 
 class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
 {
@@ -47,15 +46,11 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
     ): OAnnotations\OpenApi {
         $mapToStatusCode = [];
 
-        /**
-         * @var array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>} $map
-         */
+        /** @var array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>} $map */
         $mapper = [...$mapRequestPayload, ...$mapQueryString];
         foreach ($mapper as $map) {
             foreach ($map['attributes'] as $attribute) {
-                /**
-                 * @var MapQueryString|MapRequestPayload $instance
-                 */
+                /** @var MapQueryString|MapRequestPayload $instance */
                 $instance = $attribute->newInstance();
                 $mapToStatusCode[$instance->validationFailedStatusCode] = true;
             }
@@ -77,7 +72,7 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
         $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
 
         if ($response->description === Generator::UNDEFINED) {
-            $response->description = 'Bad request.';
+            $response->description = HttpStatus::from($statusCode)->getShortName() . ' response.';
         }
 
         $jsonContent = $this->getJsonContent($response);
@@ -89,9 +84,9 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
     private function getValidationFailedSchema(): OAttributes\Schema
     {
         return self::$validationFailedSchema ??= new OAttributes\Schema(
-            schema: 'ValidationErrorSchema',
-            title: 'Validation Failed',
-            description: 'When you will receive a validation error of payload or query string.',
+            schema: 'SymfonyMapRequestValidationFailedSchema',
+            title: 'Validation Failed Schema for MapQueryString, MapRequestPayload or Symfony Validator',
+            description: 'This schema will be used when you will receive a validation error of payload or query string, or any Symfony Validator error.',
             properties: [
                 new Property(
                     property: 'type',
@@ -117,17 +112,21 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
                         ]
                     ),
                 ),
-            ]
+            ],
+            externalDocs: new OAttributes\ExternalDocumentation(
+                description: 'Symfony Validator Component Documentation',
+                url: 'https://symfony.com/doc/current/components/validator.html'
+            )
         );
     }
 
     private function getValidationFailedExamples(): OAttributes\Examples
     {
         return self::$validationFailedExamples ??= new OAttributes\Examples(
-            ApiErrorType::VALIDATION_FAILED->value,
-            ApiErrorType::VALIDATION_FAILED->value,
-            'When the payload is invalid.',
-            [
+            example: ApiErrorType::VALIDATION_FAILED->value,
+            summary: ApiErrorType::VALIDATION_FAILED->value,
+            description: 'When you will receive a validation error of payload or query string.',
+            value: [
                 'type' => ApiErrorType::VALIDATION_FAILED->value,
                 'title' => 'Validation Failed',
                 'status' => 422,
@@ -142,5 +141,4 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
             ]
         );
     }
-
 }

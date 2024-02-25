@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Module\Api\Enum;
 
+/**
+ * Enumeration of validation error codes for the Symfony Validator component.
+ * @see validators.en.php // TODO: how to provide this as bundled ?
+ */
 enum ValidationErrorCode: string
 {
     case ERR_VALUE_SHOULD_BE_FALSE = 'ERR_VALUE_SHOULD_BE_FALSE';

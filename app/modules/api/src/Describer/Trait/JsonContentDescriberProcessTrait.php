@@ -19,9 +19,7 @@ trait JsonContentDescriberProcessTrait
 
         if ($jsonContent === false) {
             $jsonContent = new OAttributes\JsonContent();
-            $context = Util::createContext([
-                'nested' => $response,
-            ], $response->_context);
+            $context = Util::createContext(['nested' => $response,], $response->_context);
             $jsonContent->_context = $context;
             $response->_unmerged[] = $jsonContent;
         }

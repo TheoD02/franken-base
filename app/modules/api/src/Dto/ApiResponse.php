@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Module\Api;
+namespace Module\Api\Dto;
 
 use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Adapter\ApiDataInterface;
 use Module\Api\Adapter\ApiMetadataInterface;
+use Module\Api\Enum\HttpStatus;
 
 /**
  * @template T
@@ -23,10 +24,6 @@ readonly class ApiResponse
          * @phpstan-var M
          */
         public ?ApiMetadataInterface $meta = null,
-        public int $status = 200,
     ) {
-        if ($this->data === null && $this->status !== 204) {
-            throw new \InvalidArgumentException('The status code must be 204 when the data is null.');
-        }
     }
 }

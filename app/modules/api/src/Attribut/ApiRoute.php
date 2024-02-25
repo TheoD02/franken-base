@@ -9,6 +9,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 use function Symfony\Component\String\u;
 
+/**
+ * This is a minimal wrapping of Symfony Route attribute to provide a default name for the route.
+ * And it will ensure that endpoint use only one HTTP method.
+ *
+ * TODO: Possibility to extend HTTP Method to custom one ? Not required yet in our use case.
+ */
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_CLASS)]
 class ApiRoute extends Route
 {
@@ -33,10 +39,7 @@ class ApiRoute extends Route
             $path,
             $name,
             $requirements,
-            [
-                ...$options, ...[
-                    'test' => 'coucou',
-                ]],
+            $options,
             $defaults,
             $host,
             $method->value,

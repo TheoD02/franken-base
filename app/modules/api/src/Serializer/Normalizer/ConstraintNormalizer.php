@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Module\Api\Serializer\Normalizer;
 
-use Module\Api\AbstractHttpException;
 use Module\Api\Enum\ApiErrorType;
+use Module\Api\Exception\AbstractHttpException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -58,10 +58,10 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
         if ($exception instanceof HttpExceptionInterface) {
             if ($exception instanceof AbstractHttpException) {
                 $data = [
-                    self::TYPE => ApiErrorType::BUSINESS_ERROR->value,
+                    self::TYPE => $exception->getParentErrorCode()->value,
                     self::TITLE => $exception->getErrorMessage() ?: null,
                     self::STATUS => $exception->getStatusCode(),
-                    self::CODE => $exception->getErrorCode(),
+                    self::CODE => $exception->getFormattedErrorCode(),
                 ];
 
                 if ($debug) {

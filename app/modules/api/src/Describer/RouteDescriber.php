@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Module\Api\EventListener;
+namespace Module\Api\Describer;
 
 use Nelmio\ApiDocBundle\Controller\DocumentationController;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareInterface;
@@ -68,6 +68,9 @@ class RouteDescriber implements RouteDescriberInterface, ModelRegistryAwareInter
         foreach ($this->getOperations($api, $route) as $operation) {
             foreach ($this->processors as $processor) {
                 if ($processor->supports($operation, $route, $reflectionMethod, $mapRequestPayload, $mapQueryString)) {
+                    if ($processor instanceof ModelRegistryAwareInterface) {
+                        $processor->setModelRegistry($this->modelRegistry);
+                    }
                     $api = $processor->process(
                         $api,
                         $operation,
