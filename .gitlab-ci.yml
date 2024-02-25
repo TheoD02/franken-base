@@ -28,13 +28,8 @@ build:
   artifacts:
     paths:
       - app/vendor/
-  only:
-    - merge_requests
   rules:
-    - changes:
-        - app/modules/**
-        - app/src/**
-        - app/tests/**
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 build-qa:
   stage: build
@@ -50,21 +45,20 @@ build-qa:
         cd ..
       done
       cd ../app
-  only:
-    - merge_requests
   artifacts:
     paths:
       - tools/**/vendor
       - /usr/local/bin/**
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 qa-ecs:
   stage: qa
   script:
     - ../tools/ecs/vendor/bin/ecs check --clear-cache
   needs: [ "build" ]
-  only:
-    - merge_requests
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - changes:
         - app/modules/**
         - app/src/**
@@ -75,9 +69,8 @@ qa-rector:
   script:
     - ../tools/rector/vendor/bin/rector process --clear-cache
   needs: [ "build" ]
-  only:
-    - merge_requests
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - changes:
         - app/modules/**
         - app/src/**
@@ -88,9 +81,8 @@ qa-phpstan:
   script:
     - ../tools/phpstan/vendor/bin/phpstan analyse src/ modules/*/src -l 1
   needs: [ "build" ]
-  only:
-    - merge_requests
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - changes:
         - app/modules/**
         - app/src/**
@@ -110,14 +102,13 @@ test:
     - ./vendor/bin/phpunit --coverage-text --coverage-cobertura=coverage.cobertura.xml
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   needs: [ "build" ]
-  only:
-    - merge_requests
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
         path: app/coverage.cobertura.xml
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - changes:
         - app/modules/**
         - app/src/**
