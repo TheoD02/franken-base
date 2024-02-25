@@ -75,7 +75,7 @@ readonly class KernelViewListener
     protected function getControllerMethodReflectionClass(ViewEvent $event): \ReflectionMethod
     {
         $controller = $event->getRequest()->attributes->get('_controller');
-        $controller = explode('::', $controller);
+        $controller = explode('::', (string) $controller);
         if (\count($controller) !== 2) {
             $controller = "{$controller[0]}::__invoke";
         } else {
