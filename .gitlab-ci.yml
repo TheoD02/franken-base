@@ -43,10 +43,11 @@ build-qa:
     - |
       cd ../tools
       for tool in "ecs" "rector" "phpstan" "ecs"; do
-      cd $tool
-      composer install --no-interaction
-      cd ..
+        cd $tool
+        composer install --no-interaction
+        cd ..
       done
+      ln -s $(pwd)/bin/* /usr/local/bin/
       cd ../app
   artifacts:
     paths:
@@ -57,7 +58,7 @@ qa-ecs:
   script:
     - ls
     - ls ./vendor/bin
-    - ./vendor/bin/ecs check src
+    - ecs check src
   needs: [ "build" ]
   rules:
     - changes:
@@ -68,7 +69,7 @@ qa-ecs:
 qa-rector:
   stage: qa
   script:
-    - ./vendor/bin/rector process src
+    - rector process src
   needs: [ "build" ]
   rules:
     - changes:
@@ -79,7 +80,7 @@ qa-rector:
 qa-phpstan:
   stage: qa
   script:
-    - ./vendor/bin/phpstan analyse src
+    - phpstan analyse src
   needs: [ "build" ]
   rules:
     - changes:
