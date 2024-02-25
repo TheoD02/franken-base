@@ -9,7 +9,7 @@ cache:
 variables:
   SYMFONY_DEPRECATIONS_HELPER: weak
 
-before_script:
+before_script: &before_script
   - cd app
 
 stages:
@@ -45,9 +45,9 @@ build-qa:
       for tool in "ecs" "rector" "phpstan" "ecs"; do
         cd $tool
         composer install --no-interaction
+        ln -s $(pwd)/vendor/bin/$tool /usr/local/bin/$tool
         cd ..
       done
-      ln -s $(pwd)/bin/* /usr/local/bin/
       cd ../app
   artifacts:
     paths:
@@ -56,8 +56,6 @@ build-qa:
 qa-ecs:
   stage: qa
   script:
-    - ls
-    - ls ./vendor/bin
     - ecs check src
   needs: [ "build" ]
   rules:
@@ -94,6 +92,7 @@ test:
     XDEBUG_MODE: coverage
     DATABASE_URL: 'sqlite:///%kernel.project_dir%/var/data.db'
   before_script:
+    - cd app
     - apt-get update
     - apt-get install -y sqlite3
     - pecl install xdebug && docker-php-ext-enable xdebug
