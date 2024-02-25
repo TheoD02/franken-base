@@ -23,4 +23,9 @@ class UserNotFound extends UserException
     {
         return UserExceptionEnum::USER_NOT_FOUND;
     }
+
+    public function getHttpStatusCode(): int
+    {
+        return 404;
+    }
 }
