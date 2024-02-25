@@ -1,9 +1,8 @@
 <?php
 
-namespace Module\Api\Attribut;
+declare(strict_types=1);
 
-use function class_exists;
-use function sprintf;
+namespace Module\Api\Attribut;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 readonly class OpenApiMeta

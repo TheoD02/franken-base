@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\Api\EventListener;
 
 use Module\Api\ApiResponse;
@@ -25,7 +27,6 @@ readonly class KernelViewListener
             // Do nothing for non-ApiResponse controller results (but maybe we should throw an exception here if we expect all controller results to be ApiResponse?)
             return;
         }
-
 
         $context = [
             'json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS,

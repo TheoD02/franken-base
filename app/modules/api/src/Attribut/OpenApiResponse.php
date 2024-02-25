@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\Api\Attribut;
 
 use Module\Api\Enum\ResponseType;
-
-use function class_exists;
-use function sprintf;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 readonly class OpenApiResponse

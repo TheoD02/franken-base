@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User;
 
-use Module\Api\Adapter\ApiDataInterface;
 use App\User\Enum\UserRoleEnum;
 use loophp\collection\Collection;
+use Module\Api\Adapter\ApiDataInterface;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\Response;
@@ -16,7 +18,7 @@ class User implements ApiDataInterface
     #[Property(description: 'The name of the user.')]
     private string $name;
 
-    #[Property(description: 'The email of the user.')]
+    #[Property(description: 'The email of the user.', format: 'email')]
     #[Assert\Email]
     private string $email;
 
@@ -26,11 +28,7 @@ class User implements ApiDataInterface
     #[Property(
         description: 'The roles of the user.',
         type: 'array',
-        items: new Items(
-            description: 'The role of the user.',
-            enum: UserRoleEnum::class,
-            example: UserRoleEnum::ADMIN,
-        ),
+        items: new Items(description: 'The role of the user.', enum: UserRoleEnum::class, example: UserRoleEnum::ADMIN),
     )]
     private Collection $roles;
 
@@ -39,9 +37,10 @@ class User implements ApiDataInterface
         return $this->name;
     }
 
-    public function setName(string $name): User
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -50,9 +49,10 @@ class User implements ApiDataInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): User
+    public function setEmail(string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -61,9 +61,10 @@ class User implements ApiDataInterface
         return $this->roles;
     }
 
-    public function setRoles(Collection $roles): User
+    public function setRoles(Collection $roles): self
     {
         $this->roles = $roles;
+
         return $this;
     }
 }

@@ -1,8 +1,11 @@
 <?php
 
-namespace Module\Api\Normalizer;
+declare(strict_types=1);
+
+namespace Module\Api\Serializer\Normalizer;
 
 use Module\Api\AbstractHttpException;
+use Module\Api\Enum\ApiErrorType;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -13,8 +16,6 @@ use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerAwareTrait;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
-use function sprintf;
 
 class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterface
 {
@@ -44,7 +45,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
 
     public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {
-        if (!$object instanceof FlattenException) {
+        if (! $object instanceof FlattenException) {
             throw new InvalidArgumentException(sprintf('The object must implement "%s".', FlattenException::class));
         }
 
@@ -56,11 +57,10 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
         if ($exception instanceof HttpExceptionInterface) {
             if ($exception instanceof AbstractHttpException) {
                 $data = [
-                    self::TYPE => 'BUSINESS_ERROR',
+                    self::TYPE => ApiErrorType::BUSINESS_ERROR->value,
                     self::TITLE => $exception->getErrorMessage() ?: null,
                     self::STATUS => $exception->getStatusCode(),
                     self::CODE => $exception->getErrorCode(),
-                    self::VIOLATIONS => [],
                 ];
 
                 if ($debug) {
@@ -72,14 +72,14 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
 
             if ($exception instanceof PartialDenormalizationException) {
                 $data = [
-                    self::TYPE => 'NORMALIZATION_ERROR',
+                    self::TYPE => ApiErrorType::NORMALIZATION_ERROR->value,
                     self::TITLE => $exception->getMessage() ?: null,
                     self::VIOLATIONS => PartialDenormalizationExceptionNormalizerHandler::normalize($exception),
                 ];
             } elseif ($exception instanceof ValidationFailedException) {
-                $trans = $this->translator ? $this->translator->trans(...) : fn($m, $p) => strtr($m, $p);
+                $trans = $this->translator ? $this->translator->trans(...) : static fn ($m, $p) => strtr($m, $p);
                 $data = [
-                    self::TYPE => 'VALIDATION_ERROR',
+                    self::TYPE => ApiErrorType::VALIDATION_ERROR->value,
                     self::TITLE => 'Validation Failed',
                     self::VIOLATIONS => $this->validationFailedExceptionNormalizerHandler->normalize($exception),
                 ];
@@ -87,10 +87,10 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
         }
 
         $data = [
-                self::TYPE => $data[self::TYPE] ?? $context[self::TYPE] ?? 'https://tools.ietf.org/html/rfc2616#section-10',
-                self::TITLE => $data[self::TITLE] ?? $context[self::TITLE] ?? 'An error occurred',
-                self::STATUS => $context[self::STATUS] ?? $object->getStatusCode(),
-            ] + $data;
+            self::TYPE => $data[self::TYPE] ?? $context[self::TYPE] ?? 'https://tools.ietf.org/html/rfc2616#section-10',
+            self::TITLE => $data[self::TITLE] ?? $context[self::TITLE] ?? 'An error occurred',
+            self::STATUS => $context[self::STATUS] ?? $object->getStatusCode(),
+        ] + $data;
         if ($debug) {
             $data['class'] = $object->getClass();
             $data['trace'] = $object->getTrace();

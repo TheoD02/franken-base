@@ -1,39 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
 use Module\Api\Attribut\ApiRoute;
-use Exception;
-use JsonException;
-use ReflectionException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-
 use Symfony\Component\Serializer\SerializerInterface;
 
-use function current;
-use function dd;
-use function in_array;
-use function is_object;
-use function json_encode;
-use function sprintf;
-use function str_replace;
-
-class ControllerTestCase extends WebTestCase
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class ControllerTestCase extends WebTestCase
 {
     protected KernelBrowser $client;
     protected SerializerInterface $serializer;
 
     protected function setUp(): void
     {
-        $this->client = static::createClient();
+        $this->client = self::createClient();
         $this->serializer = self::getContainer()->get('serializer');
     }
 
-    /**
-     * @throws Exception
-     */
     protected function getRouteFromReflectionClass(\ReflectionClass $reflectionClass): TestRouteDescriber
     {
         $route = $reflectionClass->getAttributes(ApiRoute::class);
@@ -47,10 +39,6 @@ class ControllerTestCase extends WebTestCase
         return new TestRouteDescriber(current($routeInstance->getMethods()), $routeInstance->getPath());
     }
 
-    /**
-     * @throws ReflectionException
-     * @throws Exception
-     */
     protected function requestAction(
         string $controllerFqcn,
         array $uriParameters = [],
@@ -72,23 +60,19 @@ class ControllerTestCase extends WebTestCase
             'CONTENT_TYPE' => 'application/json',
         ];
 
-
-        $canHaveBody = in_array($testRouteDescriber->method, ['POST', 'PUT', 'PATCH', 'DELETE'], true);
+        $canHaveBody = \in_array($testRouteDescriber->method, ['POST', 'PUT', 'PATCH', 'DELETE'], true);
         $content = null;
-        if ($canHaveBody && !empty($requestBody)) {
+        if ($canHaveBody && ! empty($requestBody)) {
             $content = $this->serializer->serialize($requestBody, 'json');
         }
 
         $uri = str_replace(
-            array_map(
-                static fn($key) => sprintf('{%s}', $key),
-                array_keys($uriParameters),
-            ),
+            array_map(static fn ($key) => sprintf('{%s}', $key), array_keys($uriParameters)),
             array_values($uriParameters),
             $testRouteDescriber->uri,
         );
 
-        if (!empty($queryParameters)) {
+        if (! empty($queryParameters)) {
             $uri .= '?' . http_build_query($queryParameters);
         }
 
@@ -102,16 +86,14 @@ class ControllerTestCase extends WebTestCase
     }
 
     /**
-     * @param bool $json
      * @return ($json is true ? array : string)
-     * @throws JsonException
      */
     protected function getResponse(bool $json = true): array|string
     {
         $response = $this->client->getResponse();
         $content = $response->getContent();
         if ($json) {
-            return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+            return json_decode($content, true, 512, \JSON_THROW_ON_ERROR);
         }
 
         return $content;
@@ -120,8 +102,8 @@ class ControllerTestCase extends WebTestCase
     protected function assertApiResponseEquals(array|object $data, ?array $meta = null): void
     {
         $response = $this->getResponse();
-        self::assertEquals(is_object($data) ? $this->serializer->normalize($data) : $data, $response['data']);
-        self::assertEquals($meta, $response['meta']);
+        self::assertSame(\is_object($data) ? $this->serializer->normalize($data) : $data, $response['data']);
+        self::assertSame($meta, $response['meta']);
     }
 
     protected function assertJsonArray(array $expected, array $excludeKeys = [], array $onlyKeys = []): void
@@ -133,17 +115,17 @@ class ControllerTestCase extends WebTestCase
         $response = $this->getResponse();
 
         foreach ($response as $key => $value) {
-            if ($excludeKeys !== [] && in_array($key, $excludeKeys, true)) {
+            if ($excludeKeys !== [] && \in_array($key, $excludeKeys, true)) {
                 unset($response[$key]);
                 continue;
             }
 
-            if ($onlyKeys !== [] && !in_array($key, $onlyKeys, true)) {
+            if ($onlyKeys !== [] && ! \in_array($key, $onlyKeys, true)) {
                 unset($response[$key]);
                 continue;
             }
         }
 
-        self::assertEquals($expected, $response);
+        self::assertSame($expected, $response);
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\Api;
 
-use BackedEnum;
 use Module\Api\Enum\ApiErrorType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use function Symfony\Component\String\u;
-
 
 abstract class AbstractHttpException extends HttpException
 {
@@ -30,7 +30,7 @@ abstract class AbstractHttpException extends HttpException
      */
     abstract public function describe(array $context = []): string;
 
-    public function getErrorCode(): BackedEnum
+    public function getErrorCode(): \BackedEnum
     {
         return ApiErrorType::UNKNOWN;
     }
@@ -48,6 +48,7 @@ abstract class AbstractHttpException extends HttpException
             ->append($this->describe())
             ->trim()
             ->ensureEnd('.')
-            ->toString();
+            ->toString()
+        ;
     }
 }

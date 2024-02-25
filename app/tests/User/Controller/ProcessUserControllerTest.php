@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Tests\User\Controller;
 
@@ -7,13 +8,17 @@ use App\Tests\ControllerTestCase;
 use App\User\Controller\ProcessUserController;
 use App\User\Exception\UserExceptionEnum;
 
-class ProcessUserControllerTest extends ControllerTestCase
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class ProcessUserControllerTest extends ControllerTestCase
 {
     public function testInvokeWithUserCreation(): void
     {
         // Act
         $this->requestAction(ProcessUserController::class);
-
 
         // Assert
         self::assertResponseStatusCodeSame(422);

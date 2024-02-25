@@ -33,7 +33,7 @@ class BaseECSConfig
                 cleanCode: true,
             )
             ->withSpacing(
-                indentation: 'tab',
+                indentation: '    ',
                 lineEnding: '\n',
             )
             ->withPhpCsFixerSets(

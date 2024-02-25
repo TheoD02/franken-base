@@ -4,7 +4,8 @@ home:
     defaults:
         template: base.html.twig
     requirements:
-        path: ".+"
+        # All but not /api
+        path: '^(?!api).*$'
 
 controllers:
     resource:

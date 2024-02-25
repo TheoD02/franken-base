@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Api;
 
 use OpenApi\Attributes\Property;
-use Symfony\Component\Serializer\Attribute\SerializedPath;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class UserFilterQuery

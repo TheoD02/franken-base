@@ -4,4 +4,9 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/tools/ecs/BaseECSConfig.php';
 
-return BaseECSConfig::config();
+return BaseECSConfig::config()
+    ->withPaths([
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
+        __DIR__ . '/modules/api/src',
+    ]);

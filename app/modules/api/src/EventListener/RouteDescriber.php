@@ -1,215 +1,221 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\Api\EventListener;
 
-use loophp\collection\Collection;
-use Module\Api\Attribut\BadRequestResponse;
-use Module\Api\Attribut\OpenApiMeta;
-use Module\Api\Attribut\OpenApiResponse;
+use Module\Api\AbstractHttpException;
+use Module\Api\Attribut\ApiException;
+use Module\Api\Enum\ApiErrorType;
+use Nelmio\ApiDocBundle\Controller\DocumentationController;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareInterface;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareTrait;
-use Nelmio\ApiDocBundle\Model\Model;
 use Nelmio\ApiDocBundle\OpenApiPhp\Util;
 use Nelmio\ApiDocBundle\RouteDescriber\RouteDescriberInterface;
 use Nelmio\ApiDocBundle\RouteDescriber\RouteDescriberTrait;
-use OpenApi\Annotations\MediaType;
-use OpenApi\Annotations\OpenApi;
-use OpenApi\Annotations\Response;
-use OpenApi\Annotations\Schema;
+use OpenApi\Annotations as OAnnotations;
+use OpenApi\Attributes as OAttributes;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
-use ReflectionProperty;
-use RuntimeException;
+use OpenApi\Generator;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Routing\Route;
-
-use function count;
-use function sprintf;
 
 class RouteDescriber implements RouteDescriberInterface, ModelRegistryAwareInterface
 {
-    use RouteDescriberTrait;
     use ModelRegistryAwareTrait;
+    use RouteDescriberTrait;
 
-    #[\Override] public function describe(OpenApi $api, Route $route, \ReflectionMethod $reflectionMethod)
+    private static ?OAttributes\Schema $validationErrorSchema = null;
+    private static ?OAttributes\Examples $examples = null;
+
+    private static array $apiExceptions = [];
+
+    #[\Override]
+    public function describe(OAnnotations\OpenApi $api, Route $route, \ReflectionMethod $reflectionMethod): void
     {
+        if ($reflectionMethod->getDeclaringClass()->getName() === DocumentationController::class) {
+            return;
+        }
+
         foreach ($this->getOperations($api, $route) as $operation) {
-            $this->checkRouteAttributes($reflectionMethod);
-            /** @var Response $response */
-            $response = Util::getIndexedCollectionItem($operation, Response::class, 'default');
-            $response->response = '200';
-            $response->description = '';
+            if (! $this->hasMapAttributes($reflectionMethod)) {
+                return;
+            }
 
-            $response->content = [];
-            $response->content['application/json'] = new MediaType(['mediaType' => 'application/json']);
-
-            /** @var Schema $schema */
-            $schema = Util::getChild(
-                $response->content['application/json'],
-                Schema::class
+            /** @var OAnnotations\Response $response */
+            $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, 400);
+            /** @var OAttributes\JsonContent|false $jsonContent */
+            $jsonContent = current(
+                array_filter($response->_unmerged, static fn ($item) => $item instanceof OAttributes\JsonContent)
             );
-            $schema->type = 'object';
+            $context = Util::createContext([
+                'nested' => $response,
+            ], $response->_context);
 
-            /** @var ?OpenApiResponse $openApiResponse */
-            $openApiResponse = $this->getAttributeInstance($reflectionMethod, OpenApiResponse::class);
-            if ($openApiResponse === null) {
-                continue;
+            if ($response->description === Generator::UNDEFINED) {
+                $response->description = 'Bad request.';
             }
 
-            $this->checkOpenApiResponse($openApiResponse, $reflectionMethod);
+            if ($jsonContent === false) {
+                $jsonContent = new OAttributes\JsonContent();
+                $jsonContent->description = 'Bad request.';
+                $jsonContent->_context = $context;
+                $response->_unmerged[] = $jsonContent;
+            }
 
-            $properties[] = $this->getDataProperty($openApiResponse);
+            if ($jsonContent->oneOf === Generator::UNDEFINED) {
+                $jsonContent->oneOf = [];
+            }
 
-            /** @var ?OpenApiMeta $openApiResponse */
-            $openApiMeta = $this->getAttributeInstance($reflectionMethod, OpenApiMeta::class);
-            $properties[] = $this->getMetaProperty($openApiMeta);
+            if (\is_string($jsonContent)) {
+                throw new \Exception('What ? JsonContent is a string ?');
+            }
 
-            $schema->properties = $properties;
-        }
-    }
-
-    /**
-     * @template T
-     *
-     * @param class-string<T> $attributeFqcn
-     *
-     * @return T
-     */
-    private function getAttributeInstance(
-        \ReflectionMethod|ReflectionProperty $reflectionMethod,
-        string $attributeFqcn
-    ): ?object {
-        $attributes = $reflectionMethod->getAttributes($attributeFqcn);
-
-        if (count($attributes) === 0) {
-            return null;
-        }
-
-        return $attributes[0]->newInstance();
-    }
-
-    protected function getDataProperty(OpenApiResponse $openApiResponse): Property
-    {
-        $dataModel = $this->getOpenApiModel($openApiResponse->class);
-
-
-        $dataProperty = new Property(property: 'data', description: 'Data');
-
-        if ($openApiResponse->isCollection()) {
-            $dataProperty->type = 'array';
-            $dataProperty->items = new Items(ref: $dataModel);
-        } else {
-            $dataProperty->type = 'object';
-            $dataProperty->ref = $dataModel;
-        }
-
-        return $dataProperty;
-    }
-
-    protected function getMetaProperty(?OpenApiMeta $openApiMeta): Property
-    {
-        $metaProperty = new Property(property: 'meta', description: 'Meta', type: 'object');
-        if ($openApiMeta !== null) {
-            $metaModel = $this->getOpenApiModel($openApiMeta->class);
-            $metaProperty->ref = $metaModel;
-        } else {
-            $metaProperty->example = null;
-        }
-        return $metaProperty;
-    }
-
-    private function getOpenApiModel(string $classFqcn): string
-    {
-        $model = new Model(
-            type: new Type(Type::BUILTIN_TYPE_OBJECT, false, $classFqcn)
-        );
-        return $this->modelRegistry->register($model);
-    }
-
-    private function checkOpenApiResponse(OpenApiResponse $openApiResponse, \ReflectionMethod $reflectionMethod): void
-    {
-        $dataClassReflection = new \ReflectionClass($openApiResponse->class);
-        foreach ($dataClassReflection->getProperties() as $property) {
-            $openApiPropertyAttributs = $property->getAttributes(Property::class);
-            if (count($openApiPropertyAttributs) > 1) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Property "%s" in class "%s" must have only one OpenApi\Attributes\Property attribute.',
-                        $property->getName(),
-                        $openApiResponse->class
-                    )
+            if (self::$validationErrorSchema === null) {
+                self::$validationErrorSchema = new OAttributes\Schema(
+                    schema: 'ValidationErrorSchema',
+                    title: 'Validation error',
+                    description: 'When you will receive a validation error of payload or query string.',
+                    properties: [
+                        new Property(
+                            property: 'type',
+                            description: 'The type of the error.',
+                            example: ApiErrorType::VALIDATION_ERROR->value
+                        ),
+                        new Property(
+                            property: 'title',
+                            description: 'A short description of the error.',
+                            example: 'Validation Failed'
+                        ),
+                        new Property(property: 'status', description: 'The HTTP status code', example: 422),
+                        new Property(
+                            property: 'violations',
+                            description: 'An array of validation errors.',
+                            type: 'array',
+                            items: new Items(
+                                properties: [
+                                    new Property(property: 'propertyPath', example: 'email'),
+                                    new Property(property: 'code', example: 'ERR_VALUE_NOT_VALID_EMAIL'),
+                                    new Property(property: 'value', example: 'incorrect-at-mail.fr'),
+                                    new Property(
+                                        property: 'message',
+                                        example: 'This value is not a valid email address.'
+                                    ),
+                                ]
+                            ),
+                        ),
+                    ]
                 );
             }
 
-            $propertyType = $property->getType();
-            if ($propertyType === null) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Property "%s" in class "%s" must have a type.',
-                        $property->getName(),
-                        $openApiResponse->class
-                    )
+            $jsonContent->oneOf[] = self::$validationErrorSchema;
+
+            if (self::$examples === null) {
+                self::$examples = new OAttributes\Examples(
+                    ApiErrorType::VALIDATION_ERROR->value,
+                    ApiErrorType::VALIDATION_ERROR->value,
+                    'When the payload is invalid.',
+                    [
+                        'type' => ApiErrorType::VALIDATION_ERROR->value,
+                        'title' => 'Validation Failed',
+                        'status' => 422,
+                        'detail' => 'Some fields are missing or have invalid values.',
+                    ]
                 );
             }
 
-            if ($propertyType->getName() === 'array') {
-                throw new RuntimeException(
-                    sprintf(
-                        'Property "%s" in class "%s" should not use "array" type but use loopphp/collection.',
-                        $property->getName(),
-                        $openApiResponse->class
-                    )
-                );
-            }
+            $apiExceptions = $reflectionMethod->getAttributes(ApiException::class, \ReflectionAttribute::IS_INSTANCEOF);
+            $apiExemples = [];
 
-            if ($openApiPropertyAttributs === [] && $propertyType->getName() === Collection::class) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Property "%s" in class "%s" must have an OpenApi\Attributes\Property attribute.',
-                        $property->getName(),
-                        $openApiResponse->class
-                    )
-                );
-            }
+            foreach ($apiExceptions as $apiException) {
+                /** @var ApiException $apiExceptionInstance */
+                $apiExceptionInstance = $apiException->newInstance();
 
-            if ($openApiPropertyAttributs !== [] && $propertyType->getName() === Collection::class) {
-                /** @var Property $openApiProperty */
-                $openApiProperty = $openApiPropertyAttributs[0]->newInstance();
-                // Handle Collection type check
-            }
-        }
-    }
+                if (! isset(self::$apiExceptions[$apiExceptionInstance->exceptionFqcn])) {
+                    /** @var AbstractHttpException $exceptionInstance */
+                    $exceptionInstance = new $apiExceptionInstance->exceptionFqcn();
+                    self::$apiExceptions[$apiExceptionInstance->exceptionFqcn] = new OAttributes\Schema(
+                        schema: "{$exceptionInstance->getErrorCode()
+->value}Schema",
+                        title: $exceptionInstance->getErrorCode()
+->value,
+                        description: $exceptionInstance->describe(),
+                        properties: [
+                            new Property(
+                                property: 'type',
+                                description: 'The type of the error.',
+                                example: ApiErrorType::BUSINESS_ERROR->value
+                            ),
+                            new Property(
+                                property: 'title',
+                                description: 'A short description of the error.',
+                                example: 'Business error occurred'
+                            ),
+                            new Property(
+                                property: 'status',
+                                description: 'The HTTP status code',
+                                example: $exceptionInstance->getStatusCode()
+                            ),
+                            new Property(
+                                property: 'code',
+                                description: 'The error code',
+                                example: $exceptionInstance->getErrorCode()
+->value
+                            ),
+                        ]
+                    );
 
-    private function checkRouteAttributes(\ReflectionMethod $reflectionMethod): void
-    {
-        // Check if has MapQueryString, MapRequestPayload
-        $parameters = $reflectionMethod->getParameters();
-        $hasMapper = false;
-
-        foreach ($parameters as $parameter) {
-            $attributes = $parameter->getAttributes();
-            foreach ($attributes as $attribute) {
-                if ($attribute->getName() === MapQueryString::class || $attribute->getName(
-                    ) === MapRequestPayload::class) {
-                    $hasMapper = true;
-                    break;
+                    $apiExemples[] = new OAttributes\Examples(
+                        $exceptionInstance->getErrorCode()
+->value,
+                        $exceptionInstance->getErrorCode()
+->value,
+                        $exceptionInstance->describe(),
+                        [
+                            'type' => $exceptionInstance->getErrorCode()
+->value,
+                            'title' => $exceptionInstance->getErrorCode()
+->value,
+                            'status' => $exceptionInstance->getStatusCode(),
+                            'detail' => $exceptionInstance->describe(),
+                        ]
+                    );
                 }
+
+                $jsonContent->oneOf[] = self::$apiExceptions[$apiExceptionInstance->exceptionFqcn];
+            }
+
+            $jsonContent->examples = [self::$examples, ...$apiExemples];
+            $jsonContent->validate();
+        }
+    }
+
+    private function hasMapAttributes(\ReflectionMethod $reflectionMethod): bool
+    {
+        foreach ($reflectionMethod->getParameters() as $parameter) {
+            $attributes = $parameter->getAttributes(MapQueryString::class, \ReflectionAttribute::IS_INSTANCEOF);
+            $attributes += $parameter->getAttributes(MapRequestPayload::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+            if (\count($attributes) > 0) {
+                return true;
             }
         }
 
-        $hasBadRequestResponseAttribute = $reflectionMethod->getAttributes(BadRequestResponse::class) !== [];
+        return false;
+    }
 
-        if ($hasMapper && !$hasBadRequestResponseAttribute) {
-            throw new RuntimeException(
-                sprintf(
-                    'Seems like you forgot to add #[BadRequestResponse] attribute to method "%s" in class "%s". This attribute is required when using #[MapQueryString] or #[MapRequestPayload] attributes.',
-                    $reflectionMethod->getName(),
-                    $reflectionMethod->getDeclaringClass()->getName()
-
-                )
-            );
+    private function addValidationErrorResponse(OAnnotations\OpenApi $api, OAnnotations\Operation $operation): void
+    {
+        /** @var OAttributes\Response $response */
+        $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, 400);
+        if ($response->description === Generator::UNDEFINED) {
+            $response->description = 'Validation error';
         }
+
+        $mediaType = Util::getCollectionItem($response, OAnnotations\MediaType::class);
+
+        $schema = Util::getChild($mediaType, OAnnotations\Schema::class);
     }
 }

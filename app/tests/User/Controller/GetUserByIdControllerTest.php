@@ -1,19 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\User\Controller;
 
 use App\Tests\ControllerTestCase;
 use App\User\Controller\GetUserByIdController;
 use App\User\User;
-use PHPUnit\Framework\TestCase;
 
-class GetUserByIdControllerTest extends ControllerTestCase
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class GetUserByIdControllerTest extends ControllerTestCase
 {
-
     public function testGetUserById(): void
     {
         // Act
-        $this->requestAction(GetUserByIdController::class, uriParameters: ['id' => 1]);
+        $this->requestAction(GetUserByIdController::class, uriParameters: [
+            'id' => 1,
+        ]);
 
         // Assert
         self::assertResponseStatusCodeSame(200);

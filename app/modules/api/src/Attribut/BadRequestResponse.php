@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\Api\Attribut;
 
 use OpenApi\Attributes\Items;
@@ -27,12 +29,9 @@ class BadRequestResponse extends Response
                         items: new Items(
                             properties: [
                                 new Property(property: 'propertyPath', example: 'email'),
-                                new Property(property: 'title', example: 'ERR_VALUE_NOT_VALID_EMAIL'),
-                                new Property(property: 'template', example: 'This value is not a valid email address.'),
-                                new Property(property: 'parameters', example: ['{{ value }}' => 'test']),
-                                new Property(
-                                    property: 'type', example: 'urn:uuid:bd79c0ab-ddba-46cc-a703-a7a4b08de310'
-                                ),
+                                new Property(property: 'code', example: 'ERR_VALUE_NOT_VALID_EMAIL'),
+                                new Property(property: 'value', example: 'incorrect-at-mail.fr'),
+                                new Property(property: 'message', example: 'This value is not a valid email address.'),
                             ]
                         ),
                     ),

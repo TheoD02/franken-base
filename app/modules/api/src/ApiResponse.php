@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\Api;
 
 use Module\Api\Adapter\ApiDataCollectionInterface;
@@ -16,7 +18,7 @@ readonly class ApiResponse
         /**
          * @phpstan-var T
          */
-        public null|ApiDataInterface|ApiDataCollectionInterface|bool $data,
+        public ApiDataInterface|ApiDataCollectionInterface|bool|null $data,
         /**
          * @phpstan-var M
          */

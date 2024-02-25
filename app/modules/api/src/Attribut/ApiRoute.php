@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\Api\Attribut;
 
 use Module\Api\Enum\HttpMethod;
 use Symfony\Component\Routing\Attribute\Route;
 
-use function strtolower;
 use function Symfony\Component\String\u;
 
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_CLASS)]
@@ -32,7 +33,10 @@ class ApiRoute extends Route
             $path,
             $name,
             $requirements,
-            [...$options, ...['test'=> 'coucou']],
+            [
+                ...$options, ...[
+                    'test' => 'coucou',
+                ]],
             $defaults,
             $host,
             $method->value,
@@ -52,7 +56,8 @@ class ApiRoute extends Route
         $name = u($path)
             ->ensureStart('/')
             ->prepend(strtolower($method->value))
-            ->replace('/', '_');
+            ->replace('/', '_')
+        ;
 
         return $name->toString();
     }
