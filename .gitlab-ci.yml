@@ -52,6 +52,7 @@ build-qa:
   artifacts:
     paths:
       - tools/**/vendor
+      - /usr/local/bin/**
 
 qa-ecs:
   stage: qa
