@@ -56,7 +56,8 @@ build-qa:
 qa-ecs:
   stage: qa
   script:
-    - ecs check src
+    - ls -l /usr/local/bin/ecs
+    - /usr/local/bin/ecs check src
   needs: [ "build" ]
   rules:
     - changes:
@@ -67,7 +68,7 @@ qa-ecs:
 qa-rector:
   stage: qa
   script:
-    - rector process src
+    - /usr/local/bin/rector process src
   needs: [ "build" ]
   rules:
     - changes:
@@ -78,7 +79,7 @@ qa-rector:
 qa-phpstan:
   stage: qa
   script:
-    - phpstan analyse src
+    - /usr/local/bin/phpstan analyse src
   needs: [ "build" ]
   rules:
     - changes:
