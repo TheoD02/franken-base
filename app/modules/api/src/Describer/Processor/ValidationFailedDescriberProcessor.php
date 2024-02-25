@@ -12,7 +12,11 @@ use OpenApi\Attributes as OAttributes;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
 use OpenApi\Generator;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Route;
+
+use function dd;
 
 class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
 {
@@ -41,8 +45,36 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
         array $mapRequestPayload,
         array $mapQueryString
     ): OAnnotations\OpenApi {
+        $mapToStatusCode = [];
+
+        /**
+         * @var array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>} $map
+         */
+        $mapper = [...$mapRequestPayload, ...$mapQueryString];
+        foreach ($mapper as $map) {
+            foreach ($map['attributes'] as $attribute) {
+                /**
+                 * @var MapQueryString|MapRequestPayload $instance
+                 */
+                $instance = $attribute->newInstance();
+                $mapToStatusCode[$instance->validationFailedStatusCode] = true;
+            }
+        }
+
+        foreach ($mapToStatusCode as $statusCode => $value) {
+            $this->addValidationFailedResponse($api, $operation, $statusCode);
+        }
+
+        return $api;
+    }
+
+    private function addValidationFailedResponse(
+        mixed $api,
+        OAnnotations\Operation $operation,
+        int|string $statusCode
+    ): void {
         /** @var OAnnotations\Response $response */
-        $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, 400);
+        $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
 
         if ($response->description === Generator::UNDEFINED) {
             $response->description = 'Bad request.';
@@ -52,8 +84,6 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
 
         $jsonContent->oneOf[] = $this->getValidationFailedSchema();
         $jsonContent->examples[] = $this->getValidationFailedExamples();
-
-        return $api;
     }
 
     private function getValidationFailedSchema(): OAttributes\Schema
@@ -112,4 +142,5 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
             ]
         );
     }
+
 }

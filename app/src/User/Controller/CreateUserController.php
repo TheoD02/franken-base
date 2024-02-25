@@ -26,7 +26,7 @@ class CreateUserController
     #[ApiException(UserNotFound::class)]
     public function __invoke(
         #[MapRequestPayload] User $user,
-        #[MapQueryString(validationFailedStatusCode: 422)] ?UserFilterQuery $filterQuery
+        #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery
     ): ApiResponse {
         return new ApiResponse($user);
     }

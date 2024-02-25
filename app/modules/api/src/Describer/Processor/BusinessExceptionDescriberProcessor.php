@@ -15,6 +15,8 @@ use OpenApi\Attributes\Property;
 use OpenApi\Generator;
 use Symfony\Component\Routing\Route;
 
+use function dd;
+
 class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
 {
     use JsonContentDescriberProcessTrait;
@@ -49,35 +51,44 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
         array $mapRequestPayload,
         array $mapQueryString
     ): OAnnotations\OpenApi {
-        /** @var OAnnotations\Response $response */
-        $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, 400);
-
-        if ($response->description === Generator::UNDEFINED) {
-            $response->description = 'Bad request.';
-        }
-
-        $jsonContent = $this->getJsonContent($response);
-
         $apiExceptionsAttributes = $reflectionMethod->getAttributes(
             ApiException::class,
             \ReflectionAttribute::IS_INSTANCEOF
         );
 
+        /**
+         * @var array<int, AbstractHttpException> $exceptionByStatusCode
+         */
+        $exceptionByStatusCode = [];
         foreach ($apiExceptionsAttributes as $reflectionAttribute) {
             /** @var ApiException $attributeInstance */
             $attributeInstance = $reflectionAttribute->newInstance();
-            /** @var AbstractHttpException $exceptionInstance */
+            /**
+             * @var AbstractHttpException $exceptionInstance
+             */
             $exceptionInstance = new $attributeInstance->exceptionFqcn();
-            $jsonContent->oneOf[] = $this->getSchema($attributeInstance, $exceptionInstance);
-            $jsonContent->examples[] = $this->getExamples($attributeInstance, $exceptionInstance);
+            $exceptionByStatusCode[$exceptionInstance->getHttpStatusCode()][] = $exceptionInstance;
+        }
+
+        foreach ($exceptionByStatusCode as $statusCode => $exceptionList) {
+            /** @var OAnnotations\Response $response */
+            $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
+            if ($response->description === Generator::UNDEFINED) {
+                $response->description = 'Bad request.';
+            }
+            $jsonContent = $this->getJsonContent($response);
+            foreach ($exceptionList as $exception) {
+                $jsonContent->oneOf[] = $this->getSchema($exception);
+                $jsonContent->examples[] = $this->getExamples($exception);
+            }
         }
 
         return $api;
     }
 
-    private function getSchema(ApiException $apiException, AbstractHttpException $exception): OAttributes\Schema
+    private function getSchema(AbstractHttpException $exception): OAttributes\Schema
     {
-        return self::$businessExceptionSchema[$apiException->exceptionFqcn] ??= new OAttributes\Schema(
+        return self::$businessExceptionSchema[$exception::class] ??= new OAttributes\Schema(
             schema: "{$exception->getErrorCode()->value}Schema",
             title: $exception->getErrorMessage(),
             description: $exception->describe(),
@@ -95,7 +106,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
                 new Property(
                     property: 'status',
                     description: 'The HTTP status code',
-                    example: $exception->getStatusCode()
+                    example: $exception->getHttpStatusCode()
                 ),
                 new Property(
                     property: 'code',
@@ -106,16 +117,16 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
         );
     }
 
-    private function getExamples(ApiException $apiException, AbstractHttpException $exception): OAttributes\Examples
+    private function getExamples(AbstractHttpException $exception): OAttributes\Examples
     {
-        return self::$businessExceptionExamples[$apiException->exceptionFqcn] ??= new OAttributes\Examples(
+        return self::$businessExceptionExamples[$exception::class] ??= new OAttributes\Examples(
             $exception->getErrorCode()->value,
             $exception->getErrorCode()->value,
             $exception->describe(),
             [
                 'type' => ApiErrorType::BUSINESS_ERROR->value,
                 'title' => $exception->getErrorMessage(),
-                'status' => $exception->getStatusCode(),
+                'status' => $exception->getHttpStatusCode(),
                 'code' => $exception->getErrorCode()->value,
                 'debug_message' => $exception->describe(),
             ]
