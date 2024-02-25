@@ -9,13 +9,15 @@ variables:
   SYMFONY_DEPRECATIONS_HELPER: weak
 
 stages:
+  - build
   - qa
   - test
   - deploy
 
 build:
-  stage: qa
+  stage: build
   script:
+    - pwd
     - cd app
     - apt-get update
     - apt-get install -y unzip
@@ -33,7 +35,8 @@ build:
 qa-ecs:
   stage: qa
   script:
-    - ./bin/ecs check src
+    - cd app
+    - ./vendor/bin/ecs check src
   dependencies:
     - build
   rules:
@@ -45,7 +48,8 @@ qa-ecs:
 qa-rector:
   stage: qa
   script:
-    - ./bin/rector process src
+    - cd app
+    - ./vendor/bin/rector process src
   dependencies:
     - build
   rules:
@@ -57,7 +61,8 @@ qa-rector:
 qa-phpstan:
   stage: qa
   script:
-    - ./bin/phpstan analyse src
+    - cd app
+    - ./vendor/bin/phpstan analyse src
   dependencies:
     - build
   rules:
@@ -76,7 +81,8 @@ test:
     - apt-get install -y sqlite3
     - pecl install xdebug && docker-php-ext-enable xdebug
   script:
-    - ./bin/phpunit --coverage-text --coverage-cobertura=coverage.cobertura.xml
+    - cd app
+    - ./vendor/bin/phpunit --coverage-text --coverage-cobertura=coverage.cobertura.xml
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   dependencies:
     - build
