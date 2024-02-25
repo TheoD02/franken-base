@@ -24,25 +24,31 @@ qa-ecs:
   stage: qa
   script:
     - ./bin/ecs check src
-  changes:
-    - modules/**
-    - src/**
+  rules:
+    - changes:
+        - modules/**
+        - src/**
+        - tests/**
 
 qa-rector:
   stage: qa
   script:
     - ./bin/rector process src
-  changes:
-    - modules/**
-    - src/**
+  rules:
+    - changes:
+        - modules/**
+        - src/**
+        - tests/**
 
 qa-phpstan:
   stage: qa
   script:
     - ./bin/phpstan analyse src
-  changes:
-    - modules/**
-    - src/**
+  rules:
+    - changes:
+        - modules/**
+        - src/**
+        - tests/**
 
 test:
   stage: test
