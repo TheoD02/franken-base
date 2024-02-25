@@ -64,13 +64,14 @@ class Qa
     #[AsTaskMethod]
     public static function phpstan(): Process
     {
+        self::runTool('phpstan clear-result-cache');
         return self::runTool('phpstan analyse src/Controller -l 8');
     }
 
     #[AsTaskMethod]
     public static function rector(): Process
     {
-        return self::runTool('rector process');
+        return self::runTool('rector process --clear-cache');
     }
 
     #[AsTaskMethod]
