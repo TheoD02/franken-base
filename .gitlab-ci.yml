@@ -37,6 +37,7 @@ qa-ecs:
   stage: qa
   script:
     - ls
+    - ls ./vendor/bin
     - ./vendor/bin/ecs check src
   needs: [ "build" ]
   rules:
