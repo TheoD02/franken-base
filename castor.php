@@ -143,4 +143,9 @@ PHP;
     } else {
         Docker::exec(cmd: 'composer require pentatrion/vite-bundle');
     }
+
+    $currentDir = context()->currentDirectory;
+    $envLocalContent = file_get_contents("{$currentDir}/.env.local");
+    $envLocalContent = str_replace('{PROJECT_PATH}', $currentDir, $envLocalContent);
+    file_put_contents("{$currentDir}/.env.local", $envLocalContent);
 }
