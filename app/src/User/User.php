@@ -17,12 +17,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements ApiDataInterface
 {
     #[Property(description: 'The name of the user.')]
-    #[Groups(['user:read'])]
+    #[Groups([UserGroups::READ])]
     private string $name;
 
     #[Property(description: 'The email of the user.', format: 'email')]
     #[Assert\Email]
-    #[Groups(['user:read'])]
+    #[Groups([UserGroups::READ])]
     private string $email;
 
     /**
@@ -33,7 +33,7 @@ class User implements ApiDataInterface
         type: 'array',
         items: new Items(description: 'The role of the user.', enum: UserRoleEnum::class, example: UserRoleEnum::ADMIN),
     )]
-    #[Groups(['user:read:roles'])]
+    #[Groups([UserGroups::READ_ROLES])]
     private Collection $roles;
 
     public function __construct()

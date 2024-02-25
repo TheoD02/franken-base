@@ -16,8 +16,8 @@ class PartialDenormalizationExceptionNormalizerHandler
             $errors[] = ViolationNormalizerHelper::createViolation(
                 propertyPath: $error->getPath(),
                 code: $error->getCode(),
-                // TODO: Find a way to get the value from the error, for now we just put 'Unkown value'
-                value: 'Unkown value',
+                // TODO: Find a way to get the value from the error, for now we just put 'Unknown value'
+                value: 'Unknown value',
                 message: $error->canUseMessageForUser() ? $error->getMessage() : 'An error occurred',
             );
         }

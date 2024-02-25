@@ -1,0 +1,9 @@
+<?php
+
+namespace App\User;
+
+enum UserGroups
+{
+    public const string READ = 'user:read';
+    public const string READ_ROLES = 'user:read:roles';
+}
