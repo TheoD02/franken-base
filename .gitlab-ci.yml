@@ -45,7 +45,7 @@ build-qa:
       for tool in "ecs" "rector" "phpstan" "ecs"; do
         cd $tool
         composer install --no-interaction
-        ln -s $(pwd)/vendor/bin/$tool /usr/local/bin/$tool
+        ln -s $(pwd)/vendor/bin/$tool /usr/local/bin/$tool || true
         cd ..
       done
       cd ../app
