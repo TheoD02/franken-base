@@ -39,10 +39,11 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
     public function getSupportedTypes(?string $format): array
     {
         return [
-            FlattenException::class => __CLASS__ === self::class,
+            FlattenException::class => self::class === self::class,
         ];
     }
 
+    #[\Override]
     public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {
         if (! $object instanceof FlattenException) {
@@ -99,6 +100,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
         return $data;
     }
 
+    #[\Override]
     public function supportsNormalization(mixed $data, ?string $format = null /* , array $context = [] */): bool
     {
         return $data instanceof FlattenException;

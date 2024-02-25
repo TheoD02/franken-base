@@ -10,11 +10,13 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class ApiBundle extends AbstractBundle
 {
+    #[\Override]
     public function getPath(): string
     {
         return \dirname(__DIR__);
     }
 
+    #[\Override]
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->import(__DIR__ . '/../config/services.yaml');

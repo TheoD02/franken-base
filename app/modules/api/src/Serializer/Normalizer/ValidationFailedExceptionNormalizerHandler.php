@@ -36,7 +36,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
                 if ($serializedPath) {
                     $propertyPath = $serializedPath;
                 }
-            } catch (\Throwable $e) {
+            } catch (\Throwable) {
                 // Do nothing prevent crash when anything goes wrong
             }
 

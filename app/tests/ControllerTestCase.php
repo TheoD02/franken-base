@@ -20,6 +20,7 @@ final class ControllerTestCase extends WebTestCase
     protected KernelBrowser $client;
     protected SerializerInterface $serializer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->client = self::createClient();

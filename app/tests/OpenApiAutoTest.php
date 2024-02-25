@@ -23,6 +23,7 @@ final class OpenApiAutoTest extends WebTestCase
     private static array $openApiSpec;
     private static array $currentEndpoint;
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -30,6 +31,7 @@ final class OpenApiAutoTest extends WebTestCase
         restore_exception_handler();
     }
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->client = self::createClient();
@@ -49,7 +51,7 @@ final class OpenApiAutoTest extends WebTestCase
                 continue;
             }
             foreach ($paths as $method => $path) {
-                $endpoint[] = [$uri, strtoupper($method), $path];
+                $endpoint[] = [$uri, strtoupper((string) $method), $path];
             }
         }
 
@@ -134,7 +136,7 @@ final class OpenApiAutoTest extends WebTestCase
 
         try {
             return json_encode($class, \JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             throw new \JsonException('Failed to encode request body');
         }
     }
@@ -192,7 +194,7 @@ final class OpenApiAutoTest extends WebTestCase
     {
         try {
             $response = json_decode($this->client->getResponse()->getContent(), true, 512, \JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        } catch (\JsonException) {
             dd(self::$currentEndpoint);
         }
 
@@ -213,7 +215,7 @@ final class OpenApiAutoTest extends WebTestCase
         }
     }
 
-    private function endpointFail(string $message): void
+    private function endpointFail(string $message): never
     {
         $uri = self::$currentEndpoint['uri'];
         $method = self::$currentEndpoint['method'];

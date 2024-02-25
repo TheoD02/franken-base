@@ -8,6 +8,7 @@ use Module\Api\AbstractHttpException;
 
 abstract class UserException extends AbstractHttpException
 {
+    #[\Override]
     public function getErrorCode(): UserExceptionEnum
     {
         return UserExceptionEnum::GENERIC;
