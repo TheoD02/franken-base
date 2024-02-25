@@ -7,7 +7,6 @@ namespace Module\Api\Describer\Processor;
 use Module\Api\Attribut\OpenApiMeta;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Describer\Trait\JsonContentDescriberProcessTrait;
-use Module\Api\Enum\ApiErrorType;
 use Module\Api\Enum\HttpStatus;
 use Module\Api\Enum\ResponseType;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareInterface;
@@ -21,17 +20,8 @@ use OpenApi\Attributes as OAttributes;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
 use OpenApi\Generator;
-use ReflectionMethod;
-use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Routing\Route;
-
-use function class_exists;
-use function dd;
-use function dump;
-use function implode;
-use function sprintf;
 
 class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, ModelRegistryAwareInterface
 {
@@ -50,6 +40,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         array $mapQueryString
     ): bool {
         $openApiResponseAttributes = $reflectionMethod->getAttributes(OpenApiResponse::class);
+
         return \count($openApiResponseAttributes) > 0;
     }
 
@@ -76,25 +67,24 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
             $response->description = $openApiResponseInstance->statusCode->getShortName() . ' response.';
         }
         $response->content = [];
-        $response->content['application/json'] = new MediaType(['mediaType' => 'application/json']);
+        $response->content['application/json'] = new MediaType([
+            'mediaType' => 'application/json',
+        ]);
 
         if ($openApiResponseInstance->statusCode === HttpStatus::NO_CONTENT) {
             $response->description = $openApiResponseInstance->statusCode->getShortName();
+
             return $api;
         }
 
         /** @var Schema $schema */
-        $schema = Util::getChild(
-            $response->content['application/json'],
-            Schema::class
-        );
+        $schema = Util::getChild($response->content['application/json'], Schema::class);
         $schema->type = 'object';
 
         $schema->properties = [
             $this->getDataProperty($responseClass, $groups, $responseType),
             $this->getMetaProperty($openApiMetaInstance),
         ];
-
 
         return $api;
     }
@@ -103,17 +93,17 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     {
         $model = new Model(
             type: new Type(Type::BUILTIN_TYPE_OBJECT, false, $classFqcn),
-            serializationContext: $groups !== [] ? ['groups' => $groups] : [],
+            serializationContext: $groups !== [] ? [
+                'groups' => $groups,
+            ] : [],
         );
+
         return $this->modelRegistry->register($model);
     }
 
     private function getDataProperty(string $responseClass, array $groups, ResponseType $responseType): Property
     {
-        $dataProperty = new Property(
-            property: 'data',
-            description: 'The data of the response.',
-        );
+        $dataProperty = new Property(property: 'data', description: 'The data of the response.');
         $ref = $this->getOpenApiModel($responseClass, $groups);
         if ($responseType === ResponseType::COLLECTION) {
             $dataProperty->type = 'array';
@@ -132,14 +122,11 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
 
     private function getMetaProperty(?OpenApiMeta $openApiMetaInstance): ?Property
     {
-        $metaProperty = new Property(
-            property: 'meta',
-            description: 'The meta of the response.',
-            type: 'object',
-        );
+        $metaProperty = new Property(property: 'meta', description: 'The meta of the response.', type: 'object');
 
         if ($openApiMetaInstance === null) {
             $metaProperty->example = null;
+
             return $metaProperty;
         }
 
@@ -151,7 +138,6 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
             throw new \RuntimeException('The class of the OpenApiMeta attribute does not exist.');
         }
 
-
         $metaProperty->type = 'object';
         $metaProperty->ref = $this->getOpenApiModel($openApiMetaInstance->class);
 
@@ -159,10 +145,9 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     }
 
     /**
-     * @param ReflectionMethod $reflectionMethod
      * @return array{OpenApiResponse, OpenApiMeta|null}
      */
-    protected function getAttributesInstance(ReflectionMethod $reflectionMethod): array
+    protected function getAttributesInstance(\ReflectionMethod $reflectionMethod): array
     {
         $openApiResponseAttributes = $reflectionMethod->getAttributes(OpenApiResponse::class);
         $openApiMetaAttributes = $reflectionMethod->getAttributes(OpenApiMeta::class);
@@ -183,6 +168,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         if (\count($openApiMetaAttributes) > 0) {
             $openApiMetaInstance = $openApiMetaAttributes[0]->newInstance();
         }
+
         return [$openApiResponseInstance, $openApiMetaInstance];
     }
 }

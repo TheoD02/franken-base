@@ -6,8 +6,6 @@ namespace Module\Api\Attribut;
 
 use Module\Api\Exception\AbstractHttpException;
 
-use function class_exists;
-
 /**
  * This class permit to define the exception that can be thrown by an endpoint.
  *
@@ -30,9 +28,11 @@ class ApiException
         }
 
         if (is_subclass_of($exceptionFqcn, AbstractHttpException::class) === false) {
-            throw new \RuntimeException(
-                sprintf('The exception "%s" must extend "%s".', $exceptionFqcn, AbstractHttpException::class)
-            );
+            throw new \RuntimeException(sprintf(
+                'The exception "%s" must extend "%s".',
+                $exceptionFqcn,
+                AbstractHttpException::class
+            ));
         }
     }
 }

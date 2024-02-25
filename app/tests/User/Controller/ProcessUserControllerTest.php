@@ -6,7 +6,6 @@ namespace App\Tests\User\Controller;
 
 use App\Tests\ControllerTestCase;
 use App\User\Controller\ProcessUserController;
-use App\User\Exception\UserExceptionEnum;
 use App\User\Exception\UserProcessingException;
 use PHPUnit\Framework\Attributes\CoversClass;
 

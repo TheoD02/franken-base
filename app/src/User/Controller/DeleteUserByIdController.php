@@ -6,7 +6,6 @@ namespace App\User\Controller;
 
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
-use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethod;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 

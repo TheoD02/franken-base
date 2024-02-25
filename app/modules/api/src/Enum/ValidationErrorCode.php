@@ -6,6 +6,7 @@ namespace Module\Api\Enum;
 
 /**
  * Enumeration of validation error codes for the Symfony Validator component.
+ *
  * @see validators.en.php // TODO: how to provide this as bundled ?
  */
 enum ValidationErrorCode: string

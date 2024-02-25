@@ -223,7 +223,7 @@ enum HttpStatus: int
             527 => 'Railgun Error',
             599 => 'Network Connect Timeout Error',
             598 => 'Network Read Timeout Error',
-            default => throw new \UnexpectedValueException("Unknown status code: $this->value"),
+            default => throw new \UnexpectedValueException("Unknown status code: {$this->value}"),
         };
     }
 }
