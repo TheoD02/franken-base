@@ -56,7 +56,7 @@ build-qa:
 qa-ecs:
   stage: qa
   script:
-    - ../tools/ecs/vendor/bin/ecs check src
+    - ../tools/ecs/vendor/bin/ecs check --clear-cache
   needs: [ "build" ]
   rules:
     - changes:
@@ -67,7 +67,7 @@ qa-ecs:
 qa-rector:
   stage: qa
   script:
-    - ../tools/rector/vendor/bin/rector process src
+    - ../tools/rector/vendor/bin/rector process --clear-cache
   needs: [ "build" ]
   rules:
     - changes:
@@ -78,7 +78,7 @@ qa-rector:
 qa-phpstan:
   stage: qa
   script:
-    - ../tools/phpstan/vendor/bin/phpstan analyse src
+    - ../tools/phpstan/vendor/bin/phpstan analyse src/ modules/*/src -l 1
   needs: [ "build" ]
   rules:
     - changes:

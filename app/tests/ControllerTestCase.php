@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  *
  * @coversNothing
  */
-final class ControllerTestCase extends WebTestCase
+class ControllerTestCase extends WebTestCase
 {
     protected KernelBrowser $client;
     protected SerializerInterface $serializer;
@@ -63,17 +63,17 @@ final class ControllerTestCase extends WebTestCase
 
         $canHaveBody = \in_array($testRouteDescriber->method, ['POST', 'PUT', 'PATCH', 'DELETE'], true);
         $content = null;
-        if ($canHaveBody && ! empty($requestBody)) {
+        if ($canHaveBody && !empty($requestBody)) {
             $content = $this->serializer->serialize($requestBody, 'json');
         }
 
         $uri = str_replace(
-            array_map(static fn ($key) => sprintf('{%s}', $key), array_keys($uriParameters)),
+            array_map(static fn($key) => sprintf('{%s}', $key), array_keys($uriParameters)),
             array_values($uriParameters),
             $testRouteDescriber->uri,
         );
 
-        if (! empty($queryParameters)) {
+        if (!empty($queryParameters)) {
             $uri .= '?' . http_build_query($queryParameters);
         }
 
@@ -121,7 +121,7 @@ final class ControllerTestCase extends WebTestCase
                 continue;
             }
 
-            if ($onlyKeys !== [] && ! \in_array($key, $onlyKeys, true)) {
+            if ($onlyKeys !== [] && !\in_array($key, $onlyKeys, true)) {
                 unset($response[$key]);
                 continue;
             }
