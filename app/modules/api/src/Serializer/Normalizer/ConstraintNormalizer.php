@@ -39,7 +39,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
     public function getSupportedTypes(?string $format): array
     {
         return [
-            FlattenException::class => self::class === self::class,
+            FlattenException::class => true,
         ];
     }
 
@@ -80,7 +80,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
             } elseif ($exception instanceof ValidationFailedException) {
                 $trans = $this->translator ? $this->translator->trans(...) : static fn ($m, $p) => strtr($m, $p);
                 $data = [
-                    self::TYPE => ApiErrorType::VALIDATION_ERROR->value,
+                    self::TYPE => ApiErrorType::VALIDATION_FAILED->value,
                     self::TITLE => 'Validation Failed',
                     self::VIOLATIONS => $this->validationFailedExceptionNormalizerHandler->normalize($exception),
                 ];

@@ -9,4 +9,5 @@ enum UserExceptionEnum: string
     case GENERIC = 'GENERIC';
 
     case USER_PROCESSING_ERROR = 'USER_PROCESSING_ERROR';
+    case USER_NOT_FOUND = 'USER_NOT_FOUND';
 }
