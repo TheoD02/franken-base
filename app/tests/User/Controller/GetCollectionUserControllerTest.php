@@ -7,13 +7,15 @@ namespace App\Tests\User\Controller;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\GetCollectionUserController;
 use App\User\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * @internal
  *
  * @coversNothing
  */
-final class GetCollectionUserControllerTest extends ControllerTestCase
+#[CoversClass(GetCollectionUserController::class)]
+class GetCollectionUserControllerTest extends ControllerTestCase
 {
     public function testGetCollectionUser(): void
     {
@@ -24,8 +26,8 @@ final class GetCollectionUserControllerTest extends ControllerTestCase
         $expectedUser = [
             (new User())->setName('John Doe')
                 ->setEmail('john@doe.fr'),
-            (new User())->setName('Jane Doe')
-                ->setEmail('jane@doe.fr'),
+            (new User())->setName('Alice Cooper')
+                ->setEmail('alice@cooper.fr'),
         ];
         $expectedUser = $this->serializer->normalize($expectedUser);
         self::assertResponseStatusCodeSame(200);

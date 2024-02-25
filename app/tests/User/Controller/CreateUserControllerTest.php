@@ -7,19 +7,22 @@ namespace App\Tests\User\Controller;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\CreateUserController;
 use App\User\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * @internal
  *
  * @coversNothing
  */
-final class CreateUserControllerTest extends ControllerTestCase
+#[CoversClass(CreateUserController::class)]
+class CreateUserControllerTest extends ControllerTestCase
 {
     public function testInvokeWithUserCreation(): void
     {
         // Arrange
         $expectedUser = new User();
-        $expectedUser->setName('John Doe')
+        $expectedUser
+            ->setName('John Doe')
             ->setEmail('john@doe.com')
         ;
 

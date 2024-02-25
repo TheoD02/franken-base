@@ -7,13 +7,15 @@ namespace App\Tests\User\Controller;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\GetUserByIdController;
 use App\User\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * @internal
  *
  * @coversNothing
  */
-final class GetUserByIdControllerTest extends ControllerTestCase
+#[CoversClass(GetUserByIdController::class)]
+class GetUserByIdControllerTest extends ControllerTestCase
 {
     public function testGetUserById(): void
     {

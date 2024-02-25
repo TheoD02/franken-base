@@ -7,13 +7,15 @@ namespace App\Tests\User\Controller;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\UpdateUserController;
 use App\User\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * @internal
  *
  * @coversNothing
  */
-final class UpdateUserControllerTest extends ControllerTestCase
+#[CoversClass(UpdateUserController::class)]
+class UpdateUserControllerTest extends ControllerTestCase
 {
     public function testUpdateUser(): void
     {

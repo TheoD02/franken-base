@@ -6,13 +6,15 @@ namespace App\Tests\User\Controller;
 
 use App\Tests\ControllerTestCase;
 use App\User\Controller\DeleteUserByIdController;
+use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
  * @internal
  *
  * @coversNothing
  */
-final class DeleteUserByIdControllerTest extends ControllerTestCase
+#[CoversClass(DeleteUserByIdController::class)]
+class DeleteUserByIdControllerTest extends ControllerTestCase
 {
     public function testRemoveUserById(): void
     {
