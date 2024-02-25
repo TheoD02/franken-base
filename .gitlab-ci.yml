@@ -26,12 +26,12 @@ build:
     - composer install --no-interaction
   artifacts:
     paths:
-      - vendor/
+      - app/vendor/
   rules:
     - changes:
-        - modules/**
-        - src/**
-        - tests/**
+        - app/modules/**
+        - app/src/**
+        - app/tests/**
 
 qa-ecs:
   stage: qa
@@ -41,9 +41,9 @@ qa-ecs:
     - build
   rules:
     - changes:
-        - modules/**
-        - src/**
-        - tests/**
+        - app/modules/**
+        - app/src/**
+        - app/tests/**
 
 qa-rector:
   stage: qa
@@ -53,9 +53,9 @@ qa-rector:
     - build
   rules:
     - changes:
-        - modules/**
-        - src/**
-        - tests/**
+        - app/modules/**
+        - app/src/**
+        - app/tests/**
 
 qa-phpstan:
   stage: qa
@@ -65,9 +65,9 @@ qa-phpstan:
     - build
   rules:
     - changes:
-        - modules/**
-        - src/**
-        - tests/**
+        - app/modules/**
+        - app/src/**
+        - app/tests/**
 
 test:
   stage: test
@@ -90,9 +90,9 @@ test:
         path: coverage.cobertura.xml
   rules:
     - changes:
-        - modules/**
-        - src/**
-        - tests/**
+        - app/modules/**
+        - app/src/**
+        - app/tests/**
 
 deploy:
   stage: deploy
