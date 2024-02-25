@@ -36,9 +36,9 @@ build:
 qa-ecs:
   stage: qa
   script:
+    - ls
     - ./vendor/bin/ecs check src
-  dependencies:
-    - build
+  needs: [ "build" ]
   rules:
     - changes:
         - app/modules/**
@@ -49,8 +49,7 @@ qa-rector:
   stage: qa
   script:
     - ./vendor/bin/rector process src
-  dependencies:
-    - build
+  needs: [ "build" ]
   rules:
     - changes:
         - app/modules/**
@@ -61,8 +60,7 @@ qa-phpstan:
   stage: qa
   script:
     - ./vendor/bin/phpstan analyse src
-  dependencies:
-    - build
+  needs: [ "build" ]
   rules:
     - changes:
         - app/modules/**
@@ -81,8 +79,7 @@ test:
   script:
     - ./vendor/bin/phpunit --coverage-text --coverage-cobertura=coverage.cobertura.xml
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
-  dependencies:
-    - build
+  needs: [ "build" ]
   artifacts:
     reports:
       coverage_report:
