@@ -6,8 +6,8 @@ namespace App\User\Exception;
 
 enum UserExceptionEnum: string
 {
-    case GENERIC = 'GENERIC';
+    case USER_EXCEPTION = 'USER_EXCEPTION';
 
-    case USER_PROCESSING_ERROR = 'USER_PROCESSING_ERROR';
-    case USER_NOT_FOUND = 'USER_NOT_FOUND';
+    case PROCESSING_ERROR = 'PROCESSING_ERROR';
+    case NOT_FOUND = 'NOT_FOUND';
 }

@@ -4,8 +4,20 @@ declare(strict_types=1);
 
 namespace App\User\Exception;
 
+use Module\Api\Enum\HttpStatus;
+
+// Anywhere in code
+//
+// throw new UserNotFound('User was not found because of the wrong email.');
+
 class UserNotFound extends UserException
 {
+    public function __construct(
+        private readonly ?string $customDescription = null,
+    ) {
+        parent::__construct();
+    }
+
     #[\Override]
     public function getErrorMessage(): string
     {
@@ -15,17 +27,18 @@ class UserNotFound extends UserException
     #[\Override]
     public function describe(array $context = []): string
     {
-        return 'User not found';
+        return $this->customDescription ?? 'User was not found by the given criteria.';
     }
 
     #[\Override]
     public function getErrorCode(): UserExceptionEnum
     {
-        return UserExceptionEnum::USER_NOT_FOUND;
+        return UserExceptionEnum::NOT_FOUND;
     }
 
-    public function getHttpStatusCode(): int
+    #[\Override]
+    public function getHttpStatusCode(): HttpStatus
     {
-        return 404;
+        return HttpStatus::NOT_FOUND;
     }
 }

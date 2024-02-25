@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\User\Exception;
 
-use Symfony\Component\HttpFoundation\Response;
+use Module\Api\Enum\HttpStatus;
 
 class UserProcessingException extends UserException
 {
     #[\Override]
-    public function getStatusCode(): int
+    public function getHttpStatusCode(): HttpStatus
     {
-        return Response::HTTP_UNPROCESSABLE_ENTITY;
+        return HttpStatus::UNPROCESSABLE_ENTITY;
     }
 
     #[\Override]
     public function getErrorCode(): UserExceptionEnum
     {
-        return UserExceptionEnum::USER_PROCESSING_ERROR;
+        return UserExceptionEnum::PROCESSING_ERROR;
     }
 
     #[\Override]

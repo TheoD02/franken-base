@@ -7,10 +7,11 @@ namespace App\User\Controller;
 use App\User\Api\UserMeta;
 use App\User\Exception\UserProcessingException;
 use App\User\User;
-use Module\Api\ApiResponse;
+use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiMeta;
 use Module\Api\Attribut\OpenApiResponse;
+use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethod;
 use Module\Api\Enum\ResponseType;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -21,6 +22,7 @@ class ProcessUserController
 {
     #[OpenApiResponse(User::class, type: ResponseType::COLLECTION)]
     #[OpenApiMeta(UserMeta::class)]
+    #[ApiException(UserProcessingException::class)]
     public function __invoke(): ApiResponse
     {
         // Do some stuff/processing

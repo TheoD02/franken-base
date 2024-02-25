@@ -7,6 +7,7 @@ namespace App\Tests\User\Controller;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\ProcessUserController;
 use App\User\Exception\UserExceptionEnum;
+use App\User\Exception\UserProcessingException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 /**
@@ -25,10 +26,10 @@ class ProcessUserControllerTest extends ControllerTestCase
         // Assert
         self::assertResponseStatusCodeSame(422);
         $expected = [
-            'type' => 'BUSINESS_ERROR',
+            'type' => 'USER_EXCEPTION',
             'title' => 'Cannot process the user',
             'status' => 422,
-            'code' => UserExceptionEnum::USER_PROCESSING_ERROR->value,
+            'code' => (new UserProcessingException())->getFormattedErrorCode(),
         ];
         $this->assertJsonArray($expected, onlyKeys: array_keys($expected));
     }

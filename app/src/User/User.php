@@ -10,16 +10,19 @@ use Module\Api\Adapter\ApiDataInterface;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\Response;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Response]
 class User implements ApiDataInterface
 {
     #[Property(description: 'The name of the user.')]
+    #[Groups(['user:read'])]
     private string $name;
 
     #[Property(description: 'The email of the user.', format: 'email')]
     #[Assert\Email]
+    #[Groups(['user:read'])]
     private string $email;
 
     /**
@@ -30,7 +33,13 @@ class User implements ApiDataInterface
         type: 'array',
         items: new Items(description: 'The role of the user.', enum: UserRoleEnum::class, example: UserRoleEnum::ADMIN),
     )]
+    #[Groups(['user:read:roles'])]
     private Collection $roles;
+
+    public function __construct()
+    {
+        $this->roles = Collection::empty();
+    }
 
     public function getName(): string
     {
