@@ -8,6 +8,9 @@ cache:
 variables:
   SYMFONY_DEPRECATIONS_HELPER: weak
 
+before_script:
+  - cd app
+
 stages:
   - build
   - qa
@@ -17,8 +20,6 @@ stages:
 build:
   stage: build
   script:
-    - pwd
-    - cd app
     - apt-get update
     - apt-get install -y unzip
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -35,7 +36,6 @@ build:
 qa-ecs:
   stage: qa
   script:
-    - cd app
     - ./vendor/bin/ecs check src
   dependencies:
     - build
@@ -48,7 +48,6 @@ qa-ecs:
 qa-rector:
   stage: qa
   script:
-    - cd app
     - ./vendor/bin/rector process src
   dependencies:
     - build
@@ -61,7 +60,6 @@ qa-rector:
 qa-phpstan:
   stage: qa
   script:
-    - cd app
     - ./vendor/bin/phpstan analyse src
   dependencies:
     - build
@@ -81,7 +79,6 @@ test:
     - apt-get install -y sqlite3
     - pecl install xdebug && docker-php-ext-enable xdebug
   script:
-    - cd app
     - ./vendor/bin/phpunit --coverage-text --coverage-cobertura=coverage.cobertura.xml
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   dependencies:
