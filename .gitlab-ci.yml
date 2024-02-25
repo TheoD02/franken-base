@@ -28,6 +28,8 @@ build:
   artifacts:
     paths:
       - app/vendor/
+  only:
+    - merge_requests
   rules:
     - changes:
         - app/modules/**
@@ -48,6 +50,8 @@ build-qa:
         cd ..
       done
       cd ../app
+  only:
+    - merge_requests
   artifacts:
     paths:
       - tools/**/vendor
@@ -58,6 +62,8 @@ qa-ecs:
   script:
     - ../tools/ecs/vendor/bin/ecs check --clear-cache
   needs: [ "build" ]
+  only:
+    - merge_requests
   rules:
     - changes:
         - app/modules/**
@@ -69,6 +75,8 @@ qa-rector:
   script:
     - ../tools/rector/vendor/bin/rector process --clear-cache
   needs: [ "build" ]
+  only:
+    - merge_requests
   rules:
     - changes:
         - app/modules/**
@@ -80,6 +88,8 @@ qa-phpstan:
   script:
     - ../tools/phpstan/vendor/bin/phpstan analyse src/ modules/*/src -l 1
   needs: [ "build" ]
+  only:
+    - merge_requests
   rules:
     - changes:
         - app/modules/**
@@ -100,11 +110,13 @@ test:
     - ./vendor/bin/phpunit --coverage-text --coverage-cobertura=coverage.cobertura.xml
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   needs: [ "build" ]
+  only:
+    - merge_requests
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: coverage.cobertura.xml
+        path: app/coverage.cobertura.xml
   rules:
     - changes:
         - app/modules/**
