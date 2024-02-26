@@ -37,9 +37,6 @@ class GetCollectionUserController
                 ->setEmail('alice@cooper.fr'),
         ]);
 
-        return new ApiResponse(
-            data: $collection,
-            groups: [UserGroups::READ],
-        );
+        return new ApiResponse(data: $collection, groups: [UserGroups::READ]);
     }
 }

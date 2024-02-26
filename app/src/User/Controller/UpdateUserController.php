@@ -23,9 +23,6 @@ class UpdateUserController
     #[OpenApiResponse(User::class)]
     public function __invoke(int $id, #[MapRequestPayload] User $user): ApiResponse
     {
-        return new ApiResponse(
-            data: $user,
-            groups: [UserGroups::READ, UserGroups::READ_ROLES]
-        );
+        return new ApiResponse(data: $user, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
     }
 }

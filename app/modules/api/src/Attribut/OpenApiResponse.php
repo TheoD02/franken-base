@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Module\Api\Attribut;
 
-use Module\Api\Enum\HttpStatus;
 use Module\Api\Enum\ResponseType;
 
 /**

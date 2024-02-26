@@ -22,21 +22,11 @@ use OpenApi\Attributes\Property;
 use OpenApi\Generator;
 use PhpParser\Node\ArrayItem;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
-use PhpParser\Node\UseItem;
 use PhpParser\ParserFactory;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Routing\Route;
-
-use function array_keys;
-use function array_map;
-use function class_exists;
-use function dd;
-use function dump;
-use function end;
-use function is_subclass_of;
 
 class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, ModelRegistryAwareInterface
 {
@@ -77,7 +67,6 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
                 throw new \RuntimeException('The file could not be parsed.');
             }
 
-
             $class = null;
             foreach ($ast as $node) {
                 if ($node instanceof Namespace_) {
@@ -102,7 +91,6 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         } catch (\PhpParser\Error $e) {
             throw new \RuntimeException('An error occurred while parsing the file.', 0, $e);
         }
-
 
         [$openApiResponseInstance, $openApiMetaInstance] = $this->getAttributesInstance($reflectionMethod);
 
@@ -231,6 +219,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
                 break;
             }
         }
+
         return $method;
     }
 
@@ -250,8 +239,6 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     }
 
     /**
-     * @param \PhpParser\Node\Stmt\Return_ $returnStmt
-     * @param array|null $ast
      * @return array<class-string, \BackedEnum>
      */
     protected function getGroups(\PhpParser\Node\Stmt\Return_ $returnStmt, ?array $ast): array
@@ -265,11 +252,9 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
 
         $groups = [];
         if ($groupsArgs !== null) {
-            /**
-             * @var array<string, string> $groups {className, nameOfTheGroup}
-             */
+            /** @var array<string, string> $groups {className, nameOfTheGroup} */
             $groups = array_map(
-                static fn(ArrayItem $group) => [$group->value?->class->name, $group->value?->name->name],
+                static fn (ArrayItem $group) => [$group->value?->class->name, $group->value?->name->name],
                 $groupsArgs->value->items
             );
         }
@@ -278,7 +263,6 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         foreach ($groups as $group) {
             $groupedByClass[$group[0]][] = $group[1];
         }
-
 
         $groups = [];
         // get the class fqcn from name of class
@@ -305,6 +289,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
                 }
             }
         }
+
         return $groups;
     }
 
@@ -329,7 +314,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
                     if ($stmt instanceof Use_) {
                         foreach ($stmt->uses as $use) {
                             if ($use->alias === $httpStatusClassName || $use->name->getLast(
-                                ) === $httpStatusClassName) {
+                            ) === $httpStatusClassName) {
                                 $reflectionClass = new \ReflectionClass($use->name->toString());
                                 if ($reflectionClass->isEnum()) {
                                     $cases = $reflectionClass->getConstants();

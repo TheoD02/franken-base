@@ -23,9 +23,7 @@ class GetUserByIdController
     public function __invoke(int $id, User $user): ApiResponse
     {
         $data = (new User())->setName('John Doe')->setEmail('john@doe.fr');
-        return new ApiResponse(
-            data: $data,
-            groups: [UserGroups::READ]
-        );
+
+        return new ApiResponse(data: $data, groups: [UserGroups::READ]);
     }
 }
