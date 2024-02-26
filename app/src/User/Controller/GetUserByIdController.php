@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\User\User;
+use App\User\UserGroups;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
@@ -21,6 +22,10 @@ class GetUserByIdController
     #[OpenApiResponse(User::class)]
     public function __invoke(int $id, User $user): ApiResponse
     {
-        return new ApiResponse((new User())->setName('John Doe')->setEmail('john@doe.fr'));
+        $data = (new User())->setName('John Doe')->setEmail('john@doe.fr');
+        return new ApiResponse(
+            data: $data,
+            groups: [UserGroups::READ]
+        );
     }
 }

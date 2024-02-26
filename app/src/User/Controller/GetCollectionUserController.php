@@ -8,6 +8,7 @@ use App\User\Api\UserFilterQuery;
 use App\User\Api\UserMeta;
 use App\User\User;
 use App\User\UserCollection;
+use App\User\UserGroups;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiMeta;
 use Module\Api\Attribut\OpenApiResponse;
@@ -29,13 +30,16 @@ class GetCollectionUserController
     public function __invoke(
         #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery
     ): ApiResponse {
+        $collection = UserCollection::fromIterable([
+            (new User())->setName('John Doe')
+                ->setEmail('john@doe.fr'),
+            (new User())->setName('Alice Cooper')
+                ->setEmail('alice@cooper.fr'),
+        ]);
+
         return new ApiResponse(
-            UserCollection::fromIterable([
-                (new User())->setName('John Doe')
-                    ->setEmail('john@doe.fr'),
-                (new User())->setName('Alice Cooper')
-                    ->setEmail('alice@cooper.fr'),
-            ]),
+            data: $collection,
+            groups: [UserGroups::READ],
         );
     }
 }

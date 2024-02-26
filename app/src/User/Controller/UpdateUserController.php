@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\User\User;
+use App\User\UserGroups;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
@@ -22,6 +23,9 @@ class UpdateUserController
     #[OpenApiResponse(User::class)]
     public function __invoke(int $id, #[MapRequestPayload] User $user): ApiResponse
     {
-        return new ApiResponse($user);
+        return new ApiResponse(
+            data: $user,
+            groups: [UserGroups::READ, UserGroups::READ_ROLES]
+        );
     }
 }

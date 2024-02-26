@@ -8,11 +8,13 @@ use App\User\Api\UserFilterQuery;
 use App\User\Exception\UserNotFound;
 use App\User\Exception\UserProcessingException;
 use App\User\User;
+use App\User\UserGroups;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethod;
+use Module\Api\Enum\HttpStatus;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -31,6 +33,10 @@ class CreateUserController
         #[MapRequestPayload()] User $user,
         #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery
     ): ApiResponse {
-        return new ApiResponse($user);
+        return new ApiResponse(
+            data: $user,
+            groups: [UserGroups::READ, UserGroups::READ_ROLES],
+            httpStatus: HttpStatus::CREATED
+        );
     }
 }
