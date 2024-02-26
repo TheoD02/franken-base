@@ -8,7 +8,7 @@ use loophp\collection\CollectionDecorator;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 
 /**
- * @extends CollectionDecorator<User>
+ * @extends CollectionDecorator<mixed, User>
  */
 class UserCollection extends CollectionDecorator implements ApiDataCollectionInterface
 {

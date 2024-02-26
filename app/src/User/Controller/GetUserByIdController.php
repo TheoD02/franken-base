@@ -15,6 +15,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[ApiRoute('/api/users/{id}', method: HttpMethod::GET)]
 class GetUserByIdController
 {
+    /**
+     * @return ApiResponse<User, null>
+     */
     #[OpenApiResponse(User::class)]
     public function __invoke(int $id, User $user): ApiResponse
     {

@@ -21,6 +21,9 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 #[ApiRoute('/api/users', method: HttpMethod::POST)]
 class CreateUserController
 {
+    /**
+     * @return ApiResponse<User, null>
+     */
     #[OpenApiResponse(User::class)]
     #[ApiException(UserProcessingException::class)]
     #[ApiException(UserNotFound::class)]

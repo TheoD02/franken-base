@@ -42,7 +42,7 @@ abstract class AbstractHttpException extends HttpException
      *
      * The description aids developers in understanding the specific circumstances that led to the exception.
      *
-     * @param array $context an associative array of additional information to detail the exception
+     * @param array<mixed> $context an associative array of additional information to detail the exception
      *
      * @return string a detailed description of the exception with contextual insights
      */

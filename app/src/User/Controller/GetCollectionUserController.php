@@ -21,6 +21,9 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 #[ApiRoute('/api/users', method: HttpMethod::GET)]
 class GetCollectionUserController
 {
+    /**
+     * @return ApiResponse<UserCollection, UserMeta>
+     */
     #[OpenApiResponse(User::class, type: ResponseType::COLLECTION)]
     #[OpenApiMeta(UserMeta::class)]
     public function __invoke(

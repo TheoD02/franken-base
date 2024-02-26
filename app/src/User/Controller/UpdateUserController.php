@@ -16,6 +16,9 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 #[ApiRoute('/api/users/{id}', method: HttpMethod::PUT)]
 class UpdateUserController
 {
+    /**
+     * @return ApiResponse<User, null>
+     */
     #[OpenApiResponse(User::class)]
     public function __invoke(int $id, #[MapRequestPayload] User $user): ApiResponse
     {

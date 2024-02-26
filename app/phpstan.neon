@@ -1,0 +1,9 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        - '#^Interface loophp\\collection\\Contract\\Collection specifies template type T.*$#'
+        - '#^Class loophp\\collection\\CollectionDecorator specifies template type T.*$#'
+        - '#^Interface IteratorAggregate specifies template type TValue of interface Traversable.*$#'

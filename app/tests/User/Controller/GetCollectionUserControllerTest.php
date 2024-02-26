@@ -29,6 +29,8 @@ class GetCollectionUserControllerTest extends ControllerTestCase
             (new User())->setName('Alice Cooper')
                 ->setEmail('alice@cooper.fr'),
         ];
+
+        /** @var array<mixed> $expectedUser */
         $expectedUser = $this->serializer->normalize($expectedUser);
         self::assertResponseStatusCodeSame(200);
         $this->assertApiResponseEquals($expectedUser);

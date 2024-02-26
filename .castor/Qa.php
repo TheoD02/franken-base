@@ -65,7 +65,7 @@ class Qa
     public static function phpstan(): Process
     {
         self::runTool('phpstan clear-result-cache');
-        return self::runTool('phpstan analyse src/Controller -l 8');
+        return self::runTool('phpstan analyse src -l 8');
     }
 
     #[AsTaskMethod]

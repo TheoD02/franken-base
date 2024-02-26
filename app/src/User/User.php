@@ -26,7 +26,7 @@ class User implements ApiDataInterface
     private string $email;
 
     /**
-     * @var Collection<UserRoleEnum>
+     * @var Collection<array-key, UserRoleEnum>
      */
     #[Property(
         description: 'The roles of the user.',
@@ -65,11 +65,17 @@ class User implements ApiDataInterface
         return $this;
     }
 
+    /**
+     * @return Collection<array-key, UserRoleEnum>
+     */
     public function getRoles(): Collection
     {
         return $this->roles;
     }
 
+    /**
+     * @param Collection<array-key, UserRoleEnum> $roles
+     */
     public function setRoles(Collection $roles): self
     {
         $this->roles = $roles;

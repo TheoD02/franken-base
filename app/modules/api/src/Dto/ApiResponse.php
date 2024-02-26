@@ -10,7 +10,7 @@ use Module\Api\Adapter\ApiMetadataInterface;
 
 /**
  * @template T
- * @template M of object|null
+ * @template M
  */
 readonly class ApiResponse
 {

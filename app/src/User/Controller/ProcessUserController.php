@@ -20,6 +20,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[ApiRoute('/api/users/{id}/process', method: HttpMethod::GET)]
 class ProcessUserController
 {
+    /**
+     * @return ApiResponse<User, null>
+     */
     #[OpenApiResponse(User::class, type: ResponseType::COLLECTION)]
     #[OpenApiMeta(UserMeta::class)]
     #[ApiException(UserProcessingException::class)]
@@ -30,6 +33,7 @@ class ProcessUserController
         // OH NO! Something went wrong
         throw new UserProcessingException();
 
+        // @phpstan-ignore-next-line - this is just for the example
         return new ApiResponse((new User())->setName('John Doe')->setEmail('john@doe.fr'));
     }
 }
