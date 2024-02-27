@@ -149,3 +149,12 @@ PHP;
     $envLocalContent = str_replace('{PROJECT_PATH}', $currentDir, $envLocalContent);
     file_put_contents("{$currentDir}/.env.local", $envLocalContent);
 }
+
+#[AsTask(name: 'db:reset', description: 'Reset the database')]
+function db_reset(): void
+{
+    Symfony::console(cmd: 'doctrine:database:drop --force --if-exists');
+    Symfony::console(cmd: 'doctrine:database:create');
+    Symfony::console(cmd: 'doctrine:schema:create');
+    Symfony::console(cmd: 'doctrine:fixtures:load --no-interaction');
+}

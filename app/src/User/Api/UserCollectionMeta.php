@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\User\Api;
 
-class UserMeta
+use Module\Api\Adapter\ApiMetadataInterface;
+
+class UserCollectionMeta implements ApiMetadataInterface
 {
     public function __construct(
         public int $total,

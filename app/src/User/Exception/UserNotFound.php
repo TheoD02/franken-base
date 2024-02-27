@@ -12,9 +12,15 @@ use Module\Api\Enum\HttpStatus;
 
 class UserNotFound extends UserException
 {
+    /**
+     * @var callable|string|null
+     */
+    private $customDescription;
+
     public function __construct(
-        private readonly ?string $customDescription = null,
+        null|string|callable $customDescription = null
     ) {
+        $this->customDescription = $customDescription;
         parent::__construct();
     }
 
@@ -25,9 +31,17 @@ class UserNotFound extends UserException
     }
 
     #[\Override]
-    public function describe(array $context = []): string
+    public function describe(): string
     {
-        return $this->customDescription ?? 'User was not found by the given criteria.';
+        if (is_callable($this->customDescription)) {
+            return ($this->customDescription)();
+        }
+
+        if (is_string($this->customDescription)) {
+            return $this->customDescription;
+        }
+
+        return 'User was not found by the given criteria.';
     }
 
     #[\Override]

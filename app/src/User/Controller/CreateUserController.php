@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
+use App\Controller\Trait\EntityManagerTrait;
+use App\Entity\User;
 use App\User\Api\UserFilterQuery;
 use App\User\Exception\UserNotFound;
 use App\User\Exception\UserProcessingException;
-use App\User\User;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
@@ -21,6 +22,8 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 #[ApiRoute('/api/users', method: HttpMethod::POST)]
 class CreateUserController
 {
+    use EntityManagerTrait;
+
     /**
      * @return ApiResponse<User, null>
      */
@@ -28,9 +31,12 @@ class CreateUserController
     #[ApiException(UserProcessingException::class)]
     #[ApiException(UserNotFound::class)]
     public function __invoke(
-        #[MapRequestPayload()] User $user,
-        #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery
+        #[MapRequestPayload] User $user,
+        #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery,
     ): ApiResponse {
+        $this->em->persist($user);
+        $this->em->flush();
+
         return new ApiResponse($user);
     }
 }

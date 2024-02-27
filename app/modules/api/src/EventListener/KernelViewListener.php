@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace Module\Api\EventListener;
 
 use JetBrains\PhpStorm\NoReturn;
+use loophp\collection\Contract\Collection;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpStatus;
+use Module\Api\Enum\ResponseType;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
+
+use function dd;
 
 #[AsEventListener(event: KernelEvents::VIEW)]
 readonly class KernelViewListener
@@ -58,16 +62,15 @@ readonly class KernelViewListener
             return;
         }
 
-        $responseData = [
-            'data' => $controllerResult->data,
-            'meta' => $controllerResult->meta,
-        ];
-
         $context = $this->prepareSerializerContext($openApiResponseInstance);
 
-        $json = $this->serializer->serialize($responseData, 'json', $context);
+        $data = $controllerResult->data instanceof Collection ? $controllerResult->data->all(false) : $controllerResult->data;
+        $response = [
+            'data' => $this->serializer->normalize($data, context: $context),
+            'meta' => $this->serializer->normalize($controllerResult->meta), // TODO : Add context for meta specific groups ?
+        ];
 
-        $jsonResponse->setJson($json);
+        $jsonResponse->setData($response);
 
         $event->setResponse($jsonResponse);
     }
@@ -75,7 +78,7 @@ readonly class KernelViewListener
     protected function getControllerMethodReflectionClass(ViewEvent $event): \ReflectionMethod
     {
         $controller = $event->getRequest()->attributes->get('_controller');
-        $controller = explode('::', (string) $controller);
+        $controller = explode('::', (string)$controller);
         if (\count($controller) !== 2) {
             $controller = "{$controller[0]}::__invoke";
         } else {

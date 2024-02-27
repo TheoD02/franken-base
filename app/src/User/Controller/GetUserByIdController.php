@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\User\User;
+use App\Entity\User;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
@@ -19,8 +19,8 @@ class GetUserByIdController
      * @return ApiResponse<User, null>
      */
     #[OpenApiResponse(User::class)]
-    public function __invoke(int $id, User $user): ApiResponse
+    public function __invoke(User $user): ApiResponse
     {
-        return new ApiResponse((new User())->setName('John Doe')->setEmail('john@doe.fr'));
+        return new ApiResponse(data: $user);
     }
 }

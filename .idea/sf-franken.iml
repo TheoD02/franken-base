@@ -137,6 +137,10 @@
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/zenstruck/assert" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/zenstruck/callback" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/zenstruck/foundry" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/archtechx/enums" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/doctrine/instantiator" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/mark-gerarts/auto-mapper-plus" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/mark-gerarts/automapper-plus-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

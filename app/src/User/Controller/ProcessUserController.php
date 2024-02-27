@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\User\Api\UserMeta;
+use App\Entity\User;
 use App\User\Exception\UserProcessingException;
-use App\User\User;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
-use Module\Api\Attribut\OpenApiMeta;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethod;
@@ -24,7 +22,6 @@ class ProcessUserController
      * @return ApiResponse<User, null>
      */
     #[OpenApiResponse(User::class, type: ResponseType::COLLECTION)]
-    #[OpenApiMeta(UserMeta::class)]
     #[ApiException(UserProcessingException::class)]
     public function __invoke(): ApiResponse
     {

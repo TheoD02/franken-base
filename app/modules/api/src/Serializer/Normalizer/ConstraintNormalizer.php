@@ -21,6 +21,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
 {
     use SerializerAwareTrait;
 
+    public const string CONTEXT = 'context';
     public const string TITLE = 'title';
     public const string TYPE = 'type';
     public const string STATUS = 'status';
@@ -58,6 +59,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
         if ($exception instanceof HttpExceptionInterface) {
             if ($exception instanceof AbstractHttpException) {
                 $data = [
+                    self::CONTEXT => $exception->getContextCode()->value,
                     self::TYPE => $exception->getParentErrorCode()->value,
                     self::TITLE => $exception->getErrorMessage() ?: null,
                     self::STATUS => $exception->getStatusCode(),
@@ -87,11 +89,11 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
             }
         }
 
-        $data = [
+        $data += [
             self::TYPE => $data[self::TYPE] ?? $context[self::TYPE] ?? 'https://tools.ietf.org/html/rfc2616#section-10',
             self::TITLE => $data[self::TITLE] ?? $context[self::TITLE] ?? 'An error occurred',
             self::STATUS => $context[self::STATUS] ?? $object->getStatusCode(),
-        ] + $data;
+        ];
         if ($debug) {
             $data['class'] = $object->getClass();
             $data['trace'] = $object->getTrace();

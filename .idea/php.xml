@@ -185,6 +185,10 @@
       <path value="$PROJECT_DIR$/app/vendor/tales-from-a-dev/twig-tailwind-extra" />
       <path value="$PROJECT_DIR$/app/vendor/tales-from-a-dev/flowbite-bundle" />
       <path value="$PROJECT_DIR$/app/vendor/symfonycasts/verify-email-bundle" />
+      <path value="$PROJECT_DIR$/app/vendor/archtechx/enums" />
+      <path value="$PROJECT_DIR$/app/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/app/vendor/mark-gerarts/automapper-plus-bundle" />
+      <path value="$PROJECT_DIR$/app/vendor/mark-gerarts/auto-mapper-plus" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
