@@ -16,11 +16,12 @@ use function in_array;
 use function sprintf;
 use function strtoupper;
 
-#[AsEventListener(event: KernelEvents::EXCEPTION, priority: 500)]
+use const PHP_INT_MAX;
+
+#[AsEventListener(event: KernelEvents::EXCEPTION, priority: PHP_INT_MAX * -1)]
 readonly class ExceptionLoggerHandlerListener
 {
     public const string DEFAULT_LOG_LEVEL = LogLevel::ERROR;
-
 
     public function __construct(
         private LoggerInterface $logger,

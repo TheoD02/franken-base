@@ -27,11 +27,13 @@ class UpdateUserController
      * @return ApiResponse<User, null>
      */
     #[OpenApiResponse(User::class)]
-    public function __invoke(#[MapRequestPayload] User $user, User $userEntity, AutoMapperInterface $mapper): ApiResponse
+    public function __invoke(#[MapRequestPayload] User $user, int $id, AutoMapperInterface $mapper): ApiResponse
     {
-        $user = $mapper->mapToObject($user, $userEntity);
+        $userEntity = $this->em->find(User::class, $id);
+
+        $userEntity = $mapper->mapToObject($user, $userEntity);
         $this->em->flush();
 
-        return new ApiResponse($user);
+        return new ApiResponse($userEntity);
     }
 }
