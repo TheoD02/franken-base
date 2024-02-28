@@ -29,10 +29,10 @@ class ProcessUserController
 
         // OH NO! Something went wrong
         throw new UserProcessingException(
-            'It seem that something went wrong while processing the user. Maybe the user provider is down? Is the user still in the database?',
             [
                 'userId' => $id,
-            ]
+            ],
+            'It seem that something went wrong while processing the user. Maybe the user provider is down? Is the user still in the database?',
         );
 
         // @phpstan-ignore-next-line - this is just for the example
