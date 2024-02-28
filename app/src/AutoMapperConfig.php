@@ -10,6 +10,7 @@ use AutoMapperPlus\Configuration\AutoMapperConfigInterface;
 
 class AutoMapperConfig implements AutoMapperConfiguratorInterface
 {
+    #[\Override]
     public function configure(AutoMapperConfigInterface $config): void
     {
         $config->getOptions()->ignoreNullProperties();

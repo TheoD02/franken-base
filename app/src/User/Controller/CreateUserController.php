@@ -8,7 +8,6 @@ use App\Controller\Trait\EntityManagerTrait;
 use App\Entity\User;
 use App\User\Api\UserFilterQuery;
 use App\User\Exception\UserNotFound;
-use App\User\Exception\UserProcessingException;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;

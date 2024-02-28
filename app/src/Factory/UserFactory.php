@@ -32,6 +32,7 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class UserFactory extends ModelFactory
 {
+    #[\Override]
     protected function getDefaults(): array
     {
         return [
@@ -42,6 +43,7 @@ final class UserFactory extends ModelFactory
         ];
     }
 
+    #[\Override]
     protected static function getClass(): string
     {
         return User::class;
