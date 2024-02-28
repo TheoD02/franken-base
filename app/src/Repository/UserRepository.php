@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\User;
@@ -7,8 +9,6 @@ use App\User\Api\UserFilterQuery;
 use App\User\UserCollection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
-use function dd;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -31,20 +31,24 @@ class UserRepository extends ServiceEntityRepository
 
         $qb
             ->select('u')
-            ->orderBy('u.id', 'ASC');
+            ->orderBy('u.id', 'ASC')
+        ;
 
         if ($filterQuery !== null && $filterQuery->query !== null) {
             $qb
                 ->orWhere('u.email LIKE :query')
-                ->setParameter('query', '%' . $filterQuery->query . '%');
+                ->setParameter('query', '%' . $filterQuery->query . '%')
+            ;
 
             $qb
                 ->orWhere('u.lastName LIKE :query')
-                ->setParameter('query', '%' . $filterQuery->query . '%');
+                ->setParameter('query', '%' . $filterQuery->query . '%')
+            ;
 
             $qb
                 ->orWhere('u.firstName LIKE :query')
-                ->setParameter('query', '%' . $filterQuery->query . '%');
+                ->setParameter('query', '%' . $filterQuery->query . '%')
+            ;
         }
 
         return UserCollection::fromIterable($qb->getQuery()->getResult());

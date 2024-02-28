@@ -89,29 +89,42 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
             description: 'This schema will be used when you will receive a validation error of payload or query string, or any Symfony Validator error.',
             properties: [
                 new Property(
-                    property: 'type',
-                    description: 'The type of the error.',
-                    example: ApiErrorType::VALIDATION_FAILED->value
+                    property: 'status',
+                    description: 'The status of the response.',
+                    type: 'string',
+                    example: 'success'
                 ),
-                new Property(
-                    property: 'title',
-                    description: 'A short description of the error.',
-                    example: 'Validation Failed'
-                ),
-                new Property(property: 'status', description: 'The HTTP status code', example: 422),
-                new Property(
-                    property: 'violations',
-                    description: 'An array of validation errors.',
-                    type: 'array',
-                    items: new Items(
-                        properties: [
-                            new Property(property: 'propertyPath', example: 'email'),
-                            new Property(property: 'code', example: 'ERR_VALUE_NOT_VALID_EMAIL'),
-                            new Property(property: 'value', example: 'incorrect-at-mail.fr'),
-                            new Property(property: 'message', example: 'This value is not a valid email address.'),
-                        ]
+                new Property(property: 'error', description: 'The error object.', properties: [
+                    new Property(
+                        property: 'context_code',
+                        description: 'The type of the error.',
+                        example: 'API_PROCESSING'
                     ),
-                ),
+                    new Property(
+                        property: 'parent_code',
+                        description: 'A short description of the error.',
+                        example: 'VALIDATION'
+                    ),
+                    new Property(
+                        property: 'error_code',
+                        description: 'A short description of the error.',
+                        example: 'VALIDATION_FAILED'
+                    ),
+                    new Property(property: 'status', description: 'The HTTP status code', example: 422),
+                    new Property(
+                        property: 'violations',
+                        description: 'An array of validation errors.',
+                        type: 'array',
+                        items: new Items(
+                            properties: [
+                                new Property(property: 'propertyPath', example: 'email'),
+                                new Property(property: 'code', example: 'ERR_VALUE_NOT_VALID_EMAIL'),
+                                new Property(property: 'value', example: 'incorrect-at-mail.fr'),
+                                new Property(property: 'message', example: 'This value is not a valid email address.'),
+                            ]
+                        ),
+                    ),
+                ]),
             ],
             externalDocs: new OAttributes\ExternalDocumentation(
                 description: 'Symfony Validator Component Documentation',
@@ -127,15 +140,19 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
             summary: ApiErrorType::VALIDATION_FAILED->value,
             description: 'When you will receive a validation error of payload or query string.',
             value: [
-                'type' => ApiErrorType::VALIDATION_FAILED->value,
-                'title' => 'Validation Failed',
-                'status' => 422,
-                'violations' => [
-                    [
-                        'propertyPath' => 'email',
-                        'code' => 'ERR_VALUE_NOT_VALID_EMAIL',
-                        'value' => 'incorrect-at-mail.fr',
-                        'message' => 'This value is not a valid email address.',
+                'status' => 'error',
+                'error' => [
+                    'context_code' => 'API_PROCESSING',
+                    'parent_code' => 'VALIDATION',
+                    'error_code' => 'VALIDATION_FAILED',
+                    'status' => 422,
+                    'violations' => [
+                        [
+                            'propertyPath' => 'email',
+                            'code' => 'ERR_VALUE_NOT_VALID_EMAIL',
+                            'value' => 'incorrect-at-mail.fr',
+                            'message' => 'This value is not a valid email address.',
+                        ],
                     ],
                 ],
             ]

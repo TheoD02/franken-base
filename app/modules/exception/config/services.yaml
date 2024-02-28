@@ -20,3 +20,6 @@ services:
       - '../src/Entity/'
       - '../src/Kernel.php'
 
+  Module\ExceptionHandlerBundle\Serializer\Normalizer\AbstractHttpExceptionNormalizer:
+    tags:
+      - { name: serializer.normalizer, priority: 10_000 }

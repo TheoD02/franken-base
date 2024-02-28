@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Module\Api\Serializer\Normalizer;
 
-use Module\Api\Enum\ApiErrorType;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -14,13 +13,11 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerAwareTrait;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterface
 {
     use SerializerAwareTrait;
 
-    public const string CONTEXT = 'context';
     public const string TITLE = 'title';
     public const string TYPE = 'type';
     public const string STATUS = 'status';
@@ -32,7 +29,6 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
         #[Autowire(param: 'kernel.debug')]
         private readonly bool $debug = false,
         private readonly array $defaultContext = [],
-        private readonly ?TranslatorInterface $translator = null,
     ) {
     }
 
@@ -46,7 +42,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
     #[\Override]
     public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {
-        if (!$object instanceof FlattenException) {
+        if (! $object instanceof FlattenException) {
             throw new InvalidArgumentException(sprintf('The object must implement "%s".', FlattenException::class));
         }
 
@@ -60,36 +56,38 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
 
             if ($exception instanceof PartialDenormalizationException) {
                 $data = [
-                    self::TYPE => ApiErrorType::NORMALIZATION_ERROR->value,
-                    self::TITLE => $exception->getMessage() ?: null,
+                    'context_code' => 'API_PROCESSING',
+                    'parent_code' => 'NORMALIZATION',
+                    'error_code' => 'NORMALIZATION_PARTIAL_DENORMALIZATION_ERROR',
+                    'status' => $context[self::STATUS] ?? $object->getStatusCode(),
+                    'message' => $exception->getMessage() ?: null,
                     self::VIOLATIONS => PartialDenormalizationExceptionNormalizerHandler::normalize($exception),
                 ];
             } elseif ($exception instanceof ValidationFailedException) {
-                $trans = $this->translator ? $this->translator->trans(...) : static fn($m, $p) => strtr($m, $p);
                 $data = [
-                    self::TYPE => ApiErrorType::VALIDATION_FAILED->value,
-                    self::TITLE => 'Validation Failed',
+                    'context_code' => 'API_PROCESSING',
+                    'parent_code' => 'VALIDATION',
+                    'error_code' => 'VALIDATION_FAILED',
+                    'status' => $context[self::STATUS] ?? $object->getStatusCode(),
                     self::VIOLATIONS => $this->validationFailedExceptionNormalizerHandler->normalize($exception),
                 ];
             }
         }
 
-        $data += [
-            self::TYPE => $data[self::TYPE] ?? $context[self::TYPE] ?? 'https://tools.ietf.org/html/rfc2616#section-10',
-            self::TITLE => $data[self::TITLE] ?? $context[self::TITLE] ?? 'An error occurred',
-            self::STATUS => $context[self::STATUS] ?? $object->getStatusCode(),
-        ];
         if ($debug) {
             $data['class'] = $object->getClass();
             $data['trace'] = $object->getTrace();
         }
 
-        return $data;
+        return [
+            'status' => 'error',
+            'error' => $data,
+        ];
     }
 
     #[\Override]
     public function supportsNormalization(mixed $data, ?string $format = null /* , array $context = [] */): bool
     {
-        return false;
+        return $data instanceof FlattenException;
     }
 }

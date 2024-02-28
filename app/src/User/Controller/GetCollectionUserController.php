@@ -19,8 +19,6 @@ use Module\Api\Enum\ResponseType;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 
-use function dd;
-
 #[AsController]
 #[ApiRoute('/api/users', method: HttpMethod::GET)]
 class GetCollectionUserController
@@ -37,9 +35,6 @@ class GetCollectionUserController
     ): ApiResponse {
         $collection = $this->em->getRepository(User::class)->findByFilterQuery($filterQuery);
 
-        return new ApiResponse(
-            data: $collection,
-            meta: $collection->getMeta(),
-        );
+        return new ApiResponse(data: $collection, meta: $collection->getMeta());
     }
 }

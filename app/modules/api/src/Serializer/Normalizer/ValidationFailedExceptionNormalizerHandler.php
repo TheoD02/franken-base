@@ -8,18 +8,21 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Serializer\Attribute\SerializedPath;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 use function Symfony\Component\String\u;
 
 readonly class ValidationFailedExceptionNormalizerHandler
 {
     public function __construct(
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private ?TranslatorInterface $translator = null,
     ) {
     }
 
     public function normalize(ValidationFailedException $exception): array
     {
+        $trans = $this->translator ? $this->translator->trans(...) : static fn ($m, $p) => strtr($m, $p);
         $errors = [];
 
         foreach ($exception->getViolations() as $violation) {
@@ -42,7 +45,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
 
             $errors[] = ViolationNormalizerHelper::createViolation(
                 propertyPath: $propertyPath,
-                code: $violation->getMessage(),
+                code: $trans($violation->getMessage(), $violation->getParameters()),
                 value: $violation->getInvalidValue(),
                 message: str_replace(
                     array_keys($violation->getParameters()),

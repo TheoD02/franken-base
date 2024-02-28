@@ -6,7 +6,6 @@ namespace Module\Api\Describer\Processor;
 
 use Module\Api\Attribut\ApiException;
 use Module\Api\Describer\Trait\JsonContentDescriberProcessTrait;
-use Module\Api\Enum\ApiErrorType;
 use Module\Api\Enum\HttpStatus;
 use Module\ExceptionHandlerBundle\Exception\AbstractHttpException;
 use Nelmio\ApiDocBundle\OpenApiPhp\Util;
@@ -89,24 +88,62 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
             description: $exception->describe(),
             properties: [
                 new Property(
-                    property: 'type',
-                    description: 'The type of the error.',
-                    example: ApiErrorType::BUSINESS_ERROR->value
-                ),
-                new Property(
-                    property: 'title',
-                    description: 'A short description of the error.',
-                    example: 'Business error occurred'
-                ),
-                new Property(
                     property: 'status',
-                    description: 'The HTTP status code',
-                    example: $exception->getHttpStatusCode()
+                    description: 'The status of the response.',
+                    type: 'string',
+                    example: 'error'
                 ),
                 new Property(
-                    property: 'code',
-                    description: 'The error code',
-                    example: $exception->getErrorCode()->value
+                    property: 'error',
+                    description: 'The error code.',
+                    properties: [
+                        new Property(
+                            property: 'context_code',
+                            description: 'The context code of the error.',
+                            type: 'string',
+                            example: $exception->getContextCode()->value
+                        ),
+                        new Property(
+                            property: 'parent_code',
+                            description: 'The parent code of the error.',
+                            type: 'string',
+                            example: $exception->getParentErrorCode()->value
+                        ),
+                        new Property(
+                            property: 'error_code',
+                            description: 'The error code.',
+                            type: 'string',
+                            example: $exception->getFormattedErrorCode()
+                        ),
+                        new Property(
+                            property: 'status',
+                            description: 'The status of the response.',
+                            type: 'integer',
+                            example: $exception->getHttpStatusCode()
+                        ),
+                        new Property(
+                            property: 'message',
+                            description: 'The message of the error.',
+                            type: 'string',
+                            example: $exception->getMessage()
+                        ),
+                        new Property(
+                            property: 'debug_message',
+                            description: 'The debug message of the error.',
+                            type: 'string',
+                            example: $exception->getDescribe()
+                        ),
+                        new Property(
+                            property: 'context',
+                            description: 'The context of the error.',
+                            type: 'array',
+                            items: new OAttributes\Items(
+                                description: 'The context of the error. Difficult to describe, it depends on the error.',
+                                type: 'string',
+                                example: $exception->getContext()
+                            )
+                        ),
+                    ]
                 ),
             ]
         );
@@ -119,11 +156,16 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
             $exception->getErrorCode()->value,
             $exception->describe(),
             [
-                'type' => ApiErrorType::BUSINESS_ERROR->value,
-                'title' => $exception->getErrorMessage(),
-                'status' => $exception->getHttpStatusCode(),
-                'code' => $exception->getErrorCode()->value,
-                'debug_message' => $exception->describe(),
+                'status' => 'error',
+                'error' => [
+                    'context_code' => $exception->getContextCode()->value,
+                    'parent_code' => $exception->getParentErrorCode()->value,
+                    'error_code' => $exception->getFormattedErrorCode(),
+                    'status' => $exception->getHttpStatusCode(),
+                    'message' => $exception->getMessage(),
+                    'debug_message' => $exception->getDescribe(),
+                    'context' => $exception->getContext(),
+                ],
             ]
         );
     }

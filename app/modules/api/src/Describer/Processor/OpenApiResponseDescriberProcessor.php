@@ -82,6 +82,12 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         $schema->type = 'object';
 
         $schema->properties = [
+            new Property(
+                property: 'status',
+                description: 'The status of the response.',
+                type: 'string',
+                example: 'success'
+            ),
             $this->getDataProperty($responseClass, $groups, $responseType),
             $this->getMetaProperty($openApiMetaInstance),
         ];

@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace Module\Api\EventListener;
 
 use JetBrains\PhpStorm\NoReturn;
-use loophp\collection\Contract\Collection;
+use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpStatus;
-use Module\Api\Enum\ResponseType;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
-
-use function dd;
 
 #[AsEventListener(event: KernelEvents::VIEW)]
 readonly class KernelViewListener
@@ -62,12 +59,24 @@ readonly class KernelViewListener
             return;
         }
 
+        if (
+            $controllerResult->data instanceof ApiDataCollectionInterface
+            && $openApiResponseInstance->isCollection() === false
+        ) {
+            throw new \InvalidArgumentException(
+                'The controller must return a collection in `data` property when the #[OpenApiResponse] attribute indicates a collection response type.'
+            );
+        }
+
         $context = $this->prepareSerializerContext($openApiResponseInstance);
 
-        $data = $controllerResult->data instanceof Collection ? $controllerResult->data->all(false) : $controllerResult->data;
+        $data = $openApiResponseInstance->isCollection() ?
+            $controllerResult->data->all(false) :
+            $controllerResult->data;
         $response = [
+            'status' => $openApiResponseInstance->statusCode->isSuccessful() ? 'success' : 'error',
             'data' => $this->serializer->normalize($data, context: $context),
-            'meta' => $this->serializer->normalize($controllerResult->meta), // TODO : Add context for meta specific groups ?
+            'meta' => $controllerResult->meta ? $this->serializer->normalize($controllerResult->meta) : null,
         ];
 
         $jsonResponse->setData($response);
@@ -78,7 +87,7 @@ readonly class KernelViewListener
     protected function getControllerMethodReflectionClass(ViewEvent $event): \ReflectionMethod
     {
         $controller = $event->getRequest()->attributes->get('_controller');
-        $controller = explode('::', (string)$controller);
+        $controller = explode('::', (string) $controller);
         if (\count($controller) !== 2) {
             $controller = "{$controller[0]}::__invoke";
         } else {

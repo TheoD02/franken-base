@@ -25,3 +25,7 @@ services:
   Module\Api\Describer\RouteDescriber:
     tags:
       - { name: nelmio_api_doc.route_describer }
+
+  Module\Api\Serializer\Normalizer\ConstraintNormalizer:
+    tags:
+      - { name: serializer.normalizer, priority: 9500 }
