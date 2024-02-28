@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Module\Api\Enum;
 
-enum HttpStatus: int
+enum HttpStatusEnum: int
 {
     // Informational 1xx
     case CONTINUE = 100;

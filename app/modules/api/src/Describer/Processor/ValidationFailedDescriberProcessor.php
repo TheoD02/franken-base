@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Module\Api\Describer\Processor;
 
 use Module\Api\Describer\Trait\JsonContentDescriberProcessTrait;
-use Module\Api\Enum\ApiErrorType;
-use Module\Api\Enum\HttpStatus;
+use Module\Api\Enum\ApiErrorTypeEnum;
+use Module\Api\Enum\HttpStatusEnum;
 use Nelmio\ApiDocBundle\OpenApiPhp\Util;
 use OpenApi\Annotations as OAnnotations;
 use OpenApi\Attributes as OAttributes;
@@ -72,7 +72,7 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
         $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
 
         if ($response->description === Generator::UNDEFINED) {
-            $response->description = HttpStatus::from($statusCode)->getShortName() . ' response.';
+            $response->description = HttpStatusEnum::from($statusCode)->getShortName() . ' response.';
         }
 
         $jsonContent = $this->getJsonContent($response);
@@ -136,8 +136,8 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
     private function getValidationFailedExamples(): OAttributes\Examples
     {
         return self::$validationFailedExamples ??= new OAttributes\Examples(
-            example: ApiErrorType::VALIDATION_FAILED->value,
-            summary: ApiErrorType::VALIDATION_FAILED->value,
+            example: ApiErrorTypeEnum::VALIDATION_FAILED->value,
+            summary: ApiErrorTypeEnum::VALIDATION_FAILED->value,
             description: 'When you will receive a validation error of payload or query string.',
             value: [
                 'status' => 'error',

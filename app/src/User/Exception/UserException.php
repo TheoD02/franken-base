@@ -7,7 +7,7 @@ namespace App\User\Exception;
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionContextCodeInterface;
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionErrorCodeInterface;
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionParentCodeInterface;
-use Module\ExceptionHandlerBundle\Enum\ContextErrorCode;
+use Module\ExceptionHandlerBundle\Enum\ContextErrorCodeEnum;
 use Module\ExceptionHandlerBundle\Exception\AbstractHttpException;
 
 abstract class UserException extends AbstractHttpException
@@ -15,7 +15,7 @@ abstract class UserException extends AbstractHttpException
     #[\Override]
     public function getContextCode(): ApiExceptionContextCodeInterface
     {
-        return ContextErrorCode::TECHNICAL_ERROR;
+        return ContextErrorCodeEnum::TECHNICAL_ERROR;
     }
 
     #[\Override]

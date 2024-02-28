@@ -8,7 +8,7 @@ use JetBrains\PhpStorm\NoReturn;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
-use Module\Api\Enum\HttpStatus;
+use Module\Api\Enum\HttpStatusEnum;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
@@ -40,11 +40,11 @@ readonly class KernelViewListener
         /** @var OpenApiResponse $openApiResponseInstance */
         $openApiResponseInstance = $openApiResponseAttribute->newInstance();
 
-        if ($openApiResponseInstance->statusCode === HttpStatus::NO_CONTENT && $controllerResult !== null) {
+        if ($openApiResponseInstance->statusCode === HttpStatusEnum::NO_CONTENT && $controllerResult !== null) {
             throw new \RuntimeException('The controller must return null or void when the status code is 204.');
         }
 
-        if ($controllerResult instanceof ApiResponse === false && $openApiResponseInstance->statusCode !== HttpStatus::NO_CONTENT) {
+        if ($controllerResult instanceof ApiResponse === false && $openApiResponseInstance->statusCode !== HttpStatusEnum::NO_CONTENT) {
             throw new \InvalidArgumentException(
                 'The controller must return an instance of ApiResponse when it has an OpenApiResponse attribute.'
             );
@@ -53,7 +53,7 @@ readonly class KernelViewListener
         $jsonResponse = new JsonResponse();
         $jsonResponse->setStatusCode($openApiResponseInstance->statusCode->value);
 
-        if ($openApiResponseInstance->statusCode === HttpStatus::NO_CONTENT) {
+        if ($openApiResponseInstance->statusCode === HttpStatusEnum::NO_CONTENT) {
             $event->setResponse($jsonResponse);
 
             return;

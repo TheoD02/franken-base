@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Module\Api\Enum;
 
-enum ResponseType
+enum ResponseTypeEnum
 {
     /**
      * The response is a single item.

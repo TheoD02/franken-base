@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Module\Api\Attribut;
 
-use Module\Api\Enum\HttpStatus;
-use Module\Api\Enum\ResponseType;
+use Module\Api\Enum\HttpStatusEnum;
+use Module\Api\Enum\ResponseTypeEnum;
 
 /**
  * This class permit to define the response of an endpoint.
@@ -23,14 +23,14 @@ class OpenApiResponse
     public function __construct(
         public ?string $class = null,
         public array $groups = [],
-        public ResponseType $type = ResponseType::ITEM,
-        public HttpStatus $statusCode = HttpStatus::OK,
+        public ResponseTypeEnum $type = ResponseTypeEnum::ITEM,
+        public HttpStatusEnum $statusCode = HttpStatusEnum::OK,
         public bool $empty = false,
     ) {
         if ($this->empty === true) {
             \assert($this->class === null, 'The class must be null if the response is empty.');
             \assert($this->groups === [], 'The groups must be empty if the response is empty.');
-            $this->statusCode = HttpStatus::NO_CONTENT;
+            $this->statusCode = HttpStatusEnum::NO_CONTENT;
         } else {
             \assert($this->class !== null, 'The class must be defined if the response is not empty.');
             if (class_exists($class) === false) {
@@ -50,6 +50,6 @@ class OpenApiResponse
 
     public function isCollection(): bool
     {
-        return $this->type === ResponseType::COLLECTION;
+        return $this->type === ResponseTypeEnum::COLLECTION;
     }
 }

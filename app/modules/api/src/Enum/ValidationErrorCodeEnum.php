@@ -9,7 +9,7 @@ namespace Module\Api\Enum;
  *
  * @see validators.en.php // TODO: how to provide this as bundled ?
  */
-enum ValidationErrorCode: string
+enum ValidationErrorCodeEnum: string
 {
     case ERR_VALUE_SHOULD_BE_FALSE = 'ERR_VALUE_SHOULD_BE_FALSE';
     case ERR_VALUE_SHOULD_BE_TRUE = 'ERR_VALUE_SHOULD_BE_TRUE';

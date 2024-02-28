@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Module\Api\Attribut;
 
-use Module\Api\Enum\HttpMethod;
+use Module\Api\Enum\HttpMethodEnum;
 use Symfony\Component\Routing\Attribute\Route;
 
 use function Symfony\Component\String\u;
@@ -24,7 +24,7 @@ class ApiRoute extends Route
         array $options = [],
         array $defaults = [],
         ?string $host = null,
-        HttpMethod $method = HttpMethod::GET,
+        HttpMethodEnum $method = HttpMethodEnum::GET,
         array|string $schemes = [],
         ?string $condition = null,
         ?int $priority = null,
@@ -54,7 +54,7 @@ class ApiRoute extends Route
         );
     }
 
-    private function describeNameFromPath(string $path, HttpMethod $method): string
+    private function describeNameFromPath(string $path, HttpMethodEnum $method): string
     {
         $name = u($path)
             ->ensureStart('/')

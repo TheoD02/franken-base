@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Exception;
 
-use Module\Api\Enum\HttpStatus;
+use Module\Api\Enum\HttpStatusEnum;
 use Psr\Log\LogLevel;
 
 // Anywhere in code
@@ -32,9 +32,9 @@ class UserNotFound extends UserException
     }
 
     #[\Override]
-    public function getHttpStatusCode(): HttpStatus
+    public function getHttpStatusCode(): HttpStatusEnum
     {
-        return HttpStatus::NOT_FOUND;
+        return HttpStatusEnum::NOT_FOUND;
     }
 
     #[\Override]

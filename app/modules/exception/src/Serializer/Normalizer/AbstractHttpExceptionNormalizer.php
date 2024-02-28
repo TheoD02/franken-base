@@ -3,7 +3,6 @@
 namespace Module\ExceptionHandlerBundle\Serializer\Normalizer;
 
 use Module\ExceptionHandlerBundle\Exception\AbstractHttpException;
-use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Module\Api\Enum;
 
-enum HttpMethod: string
+enum HttpMethodEnum: string
 {
     case GET = 'GET';
     case POST = 'POST';

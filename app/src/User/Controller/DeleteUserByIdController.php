@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\Controller\Trait\EntityManagerTrait;
 use App\Entity\User;
+use App\Trait\EntityManagerTrait;
 use App\User\Exception\UserNotFound;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
-use Module\Api\Enum\HttpMethod;
+use Module\Api\Enum\HttpMethodEnum;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-#[ApiRoute('/api/users/{id}', method: HttpMethod::DELETE)]
+#[ApiRoute('/api/users/{id}', method: HttpMethodEnum::DELETE)]
 class DeleteUserByIdController
 {
     use EntityManagerTrait;

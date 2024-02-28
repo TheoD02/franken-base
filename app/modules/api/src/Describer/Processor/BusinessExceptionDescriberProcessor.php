@@ -6,7 +6,7 @@ namespace Module\Api\Describer\Processor;
 
 use Module\Api\Attribut\ApiException;
 use Module\Api\Describer\Trait\JsonContentDescriberProcessTrait;
-use Module\Api\Enum\HttpStatus;
+use Module\Api\Enum\HttpStatusEnum;
 use Module\ExceptionHandlerBundle\Exception\AbstractHttpException;
 use Nelmio\ApiDocBundle\OpenApiPhp\Util;
 use OpenApi\Annotations as OAnnotations;
@@ -14,6 +14,8 @@ use OpenApi\Attributes as OAttributes;
 use OpenApi\Attributes\Property;
 use OpenApi\Generator;
 use Symfony\Component\Routing\Route;
+
+use function class_exists;
 
 class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
 {
@@ -37,6 +39,10 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
         array $mapRequestPayload,
         array $mapQueryString
     ): bool {
+        if (class_exists('Module\ExceptionHandlerBundle\Exception\AbstractHttpException') === false) {
+            return false;
+        }
+
         return \count($reflectionMethod->getAttributes(ApiException::class, \ReflectionAttribute::IS_INSTANCEOF)) > 0;
     }
 
@@ -68,7 +74,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
             /** @var OAnnotations\Response $response */
             $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
             if ($response->description === Generator::UNDEFINED) {
-                $response->description = HttpStatus::from($statusCode)->getShortName() . ' response.';
+                $response->description = HttpStatusEnum::from($statusCode)->getShortName() . ' response.';
             }
             $jsonContent = $this->getJsonContent($response);
             foreach ($exceptionList as $exception) {

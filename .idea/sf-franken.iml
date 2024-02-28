@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/app/modules/api/src" isTestSource="false" packagePrefix="Module\Api\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/app/modules/exception/src" isTestSource="false" packagePrefix="Module\ExceptionHandlerBundle\" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/doctrine/deprecations" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/doctrine/inflector" />

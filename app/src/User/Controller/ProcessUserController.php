@@ -11,18 +11,18 @@ use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
-use Module\Api\Enum\HttpMethod;
-use Module\Api\Enum\ResponseType;
+use Module\Api\Enum\HttpMethodEnum;
+use Module\Api\Enum\ResponseTypeEnum;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-#[ApiRoute('/api/users/{id}/process', method: HttpMethod::GET)]
+#[ApiRoute('/api/users/{id}/process', method: HttpMethodEnum::GET)]
 class ProcessUserController
 {
     /**
      * @return ApiResponse<User, null>
      */
-    #[OpenApiResponse(User::class, type: ResponseType::COLLECTION)]
+    #[OpenApiResponse(User::class, type: ResponseTypeEnum::COLLECTION)]
     #[ApiException(UserProcessingException::class)]
     #[ApiException(UserNotFound::class)]
     public function __invoke(int $id): ApiResponse

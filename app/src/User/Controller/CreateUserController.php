@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\Controller\Trait\EntityManagerTrait;
 use App\Entity\User;
+use App\Trait\EntityManagerTrait;
 use App\User\Api\UserFilterQuery;
 use App\User\Exception\UserNotFound;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
-use Module\Api\Enum\HttpMethod;
+use Module\Api\Enum\HttpMethodEnum;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 
 #[AsController]
-#[ApiRoute('/api/users', method: HttpMethod::POST)]
+#[ApiRoute('/api/users', method: HttpMethodEnum::POST)]
 class CreateUserController
 {
     use EntityManagerTrait;

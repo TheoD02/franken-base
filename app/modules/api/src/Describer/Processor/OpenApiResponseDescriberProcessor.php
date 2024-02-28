@@ -7,8 +7,8 @@ namespace Module\Api\Describer\Processor;
 use Module\Api\Attribut\OpenApiMeta;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Describer\Trait\JsonContentDescriberProcessTrait;
-use Module\Api\Enum\HttpStatus;
-use Module\Api\Enum\ResponseType;
+use Module\Api\Enum\HttpStatusEnum;
+use Module\Api\Enum\ResponseTypeEnum;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareInterface;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareTrait;
 use Nelmio\ApiDocBundle\Model\Model;
@@ -71,7 +71,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
             'mediaType' => 'application/json',
         ]);
 
-        if ($openApiResponseInstance->statusCode === HttpStatus::NO_CONTENT) {
+        if ($openApiResponseInstance->statusCode === HttpStatusEnum::NO_CONTENT) {
             $response->description = $openApiResponseInstance->statusCode->getShortName();
 
             return $api;
@@ -107,11 +107,11 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         return $this->modelRegistry->register($model);
     }
 
-    private function getDataProperty(string $responseClass, array $groups, ResponseType $responseType): Property
+    private function getDataProperty(string $responseClass, array $groups, ResponseTypeEnum $responseType): Property
     {
         $dataProperty = new Property(property: 'data', description: 'The data of the response.');
         $ref = $this->getOpenApiModel($responseClass, $groups);
-        if ($responseType === ResponseType::COLLECTION) {
+        if ($responseType === ResponseTypeEnum::COLLECTION) {
             $dataProperty->type = 'array';
             $dataProperty->items = new Items(
                 ref: $ref,

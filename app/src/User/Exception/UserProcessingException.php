@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\User\Exception;
 
-use Module\Api\Enum\HttpStatus;
+use Module\Api\Enum\HttpStatusEnum;
 use Psr\Log\LogLevel;
 
 class UserProcessingException extends UserException
 {
     #[\Override]
-    public function getHttpStatusCode(): HttpStatus
+    public function getHttpStatusCode(): HttpStatusEnum
     {
-        return HttpStatus::UNPROCESSABLE_ENTITY;
+        return HttpStatusEnum::UNPROCESSABLE_ENTITY;
     }
 
     #[\Override]

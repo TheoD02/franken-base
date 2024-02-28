@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Module\ExceptionHandlerBundle\Exception;
 
-use Module\Api\Enum\HttpStatus;
+use Module\Api\Enum\HttpStatusEnum;
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionContextCodeInterface;
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionErrorCodeInterface;
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionParentCodeInterface;
@@ -31,11 +31,11 @@ abstract class AbstractHttpException extends HttpException
      *
      * The HTTP status code indicates the appropriate status to be returned about an API call.
      *
-     * @return HttpStatus the HTTP status code corresponding to the specific scenario of this exception
+     * @return HttpStatusEnum the HTTP status code corresponding to the specific scenario of this exception
      */
-    protected function getHttpStatusCode(): HttpStatus
+    protected function getHttpStatusCode(): HttpStatusEnum
     {
-        return HttpStatus::INTERNAL_SERVER_ERROR;
+        return HttpStatusEnum::INTERNAL_SERVER_ERROR;
     }
 
     /**

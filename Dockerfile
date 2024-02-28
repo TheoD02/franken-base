@@ -5,6 +5,7 @@ USER root
 
 RUN apk update --no-cache && apk add --no-cache \
     bash \
+    nano \
     git \
     acl \
     file \
