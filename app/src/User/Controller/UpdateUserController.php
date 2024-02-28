@@ -6,7 +6,9 @@ namespace App\User\Controller;
 
 use App\Controller\Trait\EntityManagerTrait;
 use App\Entity\User;
+use App\User\Exception\UserNotFound;
 use AutoMapperPlus\AutoMapperInterface;
+use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
@@ -24,9 +26,14 @@ class UpdateUserController
      * @return ApiResponse<User, null>
      */
     #[OpenApiResponse(User::class)]
+    #[ApiException(UserNotFound::class)]
     public function __invoke(#[MapRequestPayload] User $user, int $id, AutoMapperInterface $mapper): ApiResponse
     {
         $userEntity = $this->em->find(User::class, $id);
+
+        if ($userEntity === null) {
+            throw new UserNotFound();
+        }
 
         $userEntity = $mapper->mapToObject($user, $userEntity);
         $this->em->flush();

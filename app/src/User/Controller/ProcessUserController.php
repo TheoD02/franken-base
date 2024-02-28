@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\Entity\User;
+use App\User\Exception\UserNotFound;
 use App\User\Exception\UserProcessingException;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
@@ -23,6 +24,7 @@ class ProcessUserController
      */
     #[OpenApiResponse(User::class, type: ResponseType::COLLECTION)]
     #[ApiException(UserProcessingException::class)]
+    #[ApiException(UserNotFound::class)]
     public function __invoke(int $id): ApiResponse
     {
         // Do some stuff/processing

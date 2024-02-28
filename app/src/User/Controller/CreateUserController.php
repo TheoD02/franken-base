@@ -28,7 +28,6 @@ class CreateUserController
      * @return ApiResponse<User, null>
      */
     #[OpenApiResponse(User::class)]
-    #[ApiException(UserProcessingException::class)]
     #[ApiException(UserNotFound::class)]
     public function __invoke(
         #[MapRequestPayload] User $user,
