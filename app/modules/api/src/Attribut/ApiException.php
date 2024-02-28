@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Module\Api\Attribut;
 
-use Module\Api\Exception\AbstractHttpException;
+use Module\ExceptionHandlerBundle\Exception\AbstractHttpException;
 
 /**
  * This class permit to define the exception that can be thrown by an endpoint.

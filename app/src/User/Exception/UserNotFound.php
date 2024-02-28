@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Exception;
 
 use Module\Api\Enum\HttpStatus;
+use Psr\Log\LogLevel;
 
 // Anywhere in code
 //
@@ -12,18 +13,6 @@ use Module\Api\Enum\HttpStatus;
 
 class UserNotFound extends UserException
 {
-    /**
-     * @var callable|string|null
-     */
-    private $customDescription;
-
-    public function __construct(
-        null|string|callable $customDescription = null
-    ) {
-        $this->customDescription = $customDescription;
-        parent::__construct();
-    }
-
     #[\Override]
     public function getErrorMessage(): string
     {
@@ -33,14 +22,6 @@ class UserNotFound extends UserException
     #[\Override]
     public function describe(): string
     {
-        if (is_callable($this->customDescription)) {
-            return ($this->customDescription)();
-        }
-
-        if (is_string($this->customDescription)) {
-            return $this->customDescription;
-        }
-
         return 'User was not found by the given criteria.';
     }
 
@@ -54,5 +35,11 @@ class UserNotFound extends UserException
     public function getHttpStatusCode(): HttpStatus
     {
         return HttpStatus::NOT_FOUND;
+    }
+
+    #[\Override]
+    public function getLogLevel(): string
+    {
+        return LogLevel::WARNING;
     }
 }

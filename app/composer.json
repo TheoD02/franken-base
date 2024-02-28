@@ -59,7 +59,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "Module\\Api\\": "modules/api/src/"
+            "Module\\Api\\": "modules/api/src/",
+            "Module\\ExceptionHandlerBundle\\": "modules/exception/src/"
         }
     },
     "autoload-dev": {

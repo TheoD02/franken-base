@@ -2,17 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Module\Api\Exception;
+namespace Module\ExceptionHandlerBundle\Exception;
 
 use Module\Api\Enum\HttpStatus;
+use Module\ExceptionHandlerBundle\Adapter\ApiExceptionContextCodeInterface;
+use Module\ExceptionHandlerBundle\Adapter\ApiExceptionErrorCodeInterface;
+use Module\ExceptionHandlerBundle\Adapter\ApiExceptionParentCodeInterface;
+use Module\ExceptionHandlerBundle\EventListener\ExceptionLoggerHandlerListener;
+use Psr\Log\LogLevel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use function Symfony\Component\String\u;
 
 abstract class AbstractHttpException extends HttpException
 {
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ?string $describe = null,
+        private readonly array $context = []
+    ) {
         parent::__construct(
             statusCode: $this->getHttpStatusCode()->value,
             message: $this->getErrorMessage()
@@ -38,9 +45,9 @@ abstract class AbstractHttpException extends HttpException
      *
      * e.g. "BUSINESS" for business logic exceptions, "DATABASE" for database exceptions, etc.
      *
-     * @return \BackedEnum the context code defining the specific context
+     * @return ApiExceptionContextCodeInterface&\BackedEnum the context code defining the specific context (prefer string enum)
      */
-    abstract public function getContextCode(): \BackedEnum;
+    abstract public function getContextCode(): ApiExceptionContextCodeInterface;
 
     /**
      * Abstract method to retrieve the parent error code for the exception.
@@ -49,9 +56,9 @@ abstract class AbstractHttpException extends HttpException
      *
      * e.g. "USER" for user-related exceptions, "ORDER" for order-related exceptions, etc.
      *
-     * @return \BackedEnum the parent error code defining the overarching context
+     * @return ApiExceptionParentCodeInterface&\BackedEnum the parent error code defining the category of the exception (prefer string enum)
      */
-    abstract public function getParentErrorCode(): \BackedEnum;
+    abstract public function getParentErrorCode(): ApiExceptionParentCodeInterface;
 
     /**
      * Abstract method to retrieve the error code for the exception.
@@ -60,9 +67,9 @@ abstract class AbstractHttpException extends HttpException
      *
      * e.g.
      *
-     * @return \BackedEnum the error code representing the specific nature of the exception
+     * @return ApiExceptionErrorCodeInterface&\BackedEnum the error code representing the specific nature of the exception (prefer string enum)
      */
-    abstract protected function getErrorCode(): \BackedEnum;
+    abstract protected function getErrorCode(): ApiExceptionErrorCodeInterface;
 
     /**
      * Abstract method to retrieve the error message for the exception.
@@ -84,6 +91,11 @@ abstract class AbstractHttpException extends HttpException
      */
     abstract protected function describe(): string;
 
+    public function getDescribe(): ?string
+    {
+        return $this->describe ?? $this->describe();
+    }
+
     /**
      * @return string the concatenated context code and error code
      */
@@ -93,4 +105,22 @@ abstract class AbstractHttpException extends HttpException
             ->prepend($this->getParentErrorCode()->value . '_')
             ->toString();
     }
+
+    public function getContext(): array
+    {
+        return $this->context;
+    }
+
+
+    /**
+     * The log level for the exception.
+     *
+     * This log is automatically logged by the ExceptionHandlerListener.
+     *
+     * @return string
+     * @see LogLevel for possible log levels
+     *
+     * @see ExceptionLoggerHandlerListener for the log level handling
+     */
+    abstract public function getLogLevel(): string;
 }

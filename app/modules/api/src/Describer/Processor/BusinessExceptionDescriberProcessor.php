@@ -8,7 +8,7 @@ use Module\Api\Attribut\ApiException;
 use Module\Api\Describer\Trait\JsonContentDescriberProcessTrait;
 use Module\Api\Enum\ApiErrorType;
 use Module\Api\Enum\HttpStatus;
-use Module\Api\Exception\AbstractHttpException;
+use Module\ExceptionHandlerBundle\Exception\AbstractHttpException;
 use Nelmio\ApiDocBundle\OpenApiPhp\Util;
 use OpenApi\Annotations as OAnnotations;
 use OpenApi\Attributes as OAttributes;

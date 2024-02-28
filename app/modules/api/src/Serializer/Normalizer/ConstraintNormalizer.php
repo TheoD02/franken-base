@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Module\Api\Serializer\Normalizer;
 
 use Module\Api\Enum\ApiErrorType;
-use Module\Api\Exception\AbstractHttpException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -47,7 +46,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
     #[\Override]
     public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {
-        if (! $object instanceof FlattenException) {
+        if (!$object instanceof FlattenException) {
             throw new InvalidArgumentException(sprintf('The object must implement "%s".', FlattenException::class));
         }
 
@@ -57,20 +56,6 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
         $exception = $context['exception'] ?? null;
 
         if ($exception instanceof HttpExceptionInterface) {
-            if ($exception instanceof AbstractHttpException) {
-                $data = [
-                    self::CONTEXT => $exception->getContextCode()->value,
-                    self::TYPE => $exception->getParentErrorCode()->value,
-                    self::TITLE => $exception->getErrorMessage() ?: null,
-                    self::STATUS => $exception->getStatusCode(),
-                    self::CODE => $exception->getFormattedErrorCode(),
-                ];
-
-                if ($debug) {
-                    $data['debug_message'] = $exception->describe();
-                }
-            }
-
             $exception = $exception->getPrevious();
 
             if ($exception instanceof PartialDenormalizationException) {
@@ -80,7 +65,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
                     self::VIOLATIONS => PartialDenormalizationExceptionNormalizerHandler::normalize($exception),
                 ];
             } elseif ($exception instanceof ValidationFailedException) {
-                $trans = $this->translator ? $this->translator->trans(...) : static fn ($m, $p) => strtr($m, $p);
+                $trans = $this->translator ? $this->translator->trans(...) : static fn($m, $p) => strtr($m, $p);
                 $data = [
                     self::TYPE => ApiErrorType::VALIDATION_FAILED->value,
                     self::TITLE => 'Validation Failed',
@@ -105,6 +90,6 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
     #[\Override]
     public function supportsNormalization(mixed $data, ?string $format = null /* , array $context = [] */): bool
     {
-        return $data instanceof FlattenException;
+        return false;
     }
 }

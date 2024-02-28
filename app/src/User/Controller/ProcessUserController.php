@@ -23,12 +23,17 @@ class ProcessUserController
      */
     #[OpenApiResponse(User::class, type: ResponseType::COLLECTION)]
     #[ApiException(UserProcessingException::class)]
-    public function __invoke(): ApiResponse
+    public function __invoke(int $id): ApiResponse
     {
         // Do some stuff/processing
 
         // OH NO! Something went wrong
-        throw new UserProcessingException();
+        throw new UserProcessingException(
+            'It seem that something went wrong while processing the user. Maybe the user provider is down? Is the user still in the database?',
+            [
+                'userId' => $id,
+            ]
+        );
 
         // @phpstan-ignore-next-line - this is just for the example
         return new ApiResponse((new User())->setName('John Doe')->setEmail('john@doe.fr'));
