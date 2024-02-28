@@ -17,8 +17,8 @@ use function Symfony\Component\String\u;
 abstract class AbstractHttpException extends HttpException
 {
     public function __construct(
+        private readonly array $context = [],
         private readonly ?string $describe = null,
-        private readonly array $context = []
     ) {
         parent::__construct(
             statusCode: $this->getHttpStatusCode()->value,
