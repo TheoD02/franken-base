@@ -28,13 +28,14 @@ class GetCollectionUserController
     /**
      * @return ApiResponse<UserCollection, UserCollectionMeta>
      */
-    #[OpenApiResponse(User::class, groups: [UserGroups::READ], type: ResponseTypeEnum::COLLECTION)]
+    #[OpenApiResponse(User::class, type: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(UserCollectionMeta::class)]
     public function __invoke(
         #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery
     ): ApiResponse {
         $collection = $this->em->getRepository(User::class)->findByFilterQuery($filterQuery);
 
-        return new ApiResponse(data: $collection, meta: $collection->getMeta());
+
+        return new ApiResponse(data: $collection, groups: [UserGroups::READ]);
     }
 }

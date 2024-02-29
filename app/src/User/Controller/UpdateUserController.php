@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
+use Module\Api\Attribut\ApiRoute;
 use App\Entity\User;
 use App\Trait\EntityManagerTrait;
 use App\User\Exception\UserNotFound;
 use AutoMapperPlus\AutoMapperInterface;
 use Module\Api\Attribut\ApiException;
-use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethodEnum;
@@ -38,6 +38,6 @@ class UpdateUserController
         $userEntity = $mapper->mapToObject($user, $userEntity);
         $this->em->flush();
 
-        return new ApiResponse($userEntity);
+        return new ApiResponse(data: $userEntity, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
     }
 }

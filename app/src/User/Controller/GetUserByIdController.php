@@ -33,6 +33,6 @@ class GetUserByIdController
             ]);
         }
 
-        return new ApiResponse(data: $user);
+        return new ApiResponse(data: $user, groups: [UserGroups::READ]);
     }
 }

@@ -8,9 +8,10 @@ use App\Entity\User;
 use App\Trait\EntityManagerTrait;
 use App\User\Api\UserFilterQuery;
 use App\User\Exception\UserNotFound;
+use App\User\Exception\UserProcessingException;
+use App\User\UserGroups;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
-use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethodEnum;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -35,6 +36,10 @@ class CreateUserController
         $this->em->persist($user);
         $this->em->flush();
 
-        return new ApiResponse($user);
+        return new ApiResponse(
+            data: $user,
+            groups: [UserGroups::READ, UserGroups::READ_ROLES],
+            httpStatus: HttpStatus::CREATED
+        );
     }
 }
