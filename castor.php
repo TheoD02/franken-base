@@ -17,6 +17,7 @@ use function fingerprints\dockerfile_fingerprint;
 use function utils\import_from_git_remote;
 
 import('./.castor');
+import('./tools/k6/castor.php');
 
 import_from_git_remote('git@github.com:TheoD02/castor_extras.git');
 
