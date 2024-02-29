@@ -7,6 +7,7 @@ namespace App\User\Controller;
 use App\Entity\User;
 use App\Trait\EntityManagerTrait;
 use App\User\Exception\UserNotFound;
+use App\User\UserGroups;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;

@@ -26,6 +26,7 @@ readonly class KernelViewListener
     #[NoReturn]
     public function onKernelView(ViewEvent $event): void
     {
+        /**@var ?ApiResponse $controllerResult */
         $controllerResult = $event->getControllerResult();
 
         $reflection = $this->getControllerMethodReflectionClass($event);
@@ -40,20 +41,20 @@ readonly class KernelViewListener
         /** @var OpenApiResponse $openApiResponseInstance */
         $openApiResponseInstance = $openApiResponseAttribute->newInstance();
 
-        if ($openApiResponseInstance->statusCode === HttpStatusEnum::NO_CONTENT && $controllerResult !== null) {
+        if ($controllerResult->httpStatus === HttpStatusEnum::NO_CONTENT && $controllerResult !== null) {
             throw new \RuntimeException('The controller must return null or void when the status code is 204.');
         }
 
-        if ($controllerResult instanceof ApiResponse === false && $openApiResponseInstance->statusCode !== HttpStatusEnum::NO_CONTENT) {
+        if ($controllerResult instanceof ApiResponse === false && $controllerResult->httpStatus !== HttpStatusEnum::NO_CONTENT) {
             throw new \InvalidArgumentException(
                 'The controller must return an instance of ApiResponse when it has an OpenApiResponse attribute.'
             );
         }
 
         $jsonResponse = new JsonResponse();
-        $jsonResponse->setStatusCode($openApiResponseInstance->statusCode->value);
+        $jsonResponse->setStatusCode($controllerResult->httpStatus->value);
 
-        if ($openApiResponseInstance->statusCode === HttpStatusEnum::NO_CONTENT) {
+        if ($controllerResult->httpStatus === HttpStatusEnum::NO_CONTENT) {
             $event->setResponse($jsonResponse);
 
             return;
@@ -68,13 +69,13 @@ readonly class KernelViewListener
             );
         }
 
-        $context = $this->prepareSerializerContext($openApiResponseInstance);
+        $context = $this->prepareSerializerContext($controllerResult);
 
         $data = $openApiResponseInstance->isCollection() ?
             $controllerResult->data->all(false) :
             $controllerResult->data;
         $response = [
-            'status' => $openApiResponseInstance->statusCode->isSuccessful() ? 'success' : 'error',
+            'status' => $controllerResult->httpStatus->isSuccessful() ? 'success' : 'error',
             'data' => $this->serializer->normalize($data, context: $context),
             'meta' => $controllerResult->meta ? $this->serializer->normalize($controllerResult->meta) : null,
         ];
@@ -97,7 +98,7 @@ readonly class KernelViewListener
         return new \ReflectionMethod($controller);
     }
 
-    protected function prepareSerializerContext(OpenApiResponse $openApiResponseInstance): array
+    protected function prepareSerializerContext(ApiResponse $openApiResponseInstance): array
     {
         $groups = $openApiResponseInstance->groups;
 

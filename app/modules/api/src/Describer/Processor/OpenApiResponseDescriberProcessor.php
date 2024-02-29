@@ -78,7 +78,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
             $returnStmt = $this->getReturnStmt($method);
 
             if ($returnStmt === null) {
-                $httpStatus = HttpStatus::NO_CONTENT;
+                $httpStatus = HttpStatusEnum::NO_CONTENT;
             } else {
                 $name = $returnStmt->expr->class->toString();
                 if ($name !== 'ApiResponse') {
@@ -220,6 +220,9 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     {
         $method = null;
         foreach ($class->stmts as $stmt) {
+            if ($stmt instanceof ClassMethod === false) {
+                continue;
+            }
             if ($stmt->name->name === $reflectionMethod->getName()) {
                 $method = $stmt;
                 break;
@@ -299,7 +302,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         return $groups;
     }
 
-    private function getHttpStatus(\PhpParser\Node\Stmt\Return_ $returnStmt, array $ast): HttpStatus
+    private function getHttpStatus(\PhpParser\Node\Stmt\Return_ $returnStmt, array $ast): HttpStatusEnum
     {
         $httpStatus = null;
         foreach ($returnStmt->expr->args as $arg) {
@@ -309,7 +312,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         }
 
         if ($httpStatus === null) {
-            return HttpStatus::OK;
+            return HttpStatusEnum::OK;
         }
 
         $value = $httpStatus->value->name->name;

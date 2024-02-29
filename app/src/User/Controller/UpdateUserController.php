@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
+use App\User\UserGroups;
 use Module\Api\Attribut\ApiRoute;
 use App\Entity\User;
 use App\Trait\EntityManagerTrait;

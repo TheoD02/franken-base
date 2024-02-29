@@ -23,7 +23,7 @@ class OpenApiResponse
 {
     public function __construct(
         public ?string $class = null,
-        public ResponseType $type = ResponseType::ITEM,
+        public ResponseTypeEnum $type = ResponseTypeEnum::ITEM,
         public bool $empty = false,
     ) {
         if ($this->empty === true) {

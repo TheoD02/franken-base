@@ -8,6 +8,7 @@ use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Adapter\ApiDataInterface;
 use Module\Api\Adapter\ApiMetadataInterface;
 use Module\Api\Enum\HttpStatus;
+use Module\Api\Enum\HttpStatusEnum;
 
 /**
  * @template T
@@ -25,7 +26,7 @@ readonly class ApiResponse
          */
         public ?ApiMetadataInterface $meta = null,
         public array $groups = [],
-        public HttpStatus $httpStatus = HttpStatus::OK,
+        public HttpStatusEnum $httpStatus = HttpStatusEnum::OK,
     ) {
     }
 }
