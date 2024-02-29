@@ -21,7 +21,7 @@ RUN set -eux; \
         intl \
         opcache \
         zip \
-        pdo_mysql \
+        pdo_sqlite \
     ;
 
 ENV COMPOSER_ALLOW_SUPERUSER=1

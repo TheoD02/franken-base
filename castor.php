@@ -153,7 +153,7 @@ PHP;
 #[AsTask(name: 'db:reset', description: 'Reset the database')]
 function db_reset(): void
 {
-    Symfony::console(cmd: 'doctrine:database:drop --force --if-exists');
+    Symfony::console(cmd: 'doctrine:database:drop --force');
     Symfony::console(cmd: 'doctrine:database:create');
     Symfony::console(cmd: 'doctrine:schema:create');
     Symfony::console(cmd: 'doctrine:fixtures:load --no-interaction');

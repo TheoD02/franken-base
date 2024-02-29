@@ -52,17 +52,6 @@ services:
   #  <<: *worker_template
   #  command: php /app/bin/console messenger:consume scheduler_default -vv
 
-  database:
-    image: mariadb:11.3.2
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - traefik
-    profiles:
-      - app
-
   mkdocs:
     image: squidfunk/mkdocs-material:9.5.10
     volumes:
@@ -88,6 +77,5 @@ networks:
 volumes:
   caddy_data:
   caddy_config:
-  mysql_data:
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
