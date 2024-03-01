@@ -30,12 +30,16 @@ class CollectionNormalizer implements DenormalizerInterface, NormalizerInterface
     #[\Override]
     public function normalize(mixed $object, ?string $format = null, array $context = [])
     {
+        if ($object->isEmpty()) {
+            return $object;
+        }
+
         /** @var Collection $object */
         $convertBackedEnum = $context['backed_enum_as_value'] ?? false;
         if ($convertBackedEnum) {
-            return $object->isEmpty() ? Collection::empty() : $object->map(
-                static fn (\BackedEnum $value) => $value->value
-            )->all(false);
+            return $object->map(static fn ($value) => $value instanceof \BackedEnum ? $value->value : $value)->all(
+                false
+            );
         }
 
         return $object->all(false);
