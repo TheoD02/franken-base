@@ -7,6 +7,7 @@ namespace App\Tests\User\Controller;
 use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\CreateUserController;
+use App\User\UserGroups;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -18,8 +19,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 #[CoversClass(CreateUserController::class)]
 class CreateUserControllerTest extends ControllerTestCase
 {
-    use ResetDatabase;
-
     public function testInvokeWithUserCreation(): void
     {
         // Arrange
@@ -29,6 +28,6 @@ class CreateUserControllerTest extends ControllerTestCase
 
         // Assert
         self::assertResponseIsSuccessful();
-        $this->assertApiResponseEquals($expectedUser);
+        $this->assertApiResponseEquals($expectedUser, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
     }
 }

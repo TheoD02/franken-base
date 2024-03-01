@@ -7,6 +7,7 @@ namespace App\Tests\User\Controller;
 use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\UpdateUserController;
+use App\User\UserGroups;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -32,6 +33,6 @@ class UpdateUserControllerTest extends ControllerTestCase
 
         // Assert
         self::assertResponseIsSuccessful();
-        $this->assertApiResponseEquals($user);
+        $this->assertApiResponseEquals($user, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
     }
 }

@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use loophp\collection\Contract\Collection;
 use Module\Api\Attribut\ApiRoute;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+
+use function assert;
+use function dd;
+use function dump;
+use function is_object;
+use function rmdir;
 
 /**
  * @internal
@@ -54,11 +63,11 @@ class ControllerTestCase extends WebTestCase
     }
 
     /**
-     * @param class-string              $controllerFqcn
+     * @param class-string $controllerFqcn
      * @param array<string, string|int> $uriParameters
-     * @param array<string, mixed>      $queryParameters
-     * @param array<mixed>|object       $requestBody
-     * @param array<string, string>     $server
+     * @param array<string, mixed> $queryParameters
+     * @param array<mixed>|object $requestBody
+     * @param array<string, string> $server
      */
     protected function requestAction(
         string $controllerFqcn,
@@ -83,18 +92,17 @@ class ControllerTestCase extends WebTestCase
 
         $canHaveBody = \in_array($testRouteDescriber->method, ['POST', 'PUT', 'PATCH', 'DELETE'], true);
         $content = null;
-        if ($canHaveBody && ! empty($requestBody)) {
+        if ($canHaveBody && !empty($requestBody)) {
             $content = $this->serializer->serialize($requestBody, 'json');
-            dd($content);
         }
 
         $uri = str_replace(
-            array_map(static fn ($key) => sprintf('{%s}', $key), array_keys($uriParameters)),
+            array_map(static fn($key) => sprintf('{%s}', $key), array_keys($uriParameters)),
             array_values($uriParameters),
             $testRouteDescriber->uri,
         );
 
-        if (! empty($queryParameters)) {
+        if (!empty($queryParameters)) {
             $uri .= '?' . http_build_query($queryParameters);
         }
 
@@ -128,17 +136,30 @@ class ControllerTestCase extends WebTestCase
 
     /**
      * @param array<mixed>|object $data
-     * @param array<mixed>|null   $meta
+     * @param array<mixed>|null $meta
      */
-    protected function assertApiResponseEquals(array|object $data, ?array $meta = null): void
+    protected function assertApiResponseEquals(array|object $data, ?array $meta = null, array $groups = []): void
     {
         $response = $this->getResponse();
-        self::assertSame(\is_object($data) ? $this->serializer->normalize($data) : $data, $response['data']);
+
+        $context = ['backed_enum_as_value' => true];
+        if ($groups !== []) {
+            $context['groups'] = $groups;
+        }
+
+        $expected = $data;
+        if ($data instanceof Collection) {
+            $expected = $this->serializer->normalize($data->all(false), context: $context);
+        } elseif (is_object($data)) {
+            $expected = $this->serializer->normalize($data, context: $context);
+        }
+
+        self::assertSame($expected, $response['data']);
         self::assertSame($meta, $response['meta']);
     }
 
     /**
-     * @param array<mixed>  $expected
+     * @param array<mixed> $expected
      * @param array<string> $excludeKeys
      * @param array<string> $onlyKeys
      */
@@ -156,7 +177,7 @@ class ControllerTestCase extends WebTestCase
                 continue;
             }
 
-            if ($onlyKeys !== [] && ! \in_array($key, $onlyKeys, true)) {
+            if ($onlyKeys !== [] && !\in_array($key, $onlyKeys, true)) {
                 unset($response[$key]);
                 continue;
             }

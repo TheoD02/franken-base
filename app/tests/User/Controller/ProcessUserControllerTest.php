@@ -10,6 +10,8 @@ use App\User\Exception\UserProcessingException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
+use function array_keys;
+
 /**
  * @internal
  *
@@ -23,15 +25,22 @@ class ProcessUserControllerTest extends ControllerTestCase
     public function testInvokeWithUserCreation(): void
     {
         // Act
-        $this->requestAction(ProcessUserController::class);
+        $this->requestAction(ProcessUserController::class, ['id' => 1]);
 
         // Assert
         self::assertResponseStatusCodeSame(422);
+
+        $exception = new UserProcessingException();
         $expected = [
-            'type' => 'USER_EXCEPTION',
-            'title' => 'Cannot process the user',
+            'context_code' => $exception->getContextCode()->value,
+            'parent_code' => $exception->getParentErrorCode()->value,
+            'error_code' => $exception->getFormattedErrorCode(),
             'status' => 422,
-            'code' => (new UserProcessingException())->getFormattedErrorCode(),
+            'message' => $exception->getMessage(),
+            'debug_message' => 'It seem that something went wrong while processing the user. Maybe the user provider is down? Is the user still in the database?',
+            'context' => [
+                'userId' => 1
+            ]
         ];
         $this->assertJsonArray($expected, onlyKeys: array_keys($expected));
     }

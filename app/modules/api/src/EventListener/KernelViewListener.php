@@ -23,6 +23,7 @@ readonly class KernelViewListener
     ) {
     }
 
+    // TODO: Review the nullable type check, the case of empty with, without attribute and no return to handle case more fine-grained/proper way
     #[NoReturn]
     public function onKernelView(ViewEvent $event): void
     {
@@ -41,27 +42,28 @@ readonly class KernelViewListener
         /** @var OpenApiResponse $openApiResponseInstance */
         $openApiResponseInstance = $openApiResponseAttribute->newInstance();
 
-        if ($controllerResult->httpStatus === HttpStatusEnum::NO_CONTENT && $controllerResult !== null) {
+        if ($controllerResult?->httpStatus === HttpStatusEnum::NO_CONTENT && $controllerResult !== null) {
             throw new \RuntimeException('The controller must return null or void when the status code is 204.');
         }
 
-        if ($controllerResult instanceof ApiResponse === false && $controllerResult->httpStatus !== HttpStatusEnum::NO_CONTENT) {
+        if ($controllerResult instanceof ApiResponse === false && $controllerResult?->httpStatus !== HttpStatusEnum::NO_CONTENT && $openApiResponseInstance->empty !== true) {
             throw new \InvalidArgumentException(
                 'The controller must return an instance of ApiResponse when it has an OpenApiResponse attribute.'
             );
         }
 
         $jsonResponse = new JsonResponse();
-        $jsonResponse->setStatusCode($controllerResult->httpStatus->value);
+        $defaultStatusCode = $openApiResponseInstance->empty ? HttpStatusEnum::NO_CONTENT : HttpStatusEnum::OK;
+        $jsonResponse->setStatusCode(($controllerResult?->httpStatus ?? $defaultStatusCode)->value);
 
-        if ($controllerResult->httpStatus === HttpStatusEnum::NO_CONTENT) {
+        if ($controllerResult?->httpStatus === HttpStatusEnum::NO_CONTENT) {
             $event->setResponse($jsonResponse);
 
             return;
         }
 
         if (
-            $controllerResult->data instanceof ApiDataCollectionInterface
+            $controllerResult?->data instanceof ApiDataCollectionInterface
             && $openApiResponseInstance->isCollection() === false
         ) {
             throw new \InvalidArgumentException(
@@ -72,12 +74,12 @@ readonly class KernelViewListener
         $context = $this->prepareSerializerContext($controllerResult);
 
         $data = $openApiResponseInstance->isCollection() ?
-            $controllerResult->data->all(false) :
-            $controllerResult->data;
+            $controllerResult?->data->all(false) :
+            $controllerResult?->data;
         $response = [
-            'status' => $controllerResult->httpStatus->isSuccessful() ? 'success' : 'error',
+            'status' => $controllerResult?->httpStatus->isSuccessful() ? 'success' : 'error',
             'data' => $this->serializer->normalize($data, context: $context),
-            'meta' => $controllerResult->meta ? $this->serializer->normalize($controllerResult->meta) : null,
+            'meta' => $controllerResult?->meta ? $this->serializer->normalize($controllerResult->meta) : null,
         ];
 
         $jsonResponse->setData($response);
@@ -88,7 +90,7 @@ readonly class KernelViewListener
     protected function getControllerMethodReflectionClass(ViewEvent $event): \ReflectionMethod
     {
         $controller = $event->getRequest()->attributes->get('_controller');
-        $controller = explode('::', (string) $controller);
+        $controller = explode('::', (string)$controller);
         if (\count($controller) !== 2) {
             $controller = "{$controller[0]}::__invoke";
         } else {
@@ -98,9 +100,9 @@ readonly class KernelViewListener
         return new \ReflectionMethod($controller);
     }
 
-    protected function prepareSerializerContext(ApiResponse $openApiResponseInstance): array
+    protected function prepareSerializerContext(?ApiResponse $apiResponse): array
     {
-        $groups = $openApiResponseInstance->groups;
+        $groups = $apiResponse?->groups ?? [];
 
         $context = [
             'json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS,
