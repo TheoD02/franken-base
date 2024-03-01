@@ -26,7 +26,7 @@ readonly class KernelViewListener
     #[NoReturn]
     public function onKernelView(ViewEvent $event): void
     {
-        /**@var ?ApiResponse $controllerResult */
+        /** @var ?ApiResponse $controllerResult */
         $controllerResult = $event->getControllerResult();
 
         $reflection = $this->getControllerMethodReflectionClass($event);

@@ -7,7 +7,6 @@ namespace Module\Api\Dto;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Adapter\ApiDataInterface;
 use Module\Api\Adapter\ApiMetadataInterface;
-use Module\Api\Enum\HttpStatus;
 use Module\Api\Enum\HttpStatusEnum;
 
 /**

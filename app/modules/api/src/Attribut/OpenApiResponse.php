@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Module\Api\Attribut;
 
-use Module\Api\Enum\HttpStatusEnum;
 use Module\Api\Enum\ResponseTypeEnum;
-use Module\Api\Enum\ResponseType;
 
 /**
  * This class permit to define the response of an endpoint.

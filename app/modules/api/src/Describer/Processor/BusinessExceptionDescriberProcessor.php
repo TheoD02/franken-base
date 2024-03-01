@@ -15,8 +15,6 @@ use OpenApi\Attributes\Property;
 use OpenApi\Generator;
 use Symfony\Component\Routing\Route;
 
-use function class_exists;
-
 class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
 {
     use JsonContentDescriberProcessTrait;
@@ -39,7 +37,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
         array $mapRequestPayload,
         array $mapQueryString
     ): bool {
-        if (class_exists('Module\ExceptionHandlerBundle\Exception\AbstractHttpException') === false) {
+        if (class_exists(\Module\ExceptionHandlerBundle\Exception\AbstractHttpException::class) === false) {
             return false;
         }
 

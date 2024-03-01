@@ -88,6 +88,8 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
     #[\Override]
     public function supportsNormalization(mixed $data, ?string $format = null /* , array $context = [] */): bool
     {
+        return false;
+
         return $data instanceof FlattenException;
     }
 }

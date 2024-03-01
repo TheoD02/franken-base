@@ -7,9 +7,10 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use App\User\Enum\UserRoleEnum;
 use App\User\UserGroups;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use loophp\collection\Collection;
 use Module\Api\Adapter\ApiDataInterface;
+use Module\Api\Doctrine\CollectionType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -36,11 +37,16 @@ class User implements ApiDataInterface
     private ?string $email = null;
 
     /**
-     * @var array<UserRoleEnum>
+     * @var Collection<UserRoleEnum> $roles
      */
-    #[ORM\Column(type: Types::JSON)]
+    #[ORM\Column(type: CollectionType::NAME)]
     #[Groups([UserGroups::READ_ROLES])]
-    private array $roles = [];
+    private Collection $roles;
+
+    public function __construct()
+    {
+        $this->roles = Collection::fromIterable([UserRoleEnum::USER]);
+    }
 
     public function getId(): ?int
     {
@@ -89,12 +95,18 @@ class User implements ApiDataInterface
         return $this;
     }
 
-    public function getRoles(): array
+    /**
+     * @return Collection<UserRoleEnum>
+     */
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
-    public function setRoles(array $roles): static
+    /**
+     * @param Collection<UserRoleEnum> $roles
+     */
+    public function setRoles(Collection $roles): static
     {
         $this->roles = $roles;
 

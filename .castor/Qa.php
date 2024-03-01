@@ -21,7 +21,7 @@ class Qa
         self::$toolsDirectory ??= DockerUtils::resolveWorkdirFromContext(qa());
         $tools = finder()
             ->in(qa()->currentDirectory)
-            ->notName('bin')
+            ->notName(['bin', 'k6'])
             ->depth(0)
             ->directories();
 
