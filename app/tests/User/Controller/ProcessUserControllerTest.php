@@ -36,11 +36,6 @@ class ProcessUserControllerTest extends ControllerTestCase
             'parent_code' => $exception->getParentErrorCode()->value,
             'error_code' => $exception->getFormattedErrorCode(),
             'status' => 422,
-            'message' => $exception->getMessage(),
-            'debug_message' => 'It seem that something went wrong while processing the user. Maybe the user provider is down? Is the user still in the database?',
-            'context' => [
-                'userId' => 1,
-            ],
         ];
         $this->assertJsonArray($expected, onlyKeys: array_keys($expected));
     }

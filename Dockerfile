@@ -21,7 +21,7 @@ RUN set -eux; \
         intl \
         opcache \
         zip \
-        pdo_sqlite \
+        pdo_mysql \
     ;
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -55,6 +55,7 @@ RUN apk add --no-cache \
 RUN set -eux; \
     install-php-extensions \
         xdebug \
+        pcov \
     ;
 
 RUN echo "xdebug.mode=debug" >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini \

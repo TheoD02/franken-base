@@ -9,6 +9,7 @@ use App\Tests\ControllerTestCase;
 use App\User\Controller\CreateUserController;
 use App\User\UserGroups;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
@@ -18,6 +19,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(CreateUserController::class)]
 class CreateUserControllerTest extends ControllerTestCase
 {
+    use ResetDatabase;
+
     public function testInvokeWithUserCreation(): void
     {
         // Arrange
