@@ -9,7 +9,6 @@ use App\Tests\ControllerTestCase;
 use App\User\Controller\CreateUserController;
 use App\User\UserGroups;
 use PHPUnit\Framework\Attributes\CoversClass;
-use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal

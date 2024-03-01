@@ -7,18 +7,7 @@ namespace Module\Api\Doctrine;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\JsonType;
-use JsonException;
 use loophp\collection\Collection;
-
-use function dd;
-use function is_resource;
-use function json_decode;
-use function json_encode;
-
-use function stream_get_contents;
-
-use const JSON_PRESERVE_ZERO_FRACTION;
-use const JSON_THROW_ON_ERROR;
 
 class CollectionType extends JsonType
 {
@@ -36,8 +25,8 @@ class CollectionType extends JsonType
         }
 
         try {
-            return json_encode($value, JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION);
-        } catch (JsonException $e) {
+            return json_encode($value, \JSON_THROW_ON_ERROR | \JSON_PRESERVE_ZERO_FRACTION);
+        } catch (\JsonException $e) {
             throw ConversionException::conversionFailedSerialization($value->all(false), 'json', $e->getMessage(), $e);
         }
     }
@@ -49,13 +38,13 @@ class CollectionType extends JsonType
             return Collection::empty();
         }
 
-        if (is_resource($value)) {
+        if (\is_resource($value)) {
             $value = stream_get_contents($value);
         }
 
         try {
-            $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+            $value = json_decode((string) $value, true, 512, \JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
             throw ConversionException::conversionFailed($value, $this->getName(), $e);
         }
 

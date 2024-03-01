@@ -37,7 +37,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
         array $mapRequestPayload,
         array $mapQueryString
     ): bool {
-        if (class_exists(\Module\ExceptionHandlerBundle\Exception\AbstractHttpException::class) === false) {
+        if (class_exists(AbstractHttpException::class) === false) {
             return false;
         }
 
