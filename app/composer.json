@@ -12,7 +12,7 @@
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-fixtures-bundle": "^3.5",
         "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^3.0",
+        "doctrine/orm": "^2.18",
         "loophp/collection": "^7.5",
         "mark-gerarts/automapper-plus-bundle": "^1.4",
         "nelmio/api-doc-bundle": "^4.20",
