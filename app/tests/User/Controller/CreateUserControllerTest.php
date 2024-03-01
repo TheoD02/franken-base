@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\User\Controller;
 
+use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\CreateUserController;
-use App\User\User;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
@@ -17,14 +18,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(CreateUserController::class)]
 class CreateUserControllerTest extends ControllerTestCase
 {
+    use ResetDatabase;
+
     public function testInvokeWithUserCreation(): void
     {
         // Arrange
-        $expectedUser = new User();
-        $expectedUser
-            ->setName('John Doe')
-            ->setEmail('john@doe.com')
-        ;
+        $expectedUser = UserFactory::createOne()->object();
 
         $this->requestAction(CreateUserController::class, requestBody: $expectedUser);
 

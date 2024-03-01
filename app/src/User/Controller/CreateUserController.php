@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\Entity\User;
+use App\Entity\UserGroups;
 use App\Trait\EntityManagerTrait;
 use App\User\Api\UserFilterQuery;
 use App\User\Exception\UserNotFound;
-use App\User\Exception\UserProcessingException;
-use App\User\UserGroups;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;

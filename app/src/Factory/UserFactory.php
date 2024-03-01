@@ -7,6 +7,7 @@ namespace App\Factory;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\User\Enum\UserRoleEnum;
+use loophp\collection\Collection;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -39,7 +40,7 @@ final class UserFactory extends ModelFactory
             'email' => self::faker()->email(),
             'firstName' => self::faker()->firstName(),
             'lastName' => self::faker()->lastName(),
-            'roles' => [UserRoleEnum::USER],
+            'roles' => Collection::fromIterable([UserRoleEnum::USER]),
         ];
     }
 

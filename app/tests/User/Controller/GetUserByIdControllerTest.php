@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\User\Controller;
 
+use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\GetUserByIdController;
-use App\User\User;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
@@ -17,8 +18,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(GetUserByIdController::class)]
 class GetUserByIdControllerTest extends ControllerTestCase
 {
+    use ResetDatabase;
+
     public function testGetUserById(): void
     {
+        // Arrange
+        $user = UserFactory::createOne()->object();
+
         // Act
         $this->requestAction(GetUserByIdController::class, uriParameters: [
             'id' => 1,
@@ -26,6 +32,6 @@ class GetUserByIdControllerTest extends ControllerTestCase
 
         // Assert
         self::assertResponseStatusCodeSame(200);
-        $this->assertApiResponseEquals((new User())->setName('John Doe')->setEmail('john@doe.fr'));
+        $this->assertApiResponseEquals($user);
     }
 }

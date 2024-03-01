@@ -8,6 +8,7 @@ use App\Tests\ControllerTestCase;
 use App\User\Controller\ProcessUserController;
 use App\User\Exception\UserProcessingException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
@@ -17,6 +18,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(ProcessUserController::class)]
 class ProcessUserControllerTest extends ControllerTestCase
 {
+    use ResetDatabase;
+
     public function testInvokeWithUserCreation(): void
     {
         // Act

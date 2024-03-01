@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\User\Controller;
 
+use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\UpdateUserController;
-use App\User\User;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
@@ -17,13 +18,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UpdateUserController::class)]
 class UpdateUserControllerTest extends ControllerTestCase
 {
+    use ResetDatabase;
+
     public function testUpdateUser(): void
     {
         // Arrange
-        $user = (new User())
-            ->setName('John Doe')
-            ->setEmail('john@doe.fr')
-        ;
+        $user = UserFactory::createOne()->object();
 
         // Act
         $this->requestAction(UpdateUserController::class, uriParameters: [

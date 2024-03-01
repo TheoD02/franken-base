@@ -35,7 +35,6 @@ class GetCollectionUserController
     ): ApiResponse {
         $collection = $this->em->getRepository(User::class)->findByFilterQuery($filterQuery);
 
-
         return new ApiResponse(data: $collection, groups: [UserGroups::READ]);
     }
 }

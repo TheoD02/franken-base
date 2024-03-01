@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\User\Controller;
 
+use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\GetCollectionUserController;
-use App\User\User;
 use PHPUnit\Framework\Attributes\CoversClass;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
@@ -17,18 +18,15 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(GetCollectionUserController::class)]
 class GetCollectionUserControllerTest extends ControllerTestCase
 {
+    use ResetDatabase;
+
     public function testGetCollectionUser(): void
     {
         // Act
         $this->requestAction(GetCollectionUserController::class);
 
         // Assert
-        $expectedUser = [
-            (new User())->setName('John Doe')
-                ->setEmail('john@doe.fr'),
-            (new User())->setName('Alice Cooper')
-                ->setEmail('alice@cooper.fr'),
-        ];
+        $expectedUser = UserFactory::createMany(2);
 
         /** @var array<mixed> $expectedUser */
         $expectedUser = $this->serializer->normalize($expectedUser);

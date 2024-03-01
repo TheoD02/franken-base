@@ -85,6 +85,7 @@ class ControllerTestCase extends WebTestCase
         $content = null;
         if ($canHaveBody && ! empty($requestBody)) {
             $content = $this->serializer->serialize($requestBody, 'json');
+            dd($content);
         }
 
         $uri = str_replace(
