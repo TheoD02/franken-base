@@ -31,6 +31,8 @@ services:
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
     volumes:
       - ./app:/app
+      - ./castor.php:/app/castor.php
+      - ./.castor:/app/.castor
       - ./tools:/tools
       - ~/.ssh:/home/www-data/.ssh:ro
       - caddy_data:/data

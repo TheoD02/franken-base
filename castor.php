@@ -12,21 +12,30 @@ use function Castor\fs;
 use function Castor\import;
 use function Castor\input;
 use function Castor\io;
-use function Castor\run;
+use function Castor\Utils\Docker\docker;
 use function fingerprints\composer_fingerprint;
 use function fingerprints\dockerfile_fingerprint;
-use function utils\import_from_git_remote;
 
-import('./.castor');
-import('./tools/k6/castor.php');
-
-import_from_git_remote('git@github.com:TheoD02/castor_extras.git');
+//import_from_git_remote('git@github.com:TheoD02/castor_extras.git');
 
 #[AsContext(default: true)]
 function default_context(): Context
 {
+    $castorPath = __DIR__ . '/.castor';
+    $appPath = __DIR__ . '/app';
+    $toolsPath = __DIR__ . '/tools';
+    if (is_dir('/app')) {
+        $appPath = '/app';
+        $toolsPath = '/tools';
+    }
+
     return new Context(
         data: [
+            'paths' => [
+                'castor' => $castorPath,
+                'app' => $appPath,
+                'tools' => $toolsPath,
+            ],
             'docker' => [
                 'container' => 'franken-base-app-1',
                 'user' => capture('id -u'),
@@ -34,9 +43,15 @@ function default_context(): Context
                 'workdir' => '/app',
             ]
         ],
-        currentDirectory: __DIR__ . '/app'
+        currentDirectory: $appPath,
+        tty: true, // Required for docker exec (interactive mode), see how to handle it in the future
+        timeout: 0
     );
 }
+
+
+import(default_context()['paths']['castor']);
+import(default_context()['paths']['tools'] . '/k6/castor.php');
 
 #[AsContext]
 function qa(): Context
@@ -53,17 +68,23 @@ function qa(): Context
 #[AsTask(description: 'Start project')]
 function start(bool $force = false): void
 {
-    build(force: $force);
-    Docker::compose(['app'])->up(detach: true, wait: true);
+    fingerprint(
+        callback: fn() => docker()->compose()->build(services: ['app'], noCache: true),
+        fingerprint: dockerfile_fingerprint(),
+        force: $force
+    );
+
+    docker()->compose()->up(services: ['app'], detach: true, wait: true);
+    composer()->install();
     init_project();
-    //Docker::compose(['worker'])->up(detach: true, wait: false);
+    //docker()->compose()->up(services: ['worker'], detach: true, wait: false);
 }
 
 #[AsTask(description: 'Stop project')]
 function stop(): void
 {
-    Docker::compose(['app'])->down();
-    Docker::compose(['worker'])->down();
+    docker()->compose()->down(services: ['app']);
+    //docker()->compose()->down(services: ['worker']);
 }
 
 #[AsTask(description: 'Restart project')]
@@ -73,18 +94,11 @@ function restart(): void
     start();
 }
 
-function build(bool $force = false): void
-{
-    fingerprint(fn() => Docker::compose(['app'])->build(noCache: true),
-        fingerprint: dockerfile_fingerprint(),
-        force: $force);
-}
-
 #[AsTask(description: 'Install project')]
 function install(bool $force = false): void
 {
     start(force: $force);
-    fingerprint(callback: fn() => Composer::install(), fingerprint: composer_fingerprint(), force: $force);
+    fingerprint(callback: fn() => composer()->install(), fingerprint: composer_fingerprint(), force: $force);
 }
 
 #[AsTask(description: 'Open shell in the container (default: fish)', aliases: ['sh', 'fish'])]
@@ -93,7 +107,7 @@ function shell(
     bool $root = false
 ): void {
     $shell = input()->getArgument('command') === 'shell' ? 'fish' : input()->getArgument('command');
-    Docker::exec(cmd: $shell, user: $root ? 'root' : 'www-data');
+    docker()->exec(container: 'franken-base-app-1', args: [$shell], interactive: true, tty: true, user: $root ? 'root' : 'www-data');
 }
 
 function init_project(): void
@@ -125,7 +139,7 @@ PHP;
     $sfVersion = io()->choice('Which version of Symfony do you want to use?', ['5.4', '6.4', '7.*'], '6.4');
     io()->writeln('Creating Symfony project...');
 
-    Docker::exec(cmd: "composer create-project symfony/skeleton:\"{$sfVersion}.*\" tmp");
+    docker()->exec(container: 'franken-base-app-1', args: ['composer create-project symfony/skeleton:"' . $sfVersion . '.*" tmp']);
     $dir = context()->currentDirectory;
     fs()->mirror("{$dir}/tmp", $dir);
 
@@ -135,15 +149,15 @@ PHP;
     file_put_contents("{$dir}/ecs.php", $ecsContent);
     file_put_contents("{$dir}/rector.php", $rectorContent);
 
-    Docker::exec(cmd: 'composer require --dev symfony/debug-pack symfony/maker-bundle');
-    Docker::exec(cmd: 'composer require twig-bundle');
+    docker()->exec(container: 'franken-base-app-1', args: ['composer require --dev symfony/debug-pack symfony/maker-bundle']);
+    docker()->exec(container: 'franken-base-app-1', args: ['composer require twig-bundle']);
 
     $front = io()->choice('Use webpack-encore or vite ?', ['webpack-encore', 'vite'], 'webpack-encore');
 
     if ($front === 'webpack-encore') {
-        Docker::exec(cmd: 'composer require symfony/webpack-encore-bundle');
+        docker()->exec(container: 'franken-base-app-1', args: ['composer require symfony/webpack-encore-bundle']);
     } else {
-        Docker::exec(cmd: 'composer require pentatrion/vite-bundle');
+        docker()->exec(container: 'franken-base-app-1', args: ['composer require pentatrion/vite-bundle']);
     }
 
     $currentDir = context()->currentDirectory;
@@ -155,8 +169,8 @@ PHP;
 #[AsTask(name: 'db:reset', description: 'Reset the database')]
 function db_reset(): void
 {
-    Symfony::console(cmd: 'doctrine:database:drop --force --if-exists');
-    Symfony::console(cmd: 'doctrine:database:create');
-    Symfony::console(cmd: 'doctrine:schema:create');
-    Symfony::console(cmd: 'doctrine:fixtures:load --no-interaction');
+    symfony()->console('doctrine:database:drop --force --if-exists');
+    symfony()->console('doctrine:database:create');
+    symfony()->console('doctrine:schema:create');
+    symfony()->console('doctrine:fixtures:load --no-interaction');
 }
