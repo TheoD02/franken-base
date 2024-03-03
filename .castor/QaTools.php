@@ -67,8 +67,9 @@ class QaTools
     }
 
     #[AsTaskMethod]
-    public function ecs(#[AsOption] bool $fix = false): Process
-    {
+    public function ecs(
+        #[AsOption(description: 'Fix the issues')] bool $fix = false
+    ): Process {
         $this->add('ecs', 'check', '--clear-cache', '--ansi', '--config', '/app/ecs.php');
 
         $this->addIf($fix, '--fix');
@@ -87,11 +88,14 @@ class QaTools
     }
 
     #[AsTaskMethod]
-    public function rector(): Process
-    {
-        return $this
-            ->add('rector', 'process', '--clear-cache', '--config', '/app/rector.php')
-            ->runCommand();
+    public function rector(
+        #[AsOption(description: 'Fix the issues')] bool $fix = false
+    ): Process {
+        $this->add('rector', 'process', '--clear-cache', '--config', '/app/rector.php');
+
+        $this->addIf(!$fix, '--dry-run');
+
+        return $this->runCommand();
     }
 
     #[AsTaskMethod(aliases: ['qa:arki'])]
