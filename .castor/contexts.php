@@ -58,8 +58,6 @@ function default_context(): Context
             ],
             'docker' => [
                 'default' => $globalDockerContext,
-                'composer' => $globalDockerContext,
-                'php bin/console' => $globalDockerContext,
             ]
         ],
         currentDirectory: $appPath,
@@ -68,27 +66,10 @@ function default_context(): Context
     );
 }
 
-#[AsContext]
+#[AsContext(name: 'qa')]
 function qa(): Context
 {
     return default_context()
-        ->withData([
-            'docker' => [
-                'default' => new CastorDockerContext(
-                    container: 'franken-base-app-1',
-                    serviceName: 'app',
-                    workdir: '/app',
-                    user: 'www-data',
-                    allowRunningInsideContainer: true
-                ),
-                'composer' => new CastorDockerContext(
-                    container: 'franken-base-app-1',
-                    serviceName: 'app',
-                    workdir: '/tools',
-                    user: 'www-data',
-                    allowRunningInsideContainer: true
-                ),
-            ]
-        ])
+        ->withName('qa')
         ->withPath(context('app')->data['paths']['app']);
 }

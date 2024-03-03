@@ -35,11 +35,6 @@ function start(bool $force = false): void
         docker()->compose(profile: ['app'])->up(detach: true, wait: true);
     }
 
-    fingerprint(
-        callback: fn() => composer()->install(),
-        fingerprint: composer_fingerprint(),
-        force: $force
-    );
     init_project();
     //docker()->compose(profile: ['worker'])->up(detach: true, wait: false);
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Castor\Attribute\AsOption;
+use Castor\Utils\Docker\CastorDockerContext;
 use Symfony\Component\Process\Process;
 
 use function Castor\finder;

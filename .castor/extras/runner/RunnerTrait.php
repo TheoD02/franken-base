@@ -15,7 +15,6 @@ trait RunnerTrait
 {
     private array $commands = [];
 
-
     public function __construct(private readonly Context $castorContext)
     {
     }
@@ -28,18 +27,46 @@ trait RunnerTrait
      *
      * @return string|null
      */
-    abstract private function getBaseCommand(): ?string;
+    abstract protected function getBaseCommand(): ?string;
 
-    abstract private function runWithDocker(): bool;
+    abstract protected function runWithDocker(): bool;
 
     /**
      * Use that for running anything before the command is executed (e.g. setting environment variables, some checks, etc.)
      *
      * @return void
      */
-    private function preRunCommand(): void
+    protected function preRunCommand(): void
     {
         return;
+    }
+
+    protected function withDockerContext(): CastorDockerContext
+    {
+        if ($this->runWithDocker() === false) {
+            throw new \RuntimeException('This command should be only called when running with Docker.');
+        }
+
+        /** @var ?array<string, CastorDockerContext> $docker */
+        $docker = $this->castorContext->data['docker'] ?? null;
+
+        if ($docker === null) {
+            throw new \RuntimeException('A array of CastorDockerContext is required to run this command outside a container.');
+        }
+
+        $dockerContextName = $this->getBaseCommand();
+        $dockerContext = $docker[$dockerContextName] ?? $docker['default'] ?? null;
+
+        if ($dockerContext === null) {
+            io()->error([
+                "DockerContext is required in the context '{$this->castorContext->name}'",
+                "data: ['docker' => ['{$dockerContextName}' => new DockerContext()]]",
+                'If you don\'t want to use docker context from the context, you can override the method "withDockerContext" and return a new specific DockerContext.'
+            ]);
+            exit(1);
+        }
+
+        return $dockerContext;
     }
 
     public function mergeCommands(mixed ...$commands): string
@@ -67,7 +94,7 @@ trait RunnerTrait
 
     public function addIf(mixed $condition, string $key = null, string|array $value = null): void
     {
-        if ($condition !== false) {
+        if ($condition !== false && $condition !== null) {
             if ($key === null) {
                 $this->commands[] = is_array($value) ? implode(' ', $value) : $value;
             } elseif ($value === null) {
@@ -87,24 +114,7 @@ trait RunnerTrait
         $isRunningInsideContainer = DockerUtils::isRunningInsideContainer();
         $dockerContext = null;
         if ($this->runWithDocker()) {
-            /** @var ?array<string, CastorDockerContext> $docker */
-            $docker = $this->castorContext->data['docker'] ?? null;
-
-            if ($docker === null) {
-                throw new \RuntimeException('A array of CastorDockerContext is required to run this command outside a container.');
-            }
-
-            $dockerContext = $docker[$this->getBaseCommand() ?? 'default'] ?? null;
-
-            if ($dockerContext === null) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'DockerContext for "%s" is required to run this command outside a container. [\'docker\' => [\'%s\' => new DockerContext()]]',
-                        $this->getBaseCommand(),
-                        $this->getBaseCommand()
-                    )
-                );
-            }
+            $dockerContext = $this->withDockerContext();
         }
 
         if ($isRunningInsideContainer === false && $this->runWithDocker()) {
