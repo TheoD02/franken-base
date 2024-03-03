@@ -69,8 +69,20 @@ trait RunnerTrait
         }
 
         if ($isRunningInsideContainer === false && $this->runWithDocker()) {
-            // Need to add DockerContext, in castor context. Don't exist for now.
-            return docker()->compose()->exec(service: 'app', args: [$commands]);
+            /** @var array<string, DockerContext> $docker */
+            $docker = \Castor\variable('docker');
+
+            if ($docker === null) {
+                throw new \RuntimeException('A array of DockerContext is required to run this command outside a container.');
+            }
+
+            $dockerContext = $docker[$this->getBaseCommand()] ?? null;
+
+            if ($dockerContext === null) {
+                throw new \RuntimeException(sprintf('DockerContext for "%s" is required to run this command outside a container. [\'docker\' => [\'%s\' => new DockerContext()]]', $this->getBaseCommand(), $this->getBaseCommand()));
+            }
+
+            return docker()->compose()->exec(service: $dockerContext->serviceName, args: [$commands]);
         }
 
         $runProcess = run($commands, context: $this->castorContext);

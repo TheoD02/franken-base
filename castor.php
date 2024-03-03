@@ -5,7 +5,6 @@ use Castor\Attribute\AsOption;
 use Castor\Attribute\AsTask;
 use Castor\Context;
 
-use function Castor\capture;
 use function Castor\context;
 use function Castor\fingerprint;
 use function Castor\fs;
@@ -18,6 +17,19 @@ use function fingerprints\dockerfile_fingerprint;
 
 //import_from_git_remote('git@github.com:TheoD02/castor_extras.git');
 
+class DockerContext
+{
+    public function __construct(
+        public string $container,
+        public string $serviceName,
+        public string $user,
+        public string $group,
+        public string $workdir,
+    ) {
+    }
+
+}
+
 #[AsContext(default: true)]
 function default_context(): Context
 {
@@ -29,6 +41,14 @@ function default_context(): Context
         $toolsPath = '/tools';
     }
 
+    $globalDockerContext = new DockerContext(
+        container: 'franken-base-app-1',
+        serviceName: 'app',
+        user: 'www-data',
+        group: 'www-data',
+        workdir: '/app'
+    );
+
     return new Context(
         data: [
             'paths' => [
@@ -37,10 +57,8 @@ function default_context(): Context
                 'tools' => $toolsPath,
             ],
             'docker' => [
-                'container' => 'franken-base-app-1',
-                'user' => capture('id -u'),
-                'group' => capture('id -g'),
-                'workdir' => '/app',
+                'composer' => $globalDockerContext,
+                'php bin/console' => $globalDockerContext,
             ]
         ],
         currentDirectory: $appPath,
@@ -76,6 +94,7 @@ function start(bool $force = false): void
 
     docker()->compose()->up(services: ['app'], detach: true, wait: true);
     composer()->install();
+    symfony()->console('cache:clear');
     init_project();
     //docker()->compose()->up(services: ['worker'], detach: true, wait: false);
 }
