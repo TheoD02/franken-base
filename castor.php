@@ -5,6 +5,10 @@ use Castor\Attribute\AsOption;
 use Castor\Attribute\AsTask;
 use Castor\Context;
 
+use Castor\Utils\Docker\DockerContext;
+
+use Castor\Utils\Docker\DockerUtils;
+
 use function Castor\context;
 use function Castor\fingerprint;
 use function Castor\fs;
@@ -15,84 +19,25 @@ use function Castor\Utils\Docker\docker;
 use function fingerprints\composer_fingerprint;
 use function fingerprints\dockerfile_fingerprint;
 
-//import_from_git_remote('git@github.com:TheoD02/castor_extras.git');
+import('./.castor');
 
-class DockerContext
-{
-    public function __construct(
-        public string $container,
-        public string $serviceName,
-        public string $user,
-        public string $group,
-        public string $workdir,
-    ) {
-    }
-
-}
-
-#[AsContext(default: true)]
-function default_context(): Context
-{
-    $castorPath = __DIR__ . '/.castor';
-    $appPath = __DIR__ . '/app';
-    $toolsPath = __DIR__ . '/tools';
-    if (is_dir('/app')) {
-        $appPath = '/app';
-        $toolsPath = '/tools';
-    }
-
-    $globalDockerContext = new DockerContext(
-        container: 'franken-base-app-1',
-        serviceName: 'app',
-        user: 'www-data',
-        group: 'www-data',
-        workdir: '/app'
-    );
-
-    return new Context(
-        data: [
-            'paths' => [
-                'castor' => $castorPath,
-                'app' => $appPath,
-                'tools' => $toolsPath,
-            ],
-            'docker' => [
-                'composer' => $globalDockerContext,
-                'php bin/console' => $globalDockerContext,
-            ]
-        ],
-        currentDirectory: $appPath,
-        tty: true, // Required for docker exec (interactive mode), see how to handle it in the future
-        timeout: 0
-    );
-}
-
-
-import(default_context()['paths']['castor']);
+//import(default_context()['paths']['castor']);
 import(default_context()['paths']['tools'] . '/k6/castor.php');
 
-#[AsContext]
-function qa(): Context
-{
-    return default_context()
-        ->withData([
-            'docker' => [
-                'workdir' => '/tools',
-            ]
-        ])
-        ->withPath(__DIR__ . '/tools');
-}
 
 #[AsTask(description: 'Start project')]
 function start(bool $force = false): void
 {
-    fingerprint(
-        callback: fn() => docker()->compose()->build(services: ['app'], noCache: true),
-        fingerprint: dockerfile_fingerprint(),
-        force: $force
-    );
+    if (DockerUtils::isRunningInsideContainer() === false) {
+        fingerprint(
+            callback: fn() => docker()->compose()->build(services: ['app'], noCache: true),
+            fingerprint: dockerfile_fingerprint(),
+            force: $force
+        );
 
-    docker()->compose()->up(services: ['app'], detach: true, wait: true);
+        docker()->compose()->up(services: ['app'], detach: true, wait: true);
+    }
+
     composer()->install();
     symfony()->console('cache:clear');
     init_project();

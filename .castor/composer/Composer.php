@@ -2,10 +2,12 @@
 
 use Castor\Context;
 
+use Castor\Utils\Docker\CastorDockerContext;
 use Castor\Utils\Docker\DockerUtils;
 use Symfony\Component\Process\Process;
 
 use function Castor\context;
+use function Castor\io;
 use function Castor\run;
 use function Castor\Utils\Docker\docker;
 
@@ -16,8 +18,6 @@ trait RunnerTrait
     abstract private function getBaseCommand(): string;
 
     abstract private function runWithDocker(): bool;
-
-    abstract private function allowRunningInsideContainer(): bool;
 
     public function __construct(private readonly Context $castorContext)
     {
@@ -64,25 +64,39 @@ trait RunnerTrait
         $commands = $this->mergeCommands($this->getBaseCommand(), $this->commands);
 
         $isRunningInsideContainer = DockerUtils::isRunningInsideContainer();
-        if ($isRunningInsideContainer && $this->allowRunningInsideContainer() === false) {
-            throw new \RuntimeException('This command cannot be run inside a container.');
-        }
-
-        if ($isRunningInsideContainer === false && $this->runWithDocker()) {
-            /** @var array<string, DockerContext> $docker */
+        $dockerContext = null;
+        if ($this->runWithDocker()) {
+            /** @var array<string, CastorDockerContext> $docker */
             $docker = \Castor\variable('docker');
 
             if ($docker === null) {
-                throw new \RuntimeException('A array of DockerContext is required to run this command outside a container.');
+                throw new \RuntimeException('A array of CastorDockerContext is required to run this command outside a container.');
             }
 
             $dockerContext = $docker[$this->getBaseCommand()] ?? null;
 
             if ($dockerContext === null) {
-                throw new \RuntimeException(sprintf('DockerContext for "%s" is required to run this command outside a container. [\'docker\' => [\'%s\' => new DockerContext()]]', $this->getBaseCommand(), $this->getBaseCommand()));
+                throw new \RuntimeException(
+                    sprintf(
+                        'DockerContext for "%s" is required to run this command outside a container. [\'docker\' => [\'%s\' => new DockerContext()]]',
+                        $this->getBaseCommand(),
+                        $this->getBaseCommand()
+                    )
+                );
             }
+        }
 
+        if ($isRunningInsideContainer === false && $this->runWithDocker()) {
             return docker()->compose()->exec(service: $dockerContext->serviceName, args: [$commands]);
+        }
+
+        if ($isRunningInsideContainer === true && $dockerContext->allowRunningInsideContainer === false) {
+            io()->error([
+                "Running '{$this->getBaseCommand()}' inside a container is not allowed. ",
+                "Please run it outside the container or set 'allowRunningInsideContainer' to true in the docker context.",
+                "Current context: " . context()->name,
+            ]);
+            exit(1);
         }
 
         $runProcess = run($commands, context: $this->castorContext);
@@ -109,11 +123,6 @@ class Composer
 
 
     private function runWithDocker(): bool
-    {
-        return true;
-    }
-
-    private function allowRunningInsideContainer(): bool
     {
         return true;
     }
