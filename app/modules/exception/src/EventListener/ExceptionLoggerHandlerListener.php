@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\ExceptionHandlerBundle\EventListener;
 
 use Module\ExceptionHandlerBundle\Exception\AbstractHttpException;
@@ -7,18 +9,10 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Attribute\WithLogLevel;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-use function dd;
-use function in_array;
-use function sprintf;
-use function strtoupper;
-
-use const PHP_INT_MAX;
-
-#[AsEventListener(event: KernelEvents::EXCEPTION, priority: PHP_INT_MAX * -1)]
+#[AsEventListener(event: KernelEvents::EXCEPTION, priority: \PHP_INT_MAX * -1)]
 readonly class ExceptionLoggerHandlerListener
 {
     public const string DEFAULT_LOG_LEVEL = LogLevel::ERROR;
@@ -36,7 +30,7 @@ readonly class ExceptionLoggerHandlerListener
 
         if ($throwable instanceof AbstractHttpException) {
             $logLevel = $throwable->getLogLevel();
-            if (!\defined('Psr\Log\LogLevel::' . strtoupper($logLevel))) {
+            if (! \defined('Psr\Log\LogLevel::' . strtoupper($logLevel))) {
                 if ($this->debug) {
                     throw new \InvalidArgumentException(sprintf('Invalid log level "%s".', $logLevel));
                 }

@@ -7,11 +7,14 @@ use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
 
 require_once dirname(__DIR__) . '/tools/ecs/BaseECSConfig.php';
 
+$moduleDirs = glob(__DIR__ . '/modules/*', GLOB_ONLYDIR);
+
 return BaseECSConfig::config()
+    ->withCache(__DIR__ . '/var/ecs')
     ->withPaths([
         __DIR__ . '/src',
         __DIR__ . '/tests',
-        __DIR__ . '/modules/api/src',
+        ...$moduleDirs,
     ])
     ->withSkip([
         FinalInternalClassFixer::class,

@@ -103,7 +103,8 @@ abstract class AbstractHttpException extends HttpException
     {
         return u($this->getErrorCode()->value)
             ->prepend($this->getParentErrorCode()->value . '_')
-            ->toString();
+            ->toString()
+        ;
     }
 
     public function getContext(): array
@@ -111,15 +112,12 @@ abstract class AbstractHttpException extends HttpException
         return $this->context;
     }
 
-
     /**
      * The log level for the exception.
      *
      * This log is automatically logged by the ExceptionHandlerListener.
      *
-     * @return string
      * @see LogLevel for possible log levels
-     *
      * @see ExceptionLoggerHandlerListener for the log level handling
      */
     abstract public function getLogLevel(): string;

@@ -2,108 +2,9 @@
 
 use Castor\Context;
 
-use Castor\Utils\Docker\CastorDockerContext;
-use Castor\Utils\Docker\DockerUtils;
 use Symfony\Component\Process\Process;
 
 use function Castor\context;
-use function Castor\io;
-use function Castor\run;
-use function Castor\Utils\Docker\docker;
-
-trait RunnerTrait
-{
-    private array $commands = [];
-
-    abstract private function getBaseCommand(): string;
-
-    abstract private function runWithDocker(): bool;
-
-    public function __construct(private readonly Context $castorContext)
-    {
-    }
-
-    public function mergeCommands(mixed ...$commands): string
-    {
-        $commandsAsArrays = array_map(
-            callback: static fn($command) => is_array($command) ? $command : explode(' ', $command),
-            array: $commands
-        );
-        $flattened = array_reduce(
-            array: $commandsAsArrays,
-            callback: static fn($carry, $item) => [...$carry, ...$item],
-            initial: []
-        );
-
-        return implode(' ', $flattened);
-    }
-
-    public function add(string $command): self
-    {
-        $this->commands[] = $command;
-        return $this;
-    }
-
-    public function addIf(mixed $condition, string $key = null, string|array $value = null): void
-    {
-        if ($condition !== false) {
-            if ($key === null) {
-                $this->commands[] = is_array($value) ? implode(' ', $value) : $value;
-            } elseif ($value === null) {
-                $this->commands[] = $key;
-            } elseif (is_array($value)) {
-                $this->commands[] = $key . ' ' . implode(' ' . $key . ' ', $value);
-            } else {
-                $this->commands[] = $key . ' ' . $value;
-            }
-        }
-    }
-
-    public function runCommand(): Process
-    {
-        $commands = $this->mergeCommands($this->getBaseCommand(), $this->commands);
-
-        $isRunningInsideContainer = DockerUtils::isRunningInsideContainer();
-        $dockerContext = null;
-        if ($this->runWithDocker()) {
-            /** @var array<string, CastorDockerContext> $docker */
-            $docker = \Castor\variable('docker');
-
-            if ($docker === null) {
-                throw new \RuntimeException('A array of CastorDockerContext is required to run this command outside a container.');
-            }
-
-            $dockerContext = $docker[$this->getBaseCommand()] ?? null;
-
-            if ($dockerContext === null) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'DockerContext for "%s" is required to run this command outside a container. [\'docker\' => [\'%s\' => new DockerContext()]]',
-                        $this->getBaseCommand(),
-                        $this->getBaseCommand()
-                    )
-                );
-            }
-        }
-
-        if ($isRunningInsideContainer === false && $this->runWithDocker()) {
-            return docker()->compose()->exec(service: $dockerContext->serviceName, args: [$commands]);
-        }
-
-        if ($isRunningInsideContainer === true && $dockerContext->allowRunningInsideContainer === false) {
-            io()->error([
-                "Running '{$this->getBaseCommand()}' inside a container is not allowed. ",
-                "Please run it outside the container or set 'allowRunningInsideContainer' to true in the docker context.",
-                "Current context: " . context()->name,
-            ]);
-            exit(1);
-        }
-
-        $runProcess = run($commands, context: $this->castorContext);
-        $this->commands = [];
-        return $runProcess;
-    }
-}
 
 class Composer
 {
@@ -127,8 +28,9 @@ class Composer
         return true;
     }
 
-    public function install(): Process
+    public function install(?string $workingDirectory = null): Process
     {
+        $this->addIf($workingDirectory, '--working-dir', $workingDirectory);
         return $this->add('install')->runCommand();
     }
 }

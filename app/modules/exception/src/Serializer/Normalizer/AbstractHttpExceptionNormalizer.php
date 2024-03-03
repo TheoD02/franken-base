@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\ExceptionHandlerBundle\Serializer\Normalizer;
 
 use Module\ExceptionHandlerBundle\Exception\AbstractHttpException;
@@ -8,8 +10,6 @@ use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerAwareTrait;
-
-use const PHP_INT_MAX;
 
 class AbstractHttpExceptionNormalizer implements NormalizerInterface, SerializerAwareInterface
 {

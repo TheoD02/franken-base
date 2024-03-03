@@ -63,6 +63,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - mariadb:/var/lib/mysql
+    profiles:
+      - app
     networks:
       - database
 

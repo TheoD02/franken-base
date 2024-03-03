@@ -1,15 +1,11 @@
 <?php
 
-use Castor\Attribute\AsContext;
 use Castor\Attribute\AsOption;
 use Castor\Attribute\AsTask;
-use Castor\Context;
 
-use Castor\Utils\Docker\DockerContext;
 
 use Castor\Utils\Docker\DockerUtils;
 
-use function Castor\context;
 use function Castor\fingerprint;
 use function Castor\fs;
 use function Castor\import;
@@ -19,6 +15,7 @@ use function Castor\Utils\Docker\docker;
 use function fingerprints\composer_fingerprint;
 use function fingerprints\dockerfile_fingerprint;
 
+import('./.castor/extras');
 import('./.castor');
 
 //import(default_context()['paths']['castor']);
@@ -35,20 +32,23 @@ function start(bool $force = false): void
             force: $force
         );
 
-        docker()->compose()->up(services: ['app'], detach: true, wait: true);
+        docker()->compose(profile: ['app'])->up(detach: true, wait: true);
     }
 
-    composer()->install();
-    symfony()->console('cache:clear');
+    fingerprint(
+        callback: fn() => composer()->install(),
+        fingerprint: composer_fingerprint(),
+        force: $force
+    );
     init_project();
-    //docker()->compose()->up(services: ['worker'], detach: true, wait: false);
+    //docker()->compose(profile: ['worker'])->up(detach: true, wait: false);
 }
 
 #[AsTask(description: 'Stop project')]
 function stop(): void
 {
-    docker()->compose()->down(services: ['app']);
-    //docker()->compose()->down(services: ['worker']);
+    docker()->compose(profile: ['app'])->down();
+    //docker()->compose(profile: ['worker'])->down();
 }
 
 #[AsTask(description: 'Restart project')]
@@ -76,7 +76,7 @@ function shell(
 
 function init_project(): void
 {
-    if (fs()->exists('./app/composer.json')) {
+    if (fs()->exists(path('composer.json'))) {
         return;
     }
 
@@ -104,14 +104,14 @@ PHP;
     io()->writeln('Creating Symfony project...');
 
     docker()->exec(container: 'franken-base-app-1', args: ['composer create-project symfony/skeleton:"' . $sfVersion . '.*" tmp']);
-    $dir = context()->currentDirectory;
-    fs()->mirror("{$dir}/tmp", $dir);
+    $currentDir = path();
+    fs()->mirror("{$currentDir}/tmp", $currentDir);
 
-    fs()->remove("{$dir}/tmp");
+    fs()->remove("{$currentDir}/tmp");
 
     io()->info('Setting up ECS and Rector...');
-    file_put_contents("{$dir}/ecs.php", $ecsContent);
-    file_put_contents("{$dir}/rector.php", $rectorContent);
+    file_put_contents("{$currentDir}/ecs.php", $ecsContent);
+    file_put_contents("{$currentDir}/rector.php", $rectorContent);
 
     docker()->exec(container: 'franken-base-app-1', args: ['composer require --dev symfony/debug-pack symfony/maker-bundle']);
     docker()->exec(container: 'franken-base-app-1', args: ['composer require twig-bundle']);
@@ -124,7 +124,6 @@ PHP;
         docker()->exec(container: 'franken-base-app-1', args: ['composer require pentatrion/vite-bundle']);
     }
 
-    $currentDir = context()->currentDirectory;
     $envLocalContent = file_get_contents("{$currentDir}/.env.local");
     $envLocalContent = str_replace('{PROJECT_PATH}', $currentDir, $envLocalContent);
     file_put_contents("{$currentDir}/.env.local", $envLocalContent);
@@ -137,4 +136,10 @@ function db_reset(): void
     symfony()->console('doctrine:database:create');
     symfony()->console('doctrine:schema:create');
     symfony()->console('doctrine:fixtures:load --no-interaction');
+}
+
+function format_php(): void
+{
+    $files = fs()->find(path('src'), path('tests'))->name('*.php');
+    docker()->exec(container: 'franken-base-app-1', args: ['php-cs-fixer', 'fix', '--config=.php_cs.dist', '--using-cache=no', ...$files]);
 }

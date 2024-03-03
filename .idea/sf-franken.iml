@@ -142,6 +142,11 @@
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/mark-gerarts/auto-mapper-plus" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/mark-gerarts/automapper-plus-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/brianium/paratest" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/doctrine/common" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/ergebnis/phpunit-slow-test-detector" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/fidry/cpu-core-counter" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/jean85/pretty-package-versions" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

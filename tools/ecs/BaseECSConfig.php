@@ -10,7 +10,6 @@ class BaseECSConfig
 {
     public static function config(): ECSConfigBuilder
     {
-        $cwd = getcwd();
         return ECSConfig::configure()
             ->withRootFiles()
 

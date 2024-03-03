@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\ExceptionHandlerBundle\Enum;
 
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionContextCodeInterface;
