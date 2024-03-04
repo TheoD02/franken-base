@@ -6,12 +6,15 @@ use Castor\Attribute\AsTask;
 
 use Castor\Utils\Docker\DockerUtils;
 
+use function Castor\finder;
 use function Castor\fingerprint;
 use function Castor\fs;
+use function Castor\http_client;
 use function Castor\import;
 use function Castor\input;
 use function Castor\io;
 use function Castor\Utils\Docker\docker;
+use function Castor\with;
 use function fingerprints\composer_fingerprint;
 use function fingerprints\dockerfile_fingerprint;
 
@@ -27,7 +30,7 @@ function start(bool $force = false): void
 {
     if (DockerUtils::isRunningInsideContainer() === false) {
         fingerprint(
-            callback: fn() => docker()->compose()->build(services: ['app'], noCache: true),
+            callback: fn() => docker()->compose()->build(services: ['app']),
             fingerprint: dockerfile_fingerprint(),
             force: $force
         );
@@ -71,6 +74,30 @@ function shell(
 
 function init_project(): void
 {
+//    try {
+//        $files = finder()
+//            ->in(path())
+//            ->sortByName()
+//            ->notName(['castor.php', '.castor']);
+//
+//        foreach ($files->directories() as $directory) {
+//            try {
+//                fs()->remove($directory);
+//            } catch (Exception $e) {
+//                // do nothing
+//            }
+//        }
+//
+//        foreach ($files->ignoreDotFiles(false)->files() as $file) {
+//            try {
+//                fs()->remove($file);
+//            } catch (Exception $e) {
+//                // do nothing
+//            }
+//        }
+//    } catch (Exception $e) {
+//        // do nothing
+//    }
     if (fs()->exists(path('composer.json'))) {
         return;
     }
@@ -98,30 +125,31 @@ PHP;
     $sfVersion = io()->choice('Which version of Symfony do you want to use?', ['5.4', '6.4', '7.*'], '6.4');
     io()->writeln('Creating Symfony project...');
 
-    docker()->exec(container: 'franken-base-app-1', args: ['composer create-project symfony/skeleton:"' . $sfVersion . '.*" tmp']);
+    composer()->createProject("symfony/skeleton:\"$sfVersion.*\"", 'tmp');
     $currentDir = path();
     fs()->mirror("{$currentDir}/tmp", $currentDir);
-
     fs()->remove("{$currentDir}/tmp");
+
+    io()->info('Updating Symfony version...');
+    composer()->update('symfony/*', withDependencies: true);
 
     io()->info('Setting up ECS and Rector...');
     file_put_contents("{$currentDir}/ecs.php", $ecsContent);
     file_put_contents("{$currentDir}/rector.php", $rectorContent);
 
-    docker()->exec(container: 'franken-base-app-1', args: ['composer require --dev symfony/debug-pack symfony/maker-bundle']);
-    docker()->exec(container: 'franken-base-app-1', args: ['composer require twig-bundle']);
+    composer()->require(['symfony/maker-bundle', 'symfony/debug-pack'], dev: true);
+    composer()->require('twig-bundle');
 
     $front = io()->choice('Use webpack-encore or vite ?', ['webpack-encore', 'vite'], 'webpack-encore');
 
     if ($front === 'webpack-encore') {
-        docker()->exec(container: 'franken-base-app-1', args: ['composer require symfony/webpack-encore-bundle']);
+        composer()->require('symfony/webpack-encore-bundle');
     } else {
-        docker()->exec(container: 'franken-base-app-1', args: ['composer require pentatrion/vite-bundle']);
+        composer()->require('pentatrion/vite-bundle');
     }
-
-    $envLocalContent = file_get_contents("{$currentDir}/.env.local");
+    /*$envLocalContent = file_get_contents("{$currentDir}/.env.local");
     $envLocalContent = str_replace('{PROJECT_PATH}', $currentDir, $envLocalContent);
-    file_put_contents("{$currentDir}/.env.local", $envLocalContent);
+    file_put_contents("{$currentDir}/.env.local", $envLocalContent);*/
 }
 
 #[AsTask(name: 'db:reset', description: 'Reset the database')]
