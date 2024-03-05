@@ -69,7 +69,9 @@ services:
       - database
 
   mkdocs:
-    image: squidfunk/mkdocs-material:9.5.10
+    build:
+      dockerfile: MkdocsDockerfile
+      context: .
     volumes:
       - ./:/docs
     labels:

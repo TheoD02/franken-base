@@ -23,12 +23,7 @@ class Symfony
     }
 
 
-    private function runWithDocker(): bool
-    {
-        return true;
-    }
-
-    private function allowRunningInsideContainer(): bool
+    protected function allowRunningUsingDocker(): bool
     {
         return true;
     }

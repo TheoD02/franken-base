@@ -17,13 +17,12 @@ class Composer
         $this->__runnerTraitConstruct($context);
     }
 
-    private function getBaseCommand(): string
+    protected function getBaseCommand(): string
     {
         return 'composer';
     }
 
-
-    private function runWithDocker(): bool
+    protected function allowRunningUsingDocker(): bool
     {
         return true;
     }
