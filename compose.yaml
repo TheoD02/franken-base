@@ -4,7 +4,7 @@ x-worker-template:
   worker_template: &worker_template
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./.docker/php/Dockerfile
       target: worker-dev
     volumes:
       - ./app:/app
@@ -15,7 +15,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./.docker/php/Dockerfile
       target: dev
     ports:
       - "3150:3150"
@@ -70,7 +70,7 @@ services:
 
   mkdocs:
     build:
-      dockerfile: MkdocsDockerfile
+      dockerfile: ./.docker/mkdocs/Dockerfile
       context: .
     volumes:
       - ./:/docs

@@ -13,10 +13,9 @@ use const ROOT_DIR;
 function dockerfile_fingerprint(): string
 {
     return hasher()
-        ->writeFile(ROOT_DIR . '/Dockerfile')
         ->writeWithFinder(
             finder()
-                ->in(ROOT_DIR . '/docker')
+                ->in(ROOT_DIR . '/.docker')
         )
         ->finish();
 }

@@ -30,7 +30,7 @@ function start(bool $force = false): void
 {
     if (DockerUtils::isRunningInsideContainer() === false) {
         fingerprint(
-            callback: fn() => docker()->compose()->build(services: ['app']),
+            callback: fn() => docker()->compose()->build(services: ['app'], noCache: true),
             fingerprint: dockerfile_fingerprint(),
             force: $force
         );
