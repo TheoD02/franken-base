@@ -22,12 +22,7 @@ class QaTools
         $this->__runnerTraitConstruct(qa());
     }
 
-    private function getBaseCommand(): ?string
-    {
-        return null;
-    }
-
-    private function runWithDocker(): bool
+    protected function allowRunningUsingDocker(): bool
     {
         return true;
     }
@@ -119,12 +114,7 @@ class QaVendor
         $this->__runnerTraitConstruct(default_context());
     }
 
-    private function getBaseCommand(): ?string
-    {
-        return null;
-    }
-
-    private function runWithDocker(): bool
+    protected function allowRunningUsingDocker(): bool
     {
         return true;
     }

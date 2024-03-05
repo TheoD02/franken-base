@@ -41,6 +41,8 @@ nav:
   - Home: home.md
   - Setup:
       - 'Setup xdebug': 'xdebug/setup_xdebug.md'
+  - Castor:
+      - 'Usage of RunnerTrait': 'castor/how-to-use-runner-trait.md'
   - Symfony:
       - 'Use scheduler': 'symfony/use_scheduler.md'
       - 'Create API endpoint': 'symfony/create_api_endpoint.md'
@@ -55,6 +57,7 @@ extra:
 
 markdown_extensions:
   - admonition
+  - github-callouts
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.highlight:
