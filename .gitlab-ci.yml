@@ -132,8 +132,6 @@ pages:
   stage: deploy
   needs: [ "docker-build-mkdocs" ]
   image: mkdocs
-  before_script:
-    - docker build -t mkdocs -f ./.docker/mkdocs/Dockerfile .
   script:
     - mkdocs build -d public
   artifacts:
