@@ -122,16 +122,12 @@ deploy:
     - master
 
 
-docker-build-mkdocs:
-  image: docker:latest
-  script:
-    - docker build -t mkdocs -f ./.docker/mkdocs/Dockerfile .
-
 pages:
   # Build mkdocs with python
   stage: deploy
-  needs: [ "docker-build-mkdocs" ]
-  image: mkdocs
+  image: squidfunk/mkdocs-material:9.5.10
+  before_script:
+    - pip install markdown-callouts
   script:
     - mkdocs build -d public
   artifacts:
