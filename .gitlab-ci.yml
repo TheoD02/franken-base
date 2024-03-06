@@ -125,8 +125,9 @@ pages:
   # Build mkdocs with python
   stage: deploy
   image: squidfunk/mkdocs-material:9.5.10
-  script:
+  before_script:
     - pip install markdown-callouts
+  script:
     - mkdocs build -d public
   artifacts:
     paths:
