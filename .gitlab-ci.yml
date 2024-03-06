@@ -125,6 +125,8 @@ deploy:
 pages:
   stage: deploy
   image: python:latest
+  before_script:
+    cd ..
   script:
     - pip install mkdocs-material
     - pip install markdown-callouts
