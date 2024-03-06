@@ -123,6 +123,7 @@ deploy:
 
 
 docker-build-mkdocs:
+  image: docker:latest
   script:
     - docker build -t mkdocs -f ./.docker/mkdocs/Dockerfile .
 
