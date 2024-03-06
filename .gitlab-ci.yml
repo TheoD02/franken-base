@@ -123,13 +123,14 @@ deploy:
 
 
 pages:
-  # Build mkdocs with python
   stage: deploy
-  image: squidfunk/mkdocs-material:9.5.10
-  before_script:
-    - pip install markdown-callouts
+  image: python:latest
   script:
-    - mkdocs build -d public
+    - pip install mkdocs-material
+    - pip install markdown-callouts
+    - mkdocs build --site-dir public
   artifacts:
     paths:
       - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
