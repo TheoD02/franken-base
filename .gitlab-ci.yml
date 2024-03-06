@@ -121,9 +121,15 @@ deploy:
   only:
     - master
 
+
+docker-build-mkdocs:
+  script:
+    - docker build -t mkdocs -f ./.docker/mkdocs/Dockerfile .
+
 pages:
   # Build mkdocs with python
   stage: deploy
+  needs: [ "docker-build-mkdocs" ]
   image: mkdocs
   before_script:
     - docker build -t mkdocs -f ./.docker/mkdocs/Dockerfile .
