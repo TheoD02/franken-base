@@ -38,7 +38,7 @@ theme:
         name: Switch to light mode
 
 nav:
-  - Home: home.md
+  - Home: index.md
   - Setup:
       - 'Setup xdebug': 'xdebug/setup_xdebug.md'
   - Castor:

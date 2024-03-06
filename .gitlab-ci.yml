@@ -121,3 +121,13 @@ deploy:
   only:
     - master
 
+pages:
+  # Build mkdocs with python
+  stage: deploy
+  image: squidfunk/mkdocs-material:9.5.10
+  script:
+    - pip install markdown-callouts
+    - mkdocs build -d public
+  artifacts:
+    paths:
+      - public
