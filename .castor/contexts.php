@@ -8,25 +8,6 @@ use Castor\Utils\Docker\CastorDockerContext;
 
 use function Castor\context;
 
-/**
- * Return current context directory with optional additional path.
- */
-function path(?string $path = null, ?Context $context = null): string
-{
-    $context ??= context();
-    $currentDirectory = $context->currentDirectory;
-
-    if ($path === null) {
-        return $currentDirectory;
-    }
-
-    if (str_starts_with($path, '/')) {
-        return "{$currentDirectory}{$path}";
-    }
-
-    return "{$currentDirectory}/{$path}";
-}
-
 define('ROOT_DIR', dirname(__DIR__));
 
 #[AsContext(name: 'app', default: true)]

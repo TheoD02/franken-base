@@ -4,51 +4,25 @@ declare(strict_types=1);
 
 namespace utils;
 
-use function Castor\fingerprint;
-use function Castor\hasher;
-use function Castor\http_client;
-use function Castor\run;
+use Castor\Context;
 
-function import_from_http_remote(string $url): void
+use function Castor\context;
+
+/**
+ * Return current context directory with optional additional path.
+ */
+function path(?string $path = null, ?Context $context = null): string
 {
-    $response = http_client()->request('GET', $url);
+    $context ??= context();
+    $currentDirectory = $context->currentDirectory;
 
-    $filename = basename($url);
-    $filename = explode('?', $filename)[0];
-    $destinationDir = __DIR__ . '/remote-imported';
-    $destinationFile = $destinationDir . '/' . $filename;
-
-    if (! is_dir($destinationDir) && ! mkdir($destinationDir) && ! is_dir($destinationDir)) {
-        throw new \RuntimeException(sprintf('Directory "%s" was not created', $destinationDir));
+    if ($path === null) {
+        return $currentDirectory;
     }
 
-    file_put_contents($destinationFile, $response->getContent());
-}
-
-function import_from_git_remote(string $url): void
-{
-    $destinationDir = __DIR__ . '/remote-imported';
-    $repositoryDir = $destinationDir . '/' . basename($url, '.git');
-
-    if (is_dir($repositoryDir)) {
-        fingerprint(
-            callback: static function () use ($repositoryDir) {
-                run('git pull', path: $repositoryDir);
-            },
-            fingerprint: prevent_update($url)
-        );
-
-        return;
+    if (str_starts_with($path, '/')) {
+        return "{$currentDirectory}{$path}";
     }
 
-    run("git clone --depth=1 {$url}", path: $destinationDir);
-}
-
-function prevent_update(string $url): string
-{
-    return hasher()
-        ->write((new \DateTime())->add(new \DateInterval('P7D'))->format('Y-m-d'))
-        ->write($url)
-        ->finish()
-    ;
+    return "{$currentDirectory}/{$path}";
 }
