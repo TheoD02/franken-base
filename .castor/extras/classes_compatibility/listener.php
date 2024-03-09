@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Castor\Attribute\AsListener;
 use Castor\Event\AfterApplicationInitializationEvent;
 use Castor\TaskDescriptorCollection;
@@ -28,7 +30,9 @@ function register_classes_methods_as_tasks(AfterApplicationInitializationEvent $
             $taskMethodInstance = $reflectionAttributeList[0]->newInstance();
 
             if ($taskMethodInstance->name === '') {
-                $taskMethodInstance->name = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $methodReflection->getName()));
+                $taskMethodInstance->name = strtolower(
+                    preg_replace('/(?<!^)[A-Z]/', '-$0', $methodReflection->getName())
+                );
             }
 
             if ($taskMethodInstance->namespace === null) {
@@ -38,14 +42,15 @@ function register_classes_methods_as_tasks(AfterApplicationInitializationEvent $
                     $taskMethodInstance->namespace = $reflectedClass->getShortName();
                 }
                 // Slugify the namespace
-                $taskMethodInstance->namespace = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $taskMethodInstance->namespace));
+                $taskMethodInstance->namespace = strtolower(
+                    preg_replace('/(?<!^)[A-Z]/', '-$0', $taskMethodInstance->namespace)
+                );
             }
 
             $functionReflection = new ReflectionFunction($methodReflection->getClosure($reflectedClass->newInstance()));
             $classesMethodsDescriptor[] = new Castor\TaskDescriptor($taskMethodInstance, $functionReflection);
         }
     }
-
 
     $event->taskDescriptorCollection = new TaskDescriptorCollection(
         [...$event->taskDescriptorCollection->taskDescriptors, ...$classesMethodsDescriptor],

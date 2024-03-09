@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use Castor\Context;
 use Castor\Utils\Docker\CastorDockerContext;
 use Castor\Utils\Docker\DockerUtils;
-
 use Symfony\Component\Process\Process;
 
 use function Castor\context;
@@ -15,8 +16,9 @@ trait RunnerTrait
 {
     private array $commands = [];
 
-    public function __construct(private readonly Context $castorContext)
-    {
+    public function __construct(
+        private readonly Context $castorContext
+    ) {
     }
 
     /**
@@ -39,7 +41,7 @@ trait RunnerTrait
     /**
      * This configuration is global and have priority over the docker context configuration.
      *
-     * @return ?bool If null, the configuration from the docker context will be used.
+     * @return ?bool if null, the configuration from the docker context will be used
      */
     protected function allowRunningInsideContainer(): ?bool
     {
@@ -47,20 +49,19 @@ trait RunnerTrait
     }
 
     /**
-     * Use that for running anything before the command is executed (e.g. setting environment variables, some checks, etc.)
-     *
-     * @return void
+     * Use that for running anything before the command is executed (e.g. setting environment variables, some checks, etc.).
      */
     protected function preRunCommand(): void
     {
-        return;
     }
 
-    /** @internal */
+    /**
+     * @internal
+     */
     private function getDockerContext(): CastorDockerContext
     {
         if ($this->allowRunningUsingDocker() === false) {
-            throw new \RuntimeException('This command should be only called when running with Docker.');
+            throw new RuntimeException('This command should be only called when running with Docker.');
         }
 
         return $this->withDockerContext();
@@ -80,7 +81,9 @@ trait RunnerTrait
         $docker = $this->castorContext->data['docker'] ?? null;
 
         if ($docker === null) {
-            throw new \RuntimeException('A array of CastorDockerContext is required to run this command outside a container.');
+            throw new RuntimeException(
+                'A array of CastorDockerContext is required to run this command outside a container.'
+            );
         }
 
         $dockerContext = $docker[$this->getBaseCommand()] ?? $docker['default'] ?? null;
@@ -89,7 +92,7 @@ trait RunnerTrait
             io()->error([
                 "DockerContext is required in the context '{$this->castorContext->name}'",
                 "data: ['docker' => ['{$this->getBaseCommand()}' => new DockerContext()]]",
-                'If you don\'t want to use docker context from the context, you can override the method "withDockerContext" and return a new specific DockerContext.'
+                'If you don\'t want to use docker context from the context, you can override the method "withDockerContext" and return a new specific DockerContext.',
             ]);
             exit(1);
         }
@@ -97,18 +100,20 @@ trait RunnerTrait
         return $dockerContext;
     }
 
-    /** @internal */
+    /**
+     * @internal
+     */
     private function mergeCommands(mixed ...$commands): string
     {
         $commands = array_filter($commands);
 
         $commandsAsArrays = array_map(
-            callback: static fn($command) => is_array($command) ? $command : explode(' ', $command),
+            callback: static fn ($command) => is_array($command) ? $command : explode(' ', $command),
             array: $commands
         );
         $flattened = array_reduce(
             array: $commandsAsArrays,
-            callback: static fn($carry, $item) => [...$carry, ...$item],
+            callback: static fn ($carry, $item) => [...$carry, ...$item],
             initial: []
         );
 
@@ -126,12 +131,12 @@ trait RunnerTrait
      *
      * $this->add('install', '--no-dev');
      *
-     * @param string ...$commands
      * @return RunnerTrait|Composer|QaTools|QaVendor|Symfony
      */
     public function add(string ...$commands): self
     {
         $this->commands = [...$this->commands, ...$commands];
+
         return $this;
     }
 
@@ -161,13 +166,8 @@ trait RunnerTrait
      * $this->addIf($noDev, null, ['--option1', '--option2']);
      *
      * Will run: composer install --option1 --option2
-     *
-     * @param mixed $condition
-     * @param string|null $key
-     * @param string|array|null $value
-     * @return void
      */
-    public function addIf(mixed $condition, string $key = null, string|array $value = null): void
+    public function addIf(mixed $condition, ?string $key = null, string|array|null $value = null): void
     {
         if ($condition !== false && $condition !== null) {
             if ($key === null) {
@@ -195,7 +195,13 @@ trait RunnerTrait
 
         if ($isRunningInsideContainer === false && $dockerContext !== null) {
             $this->preRunCommand();
-            return docker()->compose()->exec(service: $dockerContext->serviceName, args: [$commands], user: $dockerContext->user, workdir: $dockerContext->workdir);
+
+            return docker()->compose()->exec(
+                service: $dockerContext->serviceName,
+                args: [$commands],
+                user: $dockerContext->user,
+                workdir: $dockerContext->workdir
+            );
         }
 
         if ($isRunningInsideContainer === true && $dockerContext->allowRunningInsideContainer === false) {
@@ -204,14 +210,14 @@ trait RunnerTrait
             io()->error([
                 "Context '{$contextName}' with Docker context '{$currentDockerContextName}' does not allow running this command inside the container.",
                 "Please run it outside the container or set 'allowRunningInsideContainer' to true in the docker context.",
-                "Current context: " . context()->name,
-                "Command: " . $commands
+                'Current context: ' . context()->name,
+                'Command: ' . $commands,
             ]);
             exit(1);
         }
 
         $this->preRunCommand();
-        $runProcess = run($commands, context: $this->castorContext);
-        return $runProcess;
+
+        return run($commands, context: $this->castorContext);
     }
 }

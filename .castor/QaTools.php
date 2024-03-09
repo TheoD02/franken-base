@@ -1,7 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
 use Castor\Attribute\AsOption;
-use Castor\Utils\Docker\CastorDockerContext;
 use Symfony\Component\Process\Process;
 
 use function Castor\finder;
@@ -13,11 +14,10 @@ use function Castor\io;
 #[AsTaskClass(namespace: 'qa')]
 class QaTools
 {
-    private static bool $runOnce = false;
-
     use RunnerTrait {
         __construct as private __runnerTraitConstruct;
     }
+    private static bool $runOnce = false;
 
     public function __construct()
     {
@@ -39,13 +39,14 @@ class QaTools
             ->in(qa()->data['paths']['tools'])
             ->notName(['bin', 'k6'])
             ->depth(0)
-            ->directories();
+            ->directories()
+        ;
 
         io()->writeln('Checking tools installation');
         foreach ($tools as $tool) {
             $toolDirectory = $tool->getPathname();
             io()->write("{$toolDirectory}...");
-            if (!fs()->exists("{$toolDirectory}/composer.json")) {
+            if (! fs()->exists("{$toolDirectory}/composer.json")) {
                 io()->error("The tool {$toolDirectory} does not contain a composer.json file");
                 exit(1);
             }
@@ -53,7 +54,7 @@ class QaTools
             $needForceInstall = fs()->exists("{$toolDirectory}/vendor") === false;
 
             fingerprint(
-                callback: function () use ($tool) {
+                callback: static function () use ($tool) {
                     composer(qa()->withQuiet(), workingDirectory: $tool->getFilename())->install();
                 },
                 fingerprint: hasher()
@@ -70,9 +71,8 @@ class QaTools
     }
 
     #[AsTaskMethod]
-    public function ecs(
-        #[AsOption(description: 'Fix the issues')] bool $fix = false
-    ): Process {
+    public function ecs(#[AsOption(description: 'Fix the issues')] bool $fix = false): Process
+    {
         $this->add('ecs', 'check', '--clear-cache', '--ansi', '--config', '/app/ecs.php');
 
         $this->addIf($fix, '--fix');
@@ -87,16 +87,16 @@ class QaTools
 
         return $this
             ->add('phpstan', 'analyse', 'src', '--level=8', '--configuration', '/app/phpstan.neon')
-            ->runCommand();
+            ->runCommand()
+        ;
     }
 
     #[AsTaskMethod]
-    public function rector(
-        #[AsOption(description: 'Fix the issues')] bool $fix = false
-    ): Process {
+    public function rector(#[AsOption(description: 'Fix the issues')] bool $fix = false): Process
+    {
         $this->add('rector', 'process', '--clear-cache', '--config', '/app/rector.php');
 
-        $this->addIf(!$fix, '--dry-run');
+        $this->addIf(! $fix, '--dry-run');
 
         return $this->runCommand();
     }
@@ -106,7 +106,8 @@ class QaTools
     {
         return $this
             ->add('phparkitect', 'check', '--ansi', '--config', '/app/phparkitect.php')
-            ->runCommand();
+            ->runCommand()
+        ;
     }
 }
 

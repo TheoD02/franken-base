@@ -1,7 +1,8 @@
 <?php
 
-use Castor\Context;
+declare(strict_types=1);
 
+use Castor\Context;
 use Symfony\Component\Process\Process;
 
 use function Castor\context;
@@ -64,9 +65,7 @@ class Composer
     }
 }
 
-function composer(
-    ?Context $context = null,
-    ?string $workingDirectory = null
-): Composer {
+function composer(?Context $context = null, ?string $workingDirectory = null): Composer
+{
     return new Composer(context: $context ?? context(), workingDirectory: $workingDirectory);
 }

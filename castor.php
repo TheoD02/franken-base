@@ -14,6 +14,7 @@ use function Castor\http_client;
 use function Castor\import;
 use function Castor\input;
 use function Castor\io;
+use function Castor\run;
 use function Castor\Utils\Docker\docker;
 use function Castor\with;
 use function fingerprints\composer_fingerprint;
@@ -71,7 +72,13 @@ function shell(
 ): void {
     $shell = input()->getArgument('command') === 'shell' ? 'fish' : input()->getArgument('command');
     $containerName = context()->data['docker']['default']->container;
-    docker()->exec(container: $containerName, args: [$shell], interactive: true, tty: true, user: $root ? 'root' : 'www-data');
+    docker()->exec(
+        container: $containerName,
+        args: [$shell],
+        interactive: true,
+        tty: true,
+        user: $root ? 'root' : 'www-data'
+    );
 }
 
 function init_project(): void
@@ -161,10 +168,4 @@ function db_reset(): void
     symfony()->console('doctrine:database:create');
     symfony()->console('doctrine:schema:create');
     symfony()->console('doctrine:fixtures:load --no-interaction');
-}
-
-function format_php(): void
-{
-    $files = fs()->find(path('src'), path('tests'))->name('*.php');
-    docker()->exec(container: 'franken-base-app-1', args: ['php-cs-fixer', 'fix', '--config=.php_cs.dist', '--using-cache=no', ...$files]);
 }

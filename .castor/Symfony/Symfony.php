@@ -1,7 +1,8 @@
 <?php
 
-use Castor\Context;
+declare(strict_types=1);
 
+use Castor\Context;
 use Symfony\Component\Process\Process;
 
 use function Castor\context;
@@ -12,8 +13,9 @@ class Symfony
         __construct as private __runnerTraitConstruct;
     }
 
-    public function __construct(private readonly Context $context)
-    {
+    public function __construct(
+        private readonly Context $context
+    ) {
         $this->__runnerTraitConstruct($context);
     }
 
@@ -21,7 +23,6 @@ class Symfony
     {
         return 'php bin/console';
     }
-
 
     protected function allowRunningUsingDocker(): bool
     {

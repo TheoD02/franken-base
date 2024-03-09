@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Castor\Utils\Docker;
 
 class CastorDockerContext

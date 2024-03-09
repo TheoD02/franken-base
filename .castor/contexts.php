@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Castor\Attribute\AsContext;
 use Castor\Context;
 use Castor\Utils\Docker\CastorDockerContext;
@@ -7,10 +9,7 @@ use Castor\Utils\Docker\CastorDockerContext;
 use function Castor\context;
 
 /**
- * Return current context directory with optional additional path
- *
- * @param string|null $path
- * @return string
+ * Return current context directory with optional additional path.
  */
 function path(?string $path = null, ?Context $context = null): string
 {
@@ -62,7 +61,7 @@ function default_context(): Context
             ],
             'docker' => [
                 'default' => $globalDockerContext,
-            ]
+            ],
         ],
         currentDirectory: $appPath,
         tty: true, // Required for docker exec (interactive mode), see how to handle it in the future
@@ -75,18 +74,17 @@ function qa(): Context
 {
     $baseContext = default_context()->data['docker']['default'];
 
-    /**
-     * @var CastorDockerContext $composerContext
-     */
+    /** @var CastorDockerContext $composerContext */
     $composerContext = clone $baseContext;
     $composerContext->workdir = '/tools';
 
     return default_context()
         ->withData([
             'docker' => [
-                'composer' => $composerContext
-            ]
+                'composer' => $composerContext,
+            ],
         ])
         ->withName('qa')
-        ->withPath(context('app')->data['paths']['app']);
+        ->withPath(context('app')->data['paths']['app'])
+    ;
 }

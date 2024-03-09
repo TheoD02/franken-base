@@ -1,6 +1,8 @@
 <?php
 
-#[\Attribute(\Attribute::TARGET_CLASS)]
+declare(strict_types=1);
+
+#[Attribute(Attribute::TARGET_CLASS)]
 class AsTaskClass
 {
     public function __construct(
