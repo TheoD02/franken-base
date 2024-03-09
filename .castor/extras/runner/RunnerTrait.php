@@ -59,7 +59,7 @@ trait RunnerTrait
     /** @internal */
     private function getDockerContext(): CastorDockerContext
     {
-        if ($this->runWithDocker() === false) {
+        if ($this->allowRunningUsingDocker() === false) {
             throw new \RuntimeException('This command should be only called when running with Docker.');
         }
 
@@ -83,13 +83,12 @@ trait RunnerTrait
             throw new \RuntimeException('A array of CastorDockerContext is required to run this command outside a container.');
         }
 
-        $dockerContextName = $this->getBaseCommand() ?? 'default';
-        $dockerContext = $docker[$dockerContextName] ?? null;
+        $dockerContext = $docker[$this->getBaseCommand()] ?? $docker['default'] ?? null;
 
         if ($dockerContext === null) {
             io()->error([
                 "DockerContext is required in the context '{$this->castorContext->name}'",
-                "data: ['docker' => ['{$dockerContextName}' => new DockerContext()]]",
+                "data: ['docker' => ['{$this->getBaseCommand()}' => new DockerContext()]]",
                 'If you don\'t want to use docker context from the context, you can override the method "withDockerContext" and return a new specific DockerContext.'
             ]);
             exit(1);
@@ -186,10 +185,11 @@ trait RunnerTrait
     public function runCommand(): Process
     {
         $commands = $this->mergeCommands($this->getBaseCommand(), $this->commands);
+        $this->commands = [];
 
         $isRunningInsideContainer = DockerUtils::isRunningInsideContainer();
         $dockerContext = null;
-        if ($this->runWithDocker()) {
+        if ($this->allowRunningUsingDocker()) {
             $dockerContext = $this->getDockerContext();
         }
 
@@ -212,7 +212,6 @@ trait RunnerTrait
 
         $this->preRunCommand();
         $runProcess = run($commands, context: $this->castorContext);
-        $this->commands = [];
         return $runProcess;
     }
 }

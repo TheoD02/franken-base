@@ -13,6 +13,8 @@ use function Castor\io;
 #[AsTaskClass(namespace: 'qa')]
 class QaTools
 {
+    private static bool $runOnce = false;
+
     use RunnerTrait {
         __construct as private __runnerTraitConstruct;
     }
@@ -29,6 +31,10 @@ class QaTools
 
     private function preRunCommand(): void
     {
+        if (self::$runOnce) {
+            return;
+        }
+
         $tools = finder()
             ->in(qa()->data['paths']['tools'])
             ->notName(['bin', 'k6'])
@@ -37,28 +43,30 @@ class QaTools
 
         io()->writeln('Checking tools installation');
         foreach ($tools as $tool) {
-            io()->write("{$tool->getFilename()}...");
-            $toolDirectory = "/tools/{$tool->getFilename()}";
-            if (!fs()->exists("$toolDirectory/composer.json")) {
-                io()->error("The tool {$tool->getFilename()} does not contain a composer.json file");
+            $toolDirectory = $tool->getPathname();
+            io()->write("{$toolDirectory}...");
+            if (!fs()->exists("{$toolDirectory}/composer.json")) {
+                io()->error("The tool {$toolDirectory} does not contain a composer.json file");
                 exit(1);
             }
 
-            $needForceInstall = fs()->exists("$toolDirectory/vendor") === false;
+            $needForceInstall = fs()->exists("{$toolDirectory}/vendor") === false;
 
             fingerprint(
-                callback: function () use ($toolDirectory) {
-                    composer(qa()->withQuiet())->install(workingDirectory: $toolDirectory);
+                callback: function () use ($tool) {
+                    composer(qa()->withQuiet(), workingDirectory: $tool->getFilename())->install();
                 },
                 fingerprint: hasher()
-                    ->writeFile("$toolDirectory/composer.json")
-                    ->writeFile("$toolDirectory/composer.lock")
+                    ->writeFile("{$toolDirectory}/composer.json")
+                    ->writeFile("{$toolDirectory}/composer.lock")
                     ->finish(),
                 force: $needForceInstall
             );
             io()->writeln(' <info>OK</info>');
         }
         io()->newLine();
+
+        self::$runOnce = true;
     }
 
     #[AsTaskMethod]

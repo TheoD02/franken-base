@@ -12,8 +12,11 @@ class Composer
         __construct as private __runnerTraitConstruct;
     }
 
-    public function __construct(private readonly Context $context)
-    {
+    public function __construct(
+        private readonly Context $context,
+        ?string $workingDirectory = null
+    ) {
+        $this->addIf($workingDirectory, '--working-dir', $workingDirectory);
         $this->__runnerTraitConstruct($context);
     }
 
@@ -34,9 +37,8 @@ class Composer
         return $this->runCommand();
     }
 
-    public function install(?string $workingDirectory = null): Process
+    public function install(): Process
     {
-        $this->addIf($workingDirectory, '--working-dir', $workingDirectory);
         return $this->add('install')->runCommand();
     }
 
@@ -49,8 +51,11 @@ class Composer
         return $this->add('require', ...$packages)->runCommand();
     }
 
-    public function update(string|array|null $packages = null, bool $dev = false, bool $withDependencies = false): Process
-    {
+    public function update(
+        string|array|null $packages = null,
+        bool $dev = false,
+        bool $withDependencies = false
+    ): Process {
         $packages = is_string($packages) ? [$packages] : ($packages ?? []);
         $this->addIf($dev, '--dev');
         $this->addIf($withDependencies, '--with-all-dependencies');
@@ -59,7 +64,9 @@ class Composer
     }
 }
 
-function composer(?Context $context = null): Composer
-{
-    return new Composer($context ?? context());
+function composer(
+    ?Context $context = null,
+    ?string $workingDirectory = null
+): Composer {
+    return new Composer(context: $context ?? context(), workingDirectory: $workingDirectory);
 }

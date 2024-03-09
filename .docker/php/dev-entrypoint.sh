@@ -5,7 +5,7 @@ set -e
 if [ -f "/app/composer.json" ]; then
     echo "Installing project dependencies"
     cd /app
-    composer install
+    composer install # this is currently installed as root, see how to run this part as www-data
 fi
 
 

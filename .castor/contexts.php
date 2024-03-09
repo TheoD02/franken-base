@@ -41,8 +41,12 @@ function default_context(): Context
         $toolsPath = '/tools';
     }
 
+    // TODO: Check if work in all cases
+    $dirname = basename(dirname(__DIR__));
+    $kebab = str_replace(['_', ' '], '-', $dirname);
+
     $globalDockerContext = new CastorDockerContext(
-        container: 'franken-base-app-1',
+        container: "{$kebab}-app-1",
         serviceName: 'app',
         workdir: '/app',
         user: 'www-data',
@@ -69,7 +73,20 @@ function default_context(): Context
 #[AsContext(name: 'qa')]
 function qa(): Context
 {
+    $baseContext = default_context()->data['docker']['default'];
+
+    /**
+     * @var CastorDockerContext $composerContext
+     */
+    $composerContext = clone $baseContext;
+    $composerContext->workdir = '/tools';
+
     return default_context()
+        ->withData([
+            'docker' => [
+                'composer' => $composerContext
+            ]
+        ])
         ->withName('qa')
         ->withPath(context('app')->data['paths']['app']);
 }

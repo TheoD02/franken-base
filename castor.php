@@ -6,6 +6,7 @@ use Castor\Attribute\AsTask;
 
 use Castor\Utils\Docker\DockerUtils;
 
+use function Castor\context;
 use function Castor\finder;
 use function Castor\fingerprint;
 use function Castor\fs;
@@ -69,7 +70,8 @@ function shell(
     bool $root = false
 ): void {
     $shell = input()->getArgument('command') === 'shell' ? 'fish' : input()->getArgument('command');
-    docker()->exec(container: 'franken-base-app-1', args: [$shell], interactive: true, tty: true, user: $root ? 'root' : 'www-data');
+    $containerName = context()->data['docker']['default']->container;
+    docker()->exec(container: $containerName, args: [$shell], interactive: true, tty: true, user: $root ? 'root' : 'www-data');
 }
 
 function init_project(): void
