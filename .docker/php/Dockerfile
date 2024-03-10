@@ -32,6 +32,7 @@ RUN set -eux; \
         opcache \
         zip \
         pdo_mysql \
+        excimer \
     ;
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -67,7 +68,9 @@ RUN set -eux; \
         pcov \
     ;
 
-RUN echo "xdebug.mode=debug" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini \
+RUN echo "xdebug.mode=debug,develop,profile" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini \
+    && echo "xdebug.start_with_request=trigger" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini \
+    && echo "xdebug.output_dir=/tmp/xdebug" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini \
     && echo "xdebug.client_host=host.docker.internal" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini
 
 
