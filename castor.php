@@ -19,6 +19,7 @@ use function Castor\Utils\Docker\docker;
 use function Castor\with;
 use function fingerprints\composer_fingerprint;
 use function fingerprints\dockerfile_fingerprint;
+use function utils\path;
 
 import('./.castor/extras');
 import('./.castor');
