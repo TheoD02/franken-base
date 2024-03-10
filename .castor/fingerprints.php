@@ -6,6 +6,7 @@ namespace fingerprints;
 
 use function Castor\finder;
 use function Castor\hasher;
+use function utils\path;
 
 function dockerfile_fingerprint(): string
 {

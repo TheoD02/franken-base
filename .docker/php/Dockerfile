@@ -1,9 +1,19 @@
-FROM dunglas/frankenphp:1-alpine as frankenphp
+FROM dunglas/frankenphp:1-php8.3.3 as frankenphp
 
 WORKDIR /app
 USER root
 
-RUN apk update --no-cache && apk add --no-cache \
+#RUN apk update --no-cache && apk add --no-cache \
+#    bash \
+#    nano \
+#    git \
+#    acl \
+#    file \
+#    gettext \
+#    openssh-client \
+#    yarn
+
+RUN apt-get update && apt-get install -y \
     bash \
     nano \
     git \
@@ -48,8 +58,7 @@ ENV XDG_DATA_HOME=${XDG_DATA_HOME}
 RUN mkdir -p ${XDG_CONFIG_HOME}/fish
 RUN mkdir -p ${XDG_DATA_HOME}
 
-RUN apk add --no-cache \
-    fish
+RUN apt-get update && apt-get install -y fish
 
 # Install Xdebug
 RUN set -eux; \
@@ -70,8 +79,8 @@ RUN deluser www-data || true \
     && delgroup www-data || true
 
 # Create new user and group with the same id as the host user
-RUN addgroup -g 1000 www-data \
-    && adduser -D -H -u 1000 -s /bin/bash www-data -G www-data
+RUN groupadd -g 1000 www-data \
+    && useradd -u 1000 -ms /bin/bash -g www-data www-data
 
 RUN chown -R ${USER}:${USER} /home /tmp /app /home/${USER} ${XDG_CONFIG_HOME} ${XDG_DATA_HOME}
 
