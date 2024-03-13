@@ -45,8 +45,8 @@ class ApiResponseAstResolver
                 $httpStatus ??= $this->getHttpStatus($returnStmt, $ast);
                 $groups = $this->getGroups($returnStmt, $ast);
             }
-        } catch (\PhpParser\Error $e) {
-            throw new \RuntimeException('An error occurred while parsing the file.', 0, $e);
+        } catch (\PhpParser\Error $error) {
+            throw new \RuntimeException('An error occurred while parsing the file.', 0, $error);
         }
 
         return [$httpStatus, $groups];
@@ -59,6 +59,7 @@ class ApiResponseAstResolver
             if ($stmt instanceof ClassMethod === false) {
                 continue;
             }
+
             if ($stmt->name->name === $reflectionMethod->getName()) {
                 $method = $stmt;
                 break;
@@ -76,6 +77,7 @@ class ApiResponseAstResolver
                 if ($returnStmt instanceof \PhpParser\Node\Stmt\Return_) {
                     throw new \RuntimeException('The method must have a return statement.');
                 }
+
                 $returnStmt = $stmt;
             }
         }
@@ -122,6 +124,7 @@ class ApiResponseAstResolver
                                         foreach ($groupedByClass[$className] as $group) {
                                             $groups[] = $cases[$group];
                                         }
+
                                         unset($groupedByClass[$className]);
                                     }
                                 }

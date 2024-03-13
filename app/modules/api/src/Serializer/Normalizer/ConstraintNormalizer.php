@@ -19,9 +19,13 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
     use SerializerAwareTrait;
 
     public const string TITLE = 'title';
+
     public const string TYPE = 'type';
+
     public const string STATUS = 'status';
+
     public const string CODE = 'code';
+
     public const string VIOLATIONS = 'violations';
 
     public function __construct(

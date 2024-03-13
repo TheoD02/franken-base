@@ -65,6 +65,7 @@ class RouteDescriber implements RouteDescriberInterface, ModelRegistryAwareInter
                     if ($processor instanceof ModelRegistryAwareInterface) {
                         $processor->setModelRegistry($this->modelRegistry);
                     }
+
                     $api = $processor->process($api, $operation, $route, $reflectionMethod, $mapRequestPayload, $mapQueryString);
                 }
             }

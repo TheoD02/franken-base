@@ -16,6 +16,7 @@ class AbstractHttpExceptionNormalizer implements NormalizerInterface, Serializer
     use SerializerAwareTrait;
 
     public const string TYPE = 'type';
+
     public const string CODE = 'code';
 
     public function __construct(

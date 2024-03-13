@@ -20,7 +20,7 @@ class UserNotFound extends UserException
     }
 
     #[\Override]
-    public function describe(): string
+    protected function describe(): string
     {
         return 'User was not found by the given criteria.';
     }

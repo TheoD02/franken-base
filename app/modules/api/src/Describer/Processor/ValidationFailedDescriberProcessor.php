@@ -22,6 +22,7 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
     use JsonContentDescriberProcessTrait;
 
     private static OAttributes\Schema $validationFailedSchema;
+
     private static OAttributes\Examples $validationFailedExamples;
 
     #[\Override]

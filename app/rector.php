@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodingStyle\Rector\Encapsed\EncapsedStringsToSprintfRector;
 use Rector\Config\RectorConfig;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 
@@ -23,7 +24,7 @@ return RectorConfig::configure()
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
-        //codingStyle: true,
+        codingStyle: true,
         //typeDeclarations: true,
         //privatization: true,
         //naming: true,
@@ -33,4 +34,7 @@ return RectorConfig::configure()
     )
     ->withRules([
         AddVoidReturnTypeWhereNoReturnRector::class,
+    ])
+    ->withSkip([
+        EncapsedStringsToSprintfRector::class,
     ]);

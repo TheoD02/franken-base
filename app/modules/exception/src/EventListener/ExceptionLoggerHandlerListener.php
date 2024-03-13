@@ -30,10 +30,11 @@ readonly class ExceptionLoggerHandlerListener
 
         if ($throwable instanceof AbstractHttpException) {
             $logLevel = $throwable->getLogLevel();
-            if (! \defined('Psr\Log\LogLevel::' . strtoupper($logLevel))) {
+            if (! \defined(LogLevel::class . '::' . strtoupper($logLevel))) {
                 if ($this->debug) {
                     throw new \InvalidArgumentException(sprintf('Invalid log level "%s".', $logLevel));
                 }
+
                 $logLevel = self::DEFAULT_LOG_LEVEL;
             }
 

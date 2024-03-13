@@ -71,6 +71,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
             if ($response->description === Generator::UNDEFINED) {
                 $response->description = HttpStatusEnum::from($statusCode)->getShortName() . ' response.';
             }
+
             $jsonContent = $this->getJsonContent($response);
             foreach ($exceptionList as $exception) {
                 $jsonContent->oneOf[] = $this->getSchema($exception);
@@ -86,7 +87,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
         return self::$businessExceptionSchema[$exception::class] ??= new OAttributes\Schema(
             schema: "{$exception->getErrorCode()->value}Schema",
             title: $exception->getErrorMessage(),
-            description: $exception->describe(),
+            description: $exception->getDescribe(),
             properties: [
                 new Property(property: 'status', description: 'The status of the response.', type: 'string', example: 'error'),
                 new Property(
@@ -135,7 +136,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
         return self::$businessExceptionExamples[$exception::class] ??= new OAttributes\Examples(
             $exception->getErrorCode()->value,
             $exception->getErrorCode()->value,
-            $exception->describe(),
+            $exception->getDescribe(),
             [
                 'status' => 'error',
                 'error' => [

@@ -73,6 +73,7 @@ class ControllerTestCase extends WebTestCase
         if ($reflectionClass->hasMethod('__invoke') === false) {
             throw new \RuntimeException(sprintf('The class %s is not a action controller', $controllerFqcn));
         }
+
         $testRouteDescriber = $this->getRouteFromReflectionClass($reflectionClass);
 
         $server += [
@@ -102,7 +103,7 @@ class ControllerTestCase extends WebTestCase
     /**
      * @return ($json is true ? array<mixed> : string)
      */
-    protected function getResponse(bool $json = true): array|string
+    private function getResponse(bool $json = true): array|string
     {
         $response = $this->client->getResponse();
         $content = $response->getContent();

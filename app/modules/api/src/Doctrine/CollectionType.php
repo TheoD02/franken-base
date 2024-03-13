@@ -22,8 +22,8 @@ class CollectionType extends JsonType
 
         try {
             return json_encode($value, \JSON_THROW_ON_ERROR | \JSON_PRESERVE_ZERO_FRACTION);
-        } catch (\JsonException $e) {
-            throw ConversionException::conversionFailedSerialization($value->all(false), 'json', $e->getMessage(), $e);
+        } catch (\JsonException $jsonException) {
+            throw ConversionException::conversionFailedSerialization($value->all(false), 'json', $jsonException->getMessage(), $jsonException);
         }
     }
 
@@ -40,8 +40,8 @@ class CollectionType extends JsonType
 
         try {
             $value = json_decode((string) $value, true, 512, \JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            throw ConversionException::conversionFailed($value, $this->getName(), $e);
+        } catch (\JsonException $jsonException) {
+            throw ConversionException::conversionFailed($value, $this->getName(), $jsonException);
         }
 
         return Collection::fromIterable($value);

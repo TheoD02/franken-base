@@ -30,6 +30,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     use ModelRegistryAwareTrait;
 
     private static array $responseSchemaList = [];
+
     private static OAttributes\Schema $schema;
 
     #[\Override]
@@ -68,6 +69,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         if ($response->description === Generator::UNDEFINED) {
             $response->description = $httpStatus->getShortName() . ' response.';
         }
+
         $response->content = [];
         $response->content['application/json'] = new MediaType([
             'mediaType' => 'application/json',

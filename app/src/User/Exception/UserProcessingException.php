@@ -28,7 +28,7 @@ class UserProcessingException extends UserException
     }
 
     #[\Override]
-    public function describe(): string
+    protected function describe(): string
     {
         return <<<'TXT'
             When trying to process the user, an error occurred.

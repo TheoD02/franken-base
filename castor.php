@@ -33,7 +33,7 @@ function start(bool $force = false): void
 {
     if (DockerUtils::isRunningInsideContainer() === false) {
         fingerprint(
-            callback: fn() => docker()->compose()->build(services: ['app'], noCache: true),
+            callback: static fn() => docker()->compose()->build(services: ['app'], noCache: true),
             fingerprint: dockerfile_fingerprint(),
             force: $force
         );
@@ -63,7 +63,7 @@ function restart(): void
 function install(bool $force = false): void
 {
     start(force: $force);
-    fingerprint(callback: fn() => composer()->install(), fingerprint: composer_fingerprint(), force: $force);
+    fingerprint(callback: static fn() => composer()->install(), fingerprint: composer_fingerprint(), force: $force);
 }
 
 #[AsTask(description: 'Open shell in the container (default: fish)', aliases: ['sh', 'fish'])]
@@ -135,17 +135,17 @@ PHP;
     $sfVersion = io()->choice('Which version of Symfony do you want to use?', ['5.4', '6.4', '7.*'], '6.4');
     io()->writeln('Creating Symfony project...');
 
-    composer()->createProject("symfony/skeleton:\"$sfVersion.*\"", 'tmp');
+    composer()->createProject(sprintf('symfony/skeleton:"%s.*"', $sfVersion), 'tmp');
     $currentDir = path();
-    fs()->mirror("{$currentDir}/tmp", $currentDir);
-    fs()->remove("{$currentDir}/tmp");
+    fs()->mirror($currentDir . '/tmp', $currentDir);
+    fs()->remove($currentDir . '/tmp');
 
     io()->info('Updating Symfony version...');
     composer()->update('symfony/*', withDependencies: true);
 
     io()->info('Setting up ECS and Rector...');
-    file_put_contents("{$currentDir}/ecs.php", $ecsContent);
-    file_put_contents("{$currentDir}/rector.php", $rectorContent);
+    file_put_contents($currentDir . '/ecs.php', $ecsContent);
+    file_put_contents($currentDir . '/rector.php', $rectorContent);
 
     composer()->require(['symfony/maker-bundle', 'symfony/debug-pack'], dev: true);
     composer()->require('twig-bundle');
@@ -157,6 +157,7 @@ PHP;
     } else {
         composer()->require('pentatrion/vite-bundle');
     }
+
     /*$envLocalContent = file_get_contents("{$currentDir}/.env.local");
     $envLocalContent = str_replace('{PROJECT_PATH}', $currentDir, $envLocalContent);
     file_put_contents("{$currentDir}/.env.local", $envLocalContent);*/

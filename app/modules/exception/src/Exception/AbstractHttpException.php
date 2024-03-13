@@ -33,7 +33,7 @@ abstract class AbstractHttpException extends HttpException
      *
      * @return HttpStatusEnum the HTTP status code corresponding to the specific scenario of this exception
      */
-    protected function getHttpStatusCode(): HttpStatusEnum
+    public function getHttpStatusCode(): HttpStatusEnum
     {
         return HttpStatusEnum::INTERNAL_SERVER_ERROR;
     }
@@ -69,7 +69,7 @@ abstract class AbstractHttpException extends HttpException
      *
      * @return ApiExceptionErrorCodeInterface&\BackedEnum the error code representing the specific nature of the exception (prefer string enum)
      */
-    abstract protected function getErrorCode(): ApiExceptionErrorCodeInterface;
+    abstract public function getErrorCode(): ApiExceptionErrorCodeInterface;
 
     /**
      * Abstract method to retrieve the error message for the exception.
@@ -80,7 +80,7 @@ abstract class AbstractHttpException extends HttpException
      *
      * @return string the error message providing information about the exceptional condition
      */
-    abstract protected function getErrorMessage(): string;
+    abstract public function getErrorMessage(): string;
 
     /**
      * Abstract method to generate a detailed description of the exception, including additional context information.
