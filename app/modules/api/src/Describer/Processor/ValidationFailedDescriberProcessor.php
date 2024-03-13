@@ -46,7 +46,6 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
     ): OAnnotations\OpenApi {
         $mapToStatusCode = [];
 
-        /** @var array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>} $map */
         $mapper = [...$mapRequestPayload, ...$mapQueryString];
         foreach ($mapper as $map) {
             foreach ($map['attributes'] as $attribute) {
@@ -57,13 +56,13 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
         }
 
         foreach ($mapToStatusCode as $statusCode => $value) {
-            $this->addValidationFailedResponse($api, $operation, $statusCode);
+            $this->addValidationFailedResponse($operation, $statusCode);
         }
 
         return $api;
     }
 
-    private function addValidationFailedResponse(mixed $api, OAnnotations\Operation $operation, int|string $statusCode): void
+    private function addValidationFailedResponse(OAnnotations\Operation $operation, int|string $statusCode): void
     {
         /** @var OAnnotations\Response $response */
         $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
