@@ -56,7 +56,7 @@ class ApiResponseAstResolver
             if (! $returnStmt instanceof Return_) {
                 $httpStatus = HttpStatusEnum::NO_CONTENT;
             } else {
-                // @phpstan-ignore-next-line
+                /** @phpstan-ignore-next-line */
                 $name = $returnStmt->expr->class->toString();
                 if ($name !== 'ApiResponse') {
                     throw new \RuntimeException('The return type of the method must be ApiResponse.');
@@ -127,7 +127,7 @@ class ApiResponseAstResolver
         if ($groupsArgs !== null) {
             /** @var array<string, string> $groups {className, nameOfTheGroup} */
             $groups = array_map(
-                // @phpstan-ignore-next-line
+                /** @phpstan-ignore-next-line */
                 static fn (ArrayItem $arrayItem): array => [$arrayItem->value?->class->name, $arrayItem->value?->name->name],
                 $groupsArgs->value->items
             );
@@ -138,9 +138,7 @@ class ApiResponseAstResolver
             $groupedByClass[$group[0]][] = $group[1];
         }
 
-        /**
-         * @var array<string> $groups
-         */
+        /** @var array<string> $groups */
         $groups = [];
         // get the class fqcn from name of class
         foreach (array_keys($groupedByClass) as $className) {

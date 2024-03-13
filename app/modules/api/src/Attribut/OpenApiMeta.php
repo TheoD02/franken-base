@@ -11,7 +11,6 @@ namespace Module\Api\Attribut;
 readonly class OpenApiMeta
 {
     /**
-     * @param string $class
      * @param array<string> $groups
      */
     public function __construct(

@@ -36,6 +36,7 @@ class CollectionNormalizer implements DenormalizerInterface, NormalizerInterface
 
     /**
      * @param array<mixed> $context
+     *
      * @return array<mixed>|bool|string|int|float|\ArrayObject|null
      */
     #[\Override]

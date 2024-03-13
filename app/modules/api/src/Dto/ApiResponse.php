@@ -17,6 +17,7 @@ readonly class ApiResponse
 {
     /**
      * @param array<string> $groups
+     *
      * @phpstan-param T $data
      * @phpstan-param M $apiMetadata
      */

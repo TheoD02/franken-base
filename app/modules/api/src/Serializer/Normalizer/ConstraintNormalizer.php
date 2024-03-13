@@ -51,12 +51,13 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
 
     /**
      * @param array<mixed> $context
+     *
      * @return array<mixed>
      */
     #[\Override]
     public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {
-        if (!$object instanceof FlattenException) {
+        if (! $object instanceof FlattenException) {
             throw new InvalidArgumentException(sprintf('The object must implement "%s".', FlattenException::class));
         }
 

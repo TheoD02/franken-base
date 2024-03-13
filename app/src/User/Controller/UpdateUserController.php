@@ -39,9 +39,7 @@ class UpdateUserController
             throw new UserNotFound();
         }
 
-        /**
-         * @var User $userEntity
-         */
+        /** @var User $userEntity */
         $userEntity = $mapper->mapToObject($user, $userEntity);
         $this->em->flush();
 

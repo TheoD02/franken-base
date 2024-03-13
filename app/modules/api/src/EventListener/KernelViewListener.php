@@ -29,7 +29,7 @@ readonly class KernelViewListener
     #[NoReturn]
     public function onKernelView(ViewEvent $viewEvent): void
     {
-        /** @var null|ApiResponse|Response $controllerResult */
+        /** @var ApiResponse|Response|null $controllerResult */
         $controllerResult = $viewEvent->getControllerResult();
 
         $reflectionMethod = $this->getControllerMethodReflectionClass($viewEvent);
@@ -94,7 +94,7 @@ readonly class KernelViewListener
     protected function getControllerMethodReflectionClass(ViewEvent $viewEvent): \ReflectionMethod
     {
         $controller = $viewEvent->getRequest()->attributes->get('_controller');
-        $controller = explode('::', (string)$controller);
+        $controller = explode('::', (string) $controller);
         $controller = \count($controller) !== 2 ? "{$controller[0]}::__invoke" : "{$controller[0]}::{$controller[1]}";
 
         return new \ReflectionMethod($controller);

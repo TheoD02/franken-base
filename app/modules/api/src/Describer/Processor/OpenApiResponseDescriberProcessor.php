@@ -17,7 +17,6 @@ use Nelmio\ApiDocBundle\OpenApiPhp\Util;
 use OpenApi\Annotations as OAnnotations;
 use OpenApi\Annotations\MediaType;
 use OpenApi\Annotations\Schema;
-use OpenApi\Attributes as OAttributes;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
 use OpenApi\Generator;
@@ -54,7 +53,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         [$httpStatus, $groups] = (new ApiResponseAstResolver())->resolve($reflectionMethod);
 
         /**
-         * @var OpenApiResponse $openApiResponseInstance
+         * @var OpenApiResponse  $openApiResponseInstance
          * @var OpenApiMeta|null $openApiMetaInstance
          */
         [$openApiResponseInstance, $openApiMetaInstance] = $this->getAttributesInstance($reflectionMethod);
