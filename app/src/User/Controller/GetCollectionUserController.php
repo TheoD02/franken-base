@@ -20,6 +20,9 @@ use Module\Api\Enum\ResponseTypeEnum;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 
+/**
+ * @see \App\Tests\User\Controller\GetCollectionUserControllerTest
+ */
 #[AsController]
 #[ApiRoute('/api/users', method: HttpMethodEnum::GET)]
 class GetCollectionUserController

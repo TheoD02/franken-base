@@ -19,6 +19,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 
+/**
+ * @see \App\Tests\User\Controller\CreateUserControllerTest
+ */
 #[AsController]
 #[ApiRoute('/api/users', method: HttpMethodEnum::POST)]
 class CreateUserController

@@ -8,8 +8,6 @@ use Module\Api\Enum\HttpStatusEnum;
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionContextCodeInterface;
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionErrorCodeInterface;
 use Module\ExceptionHandlerBundle\Adapter\ApiExceptionParentCodeInterface;
-use Module\ExceptionHandlerBundle\EventListener\ExceptionLoggerHandlerListener;
-use Psr\Log\LogLevel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use function Symfony\Component\String\u;

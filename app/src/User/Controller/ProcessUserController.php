@@ -15,6 +15,9 @@ use Module\Api\Enum\HttpMethodEnum;
 use Module\Api\Enum\ResponseTypeEnum;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
+/**
+ * @see \App\Tests\User\Controller\ProcessUserControllerTest
+ */
 #[AsController]
 #[ApiRoute('/api/users/{id}/process', method: HttpMethodEnum::GET)]
 class ProcessUserController

@@ -26,7 +26,7 @@ class ProcessUserControllerTest extends ControllerTestCase
         ]);
 
         // Assert
-        self::assertResponseStatusCodeSame(422);
+        $this->assertResponseStatusCodeSame(422);
 
         $userProcessingException = new UserProcessingException();
         $expected = [

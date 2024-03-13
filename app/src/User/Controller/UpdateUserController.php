@@ -17,6 +17,9 @@ use Module\Api\Enum\HttpMethodEnum;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 
+/**
+ * @see \App\Tests\User\Controller\UpdateUserControllerTest
+ */
 #[AsController]
 #[ApiRoute('/api/users/{id}', method: HttpMethodEnum::PATCH)]
 class UpdateUserController

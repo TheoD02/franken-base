@@ -13,6 +13,9 @@ use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Enum\HttpMethodEnum;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
+/**
+ * @see \App\Tests\User\Controller\DeleteUserByIdControllerTest
+ */
 #[AsController]
 #[ApiRoute('/api/users/{id}', method: HttpMethodEnum::DELETE)]
 class DeleteUserByIdController

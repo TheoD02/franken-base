@@ -30,7 +30,7 @@ class GetCollectionUserControllerTest extends ControllerTestCase
         $this->requestAction(GetCollectionUserController::class);
 
         // Assert
-        self::assertResponseStatusCodeSame(200);
+        $this->assertResponseStatusCodeSame(200);
         $this->assertApiResponseEquals($userCollection, groups: [UserGroups::READ]);
     }
 }

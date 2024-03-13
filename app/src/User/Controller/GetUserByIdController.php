@@ -14,6 +14,9 @@ use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethodEnum;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
+/**
+ * @see \App\Tests\User\Controller\GetUserByIdControllerTest
+ */
 #[AsController]
 #[ApiRoute('/api/users/{id}', method: HttpMethodEnum::GET)]
 class GetUserByIdController

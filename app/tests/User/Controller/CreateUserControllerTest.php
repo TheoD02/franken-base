@@ -27,7 +27,7 @@ class CreateUserControllerTest extends ControllerTestCase
         $this->requestAction(CreateUserController::class, requestBody: $expectedUser);
 
         // Assert
-        self::assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful();
         $this->assertApiResponseEquals($expectedUser, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
     }
 }

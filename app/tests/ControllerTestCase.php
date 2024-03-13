@@ -141,8 +141,8 @@ class ControllerTestCase extends WebTestCase
             $expected = $this->serializer->normalize($data, context: $context);
         }
 
-        self::assertSame($expected, $response['data']);
-        self::assertSame($meta, $response['meta']);
+        $this->assertSame($expected, $response['data']);
+        $this->assertSame($meta, $response['meta']);
     }
 
     /**
@@ -170,6 +170,6 @@ class ControllerTestCase extends WebTestCase
             }
         }
 
-        self::assertSame($expected, $response);
+        $this->assertSame($expected, $response);
     }
 }

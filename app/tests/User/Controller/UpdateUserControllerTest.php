@@ -30,7 +30,7 @@ class UpdateUserControllerTest extends ControllerTestCase
         ], requestBody: $user);
 
         // Assert
-        self::assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful();
         $this->assertApiResponseEquals($user, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
     }
 }

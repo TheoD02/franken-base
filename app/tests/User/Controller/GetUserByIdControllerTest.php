@@ -30,7 +30,7 @@ class GetUserByIdControllerTest extends ControllerTestCase
         ]);
 
         // Assert
-        self::assertResponseStatusCodeSame(200);
+        $this->assertResponseStatusCodeSame(200);
         $this->assertApiResponseEquals($user, groups: [UserGroups::READ]);
     }
 }

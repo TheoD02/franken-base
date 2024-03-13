@@ -29,6 +29,6 @@ class DeleteUserByIdControllerTest extends ControllerTestCase
         ]);
 
         // Assert
-        self::assertResponseStatusCodeSame(204);
+        $this->assertResponseStatusCodeSame(204);
     }
 }

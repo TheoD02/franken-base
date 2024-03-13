@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Module\Api\Resolver;
 
+use PhpParser\Node\Stmt\Return_;
+use PhpParser\Error;
 use Module\Api\Enum\HttpStatusEnum;
 use PhpParser\Node\ArrayItem;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -34,7 +36,7 @@ class ApiResponseAstResolver
             $method = $this->getMethod($class, $reflectionMethod);
             $returnStmt = $this->getReturnStmt($method);
 
-            if (! $returnStmt instanceof \PhpParser\Node\Stmt\Return_) {
+            if (! $returnStmt instanceof Return_) {
                 $httpStatus = HttpStatusEnum::NO_CONTENT;
             } else {
                 $name = $returnStmt->expr->class->toString();
@@ -45,7 +47,7 @@ class ApiResponseAstResolver
                 $httpStatus ??= $this->getHttpStatus($returnStmt, $ast);
                 $groups = $this->getGroups($returnStmt, $ast);
             }
-        } catch (\PhpParser\Error $error) {
+        } catch (Error $error) {
             throw new \RuntimeException('An error occurred while parsing the file.', 0, $error);
         }
 
@@ -69,12 +71,12 @@ class ApiResponseAstResolver
         return $method;
     }
 
-    protected function getReturnStmt(ClassMethod $classMethod): ?\PhpParser\Node\Stmt\Return_
+    protected function getReturnStmt(ClassMethod $classMethod): ?Return_
     {
         $returnStmt = null;
         foreach ($classMethod->stmts as $stmt) {
-            if ($stmt instanceof \PhpParser\Node\Stmt\Return_) {
-                if ($returnStmt instanceof \PhpParser\Node\Stmt\Return_) {
+            if ($stmt instanceof Return_) {
+                if ($returnStmt instanceof Return_) {
                     throw new \RuntimeException('The method must have a return statement.');
                 }
 
@@ -88,7 +90,7 @@ class ApiResponseAstResolver
     /**
      * @return array<class-string, \BackedEnum>
      */
-    protected function getGroups(\PhpParser\Node\Stmt\Return_ $return, ?array $ast): array
+    protected function getGroups(Return_ $return, ?array $ast): array
     {
         $groupsArgs = null;
         foreach ($return->expr->args as $arg) {
@@ -141,7 +143,7 @@ class ApiResponseAstResolver
         return $groups;
     }
 
-    private function getHttpStatus(\PhpParser\Node\Stmt\Return_ $return, array $ast): HttpStatusEnum
+    private function getHttpStatus(Return_ $return, array $ast): HttpStatusEnum
     {
         $httpStatus = null;
         foreach ($return->expr->args as $arg) {
