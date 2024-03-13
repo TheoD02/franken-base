@@ -13,7 +13,7 @@ trait JsonContentDescriberProcessTrait
 {
     protected function getJsonContent(OAnnotations\Response $response): OAttributes\JsonContent
     {
-        $jsonContent = current(array_filter($response->_unmerged, static fn ($item) => $item instanceof OAttributes\JsonContent));
+        $jsonContent = current(array_filter($response->_unmerged, static fn ($item): bool => $item instanceof OAttributes\JsonContent));
 
         if ($jsonContent === false) {
             $jsonContent = new OAttributes\JsonContent();

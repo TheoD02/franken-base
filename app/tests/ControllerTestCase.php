@@ -88,7 +88,7 @@ class ControllerTestCase extends WebTestCase
         }
 
         $uri = str_replace(
-            array_map(static fn ($key) => sprintf('{%s}', $key), array_keys($uriParameters)),
+            array_map(static fn ($key): string => sprintf('{%s}', $key), array_keys($uriParameters)),
             array_values($uriParameters),
             $testRouteDescriber->uri
         );

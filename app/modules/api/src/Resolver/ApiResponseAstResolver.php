@@ -100,7 +100,7 @@ class ApiResponseAstResolver
         $groups = [];
         if ($groupsArgs !== null) {
             /** @var array<string, string> $groups {className, nameOfTheGroup} */
-            $groups = array_map(static fn (ArrayItem $group) => [$group->value?->class->name, $group->value?->name->name], $groupsArgs->value->items);
+            $groups = array_map(static fn (ArrayItem $group): array => [$group->value?->class->name, $group->value?->name->name], $groupsArgs->value->items);
         }
 
         $groupedByClass = [];

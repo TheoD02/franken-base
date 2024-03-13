@@ -22,7 +22,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
 
     public function normalize(ValidationFailedException $exception): array
     {
-        $trans = $this->translator instanceof TranslatorInterface ? $this->translator->trans(...) : static fn ($m, $p) => strtr($m, $p);
+        $trans = $this->translator instanceof TranslatorInterface ? $this->translator->trans(...) : static fn ($m, $p): string => strtr($m, $p);
         $errors = [];
 
         foreach ($exception->getViolations() as $violation) {

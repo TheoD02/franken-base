@@ -14,7 +14,7 @@ class ProxyToObjectHelper
     public static function proxyToObject(array|Proxy $proxy): object|array
     {
         if (\is_array($proxy)) {
-            return array_map(static fn (Proxy $proxy) => $proxy->object(), $proxy);
+            return array_map(static fn (Proxy $proxy): object => $proxy->object(), $proxy);
         }
 
         return $proxy->object();

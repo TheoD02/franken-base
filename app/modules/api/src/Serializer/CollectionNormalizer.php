@@ -15,7 +15,7 @@ class CollectionNormalizer implements DenormalizerInterface, NormalizerInterface
     {
         if (is_subclass_of($context['value_type']->getClassName(), \BackedEnum::class)) {
             $className = $context['value_type']->getClassName();
-            $data = array_map(static fn ($value) => $className::from($value), $data);
+            $data = array_map(static fn ($value): \BackedEnum => $className::from($value), $data);
         }
 
         return Collection::fromIterable($data);
