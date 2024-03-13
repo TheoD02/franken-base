@@ -13,8 +13,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
- *
- * @coversNothing
  */
 #[CoversClass(GetUserByIdController::class)]
 class GetUserByIdControllerTest extends ControllerTestCase

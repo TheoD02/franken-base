@@ -15,8 +15,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
- *
- * @coversNothing
  */
 #[CoversClass(GetCollectionUserController::class)]
 class GetCollectionUserControllerTest extends ControllerTestCase

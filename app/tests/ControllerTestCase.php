@@ -14,8 +14,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @internal
- *
- * @coversNothing
  */
 class ControllerTestCase extends WebTestCase
 {

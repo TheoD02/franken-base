@@ -12,8 +12,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
- *
- * @coversNothing
  */
 #[CoversClass(DeleteUserByIdController::class)]
 class DeleteUserByIdControllerTest extends ControllerTestCase

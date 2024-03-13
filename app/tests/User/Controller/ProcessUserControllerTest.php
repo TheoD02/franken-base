@@ -12,8 +12,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @internal
- *
- * @coversNothing
  */
 #[CoversClass(ProcessUserController::class)]
 class ProcessUserControllerTest extends ControllerTestCase

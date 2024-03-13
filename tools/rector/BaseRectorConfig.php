@@ -13,6 +13,12 @@ class BaseRectorConfig
         return RectorConfig::configure()
             ->withRootFiles()
             ->withPhpSets(php83: true)
+            ->withAttributesSets(
+                symfony: true,
+                doctrine: true,
+                gedmo: true,
+                phpunit: true,
+            )
             ->withRules([
                 AddVoidReturnTypeWhereNoReturnRector::class,
             ]);
