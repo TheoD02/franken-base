@@ -86,7 +86,7 @@ class ApiResponseAstResolver
             }
         }
 
-        if ($method === null) {
+        if (! $method instanceof ClassMethod) {
             throw new \RuntimeException('The method must have a return statement.');
         }
 

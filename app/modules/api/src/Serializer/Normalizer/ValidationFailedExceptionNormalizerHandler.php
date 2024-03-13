@@ -87,6 +87,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
                     $fullyMatched = false;
                     break;
                 }
+
                 continue;
             }
 

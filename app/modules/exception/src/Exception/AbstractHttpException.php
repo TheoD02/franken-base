@@ -103,7 +103,7 @@ abstract class AbstractHttpException extends HttpException
     public function getFormattedErrorCode(): string
     {
         return u((string) $this->getErrorCode()->value)
-            ->prepend(((string) $this->getParentErrorCode()->value) . '_')
+            ->prepend($this->getParentErrorCode()->value . '_')
             ->toString()
         ;
     }
