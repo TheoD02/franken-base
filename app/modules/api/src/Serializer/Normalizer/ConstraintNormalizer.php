@@ -64,7 +64,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
                     'parent_code' => 'NORMALIZATION',
                     'error_code' => 'NORMALIZATION_PARTIAL_DENORMALIZATION_ERROR',
                     'status' => $context[self::STATUS] ?? $object->getStatusCode(),
-                    'message' => $exception->getMessage() ?: null,
+                    'message' => $exception->getMessage() !== '' && $exception->getMessage() !== '0' ? $exception->getMessage() : null,
                     self::VIOLATIONS => PartialDenormalizationExceptionNormalizerHandler::normalize($exception),
                 ];
             } elseif ($exception instanceof ValidationFailedException) {

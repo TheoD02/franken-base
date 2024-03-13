@@ -36,7 +36,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
                     $propertyPath = $serializedName;
                 }
 
-                if ($serializedPath) {
+                if ($serializedPath !== null && $serializedPath !== '' && $serializedPath !== '0') {
                     $propertyPath = $serializedPath;
                 }
             } catch (\Throwable) {
