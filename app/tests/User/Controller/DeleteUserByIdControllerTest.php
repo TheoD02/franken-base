@@ -21,7 +21,7 @@ class DeleteUserByIdControllerTest extends ControllerTestCase
     public function testRemoveUserById(): void
     {
         // Arrange
-        $user = UserFactory::createOne()->object();
+        UserFactory::createOne()->object();
 
         // Act
         $this->requestAction(DeleteUserByIdController::class, uriParameters: [

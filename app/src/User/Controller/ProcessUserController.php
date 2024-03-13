@@ -33,8 +33,5 @@ class ProcessUserController
         throw new UserProcessingException([
             'userId' => $id,
         ], 'It seem that something went wrong while processing the user. Maybe the user provider is down? Is the user still in the database?', );
-
-        // @phpstan-ignore-next-line - this is just for the example
-        return new ApiResponse((new User())->setName('John Doe')->setEmail('john@doe.fr'));
     }
 }

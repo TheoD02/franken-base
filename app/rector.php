@@ -2,14 +2,35 @@
 
 declare(strict_types=1);
 
-use RectorPrefix202402\Symfony\Component\Finder\Finder;
+use Rector\Config\RectorConfig;
+use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 
-require_once dirname(__DIR__) . '/tools/rector/BaseRectorConfig.php';
-
-return BaseRectorConfig::config()
+return RectorConfig::configure()
     ->withCache(__DIR__ . '/var/rector')
     ->withPaths([
         __DIR__ . '/src',
         __DIR__ . '/tests',
         __DIR__ . '/modules/*/src',
+    ])
+    ->withRootFiles()
+    ->withPhpSets(php83: true)
+    ->withAttributesSets(
+        symfony: true,
+        doctrine: true,
+        gedmo: true,
+        phpunit: true,
+    )
+    ->withPreparedSets(
+        deadCode: true,
+        //codeQuality: true,
+        //codingStyle: true,
+        //typeDeclarations: true,
+        //privatization: true,
+        //naming: true,
+        //instanceOf: true,
+        //earlyReturn: true,
+        //strictBooleans: true,
+    )
+    ->withRules([
+        AddVoidReturnTypeWhereNoReturnRector::class,
     ]);
