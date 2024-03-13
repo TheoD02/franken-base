@@ -64,7 +64,7 @@ RUN apt-get update && apt-get install -y fish
 # Install Xdebug
 RUN set -eux; \
     install-php-extensions \
-        xdebug \
+#        xdebug \
         pcov \
     ;
 

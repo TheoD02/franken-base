@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\Api\Resolver;
 
 use Module\Api\Enum\HttpStatusEnum;
@@ -97,7 +99,7 @@ class ApiResponseAstResolver
         if ($groupsArgs !== null) {
             /** @var array<string, string> $groups {className, nameOfTheGroup} */
             $groups = array_map(
-                static fn(ArrayItem $group) => [$group->value?->class->name, $group->value?->name->name],
+                static fn (ArrayItem $group) => [$group->value?->class->name, $group->value?->name->name],
                 $groupsArgs->value->items
             );
         }

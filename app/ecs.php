@@ -16,8 +16,8 @@ return BaseECSConfig::config()
         NoUnusedImportsFixer::class,
     ])
     ->withPaths([
-        __DIR__ . '/.castor',
-        __DIR__ . '/castor.php',
+//        __DIR__ . '/.castor',
+//        __DIR__ . '/castor.php',
         __DIR__ . '/src',
         __DIR__ . '/tests',
         ...$moduleDirs,

@@ -37,7 +37,7 @@ class User implements ApiDataInterface
     private ?string $email = null;
 
     /**
-     * @var Collection<UserRoleEnum> $roles
+     * @var Collection<array-key, UserRoleEnum> $roles
      */
     #[ORM\Column(type: CollectionType::NAME)]
     #[Groups([UserGroups::READ_ROLES])]
@@ -96,7 +96,7 @@ class User implements ApiDataInterface
     }
 
     /**
-     * @return Collection<UserRoleEnum>
+     * @return Collection<array-key, UserRoleEnum>
      */
     public function getRoles(): Collection
     {
@@ -104,7 +104,7 @@ class User implements ApiDataInterface
     }
 
     /**
-     * @param Collection<UserRoleEnum> $roles
+     * @param Collection<array-key, UserRoleEnum> $roles
      */
     public function setRoles(Collection $roles): static
     {

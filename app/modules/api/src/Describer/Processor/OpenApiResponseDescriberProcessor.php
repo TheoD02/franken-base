@@ -21,11 +21,6 @@ use OpenApi\Attributes as OAttributes;
 use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
 use OpenApi\Generator;
-use PhpParser\Node\ArrayItem;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Use_;
-use PhpParser\ParserFactory;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Routing\Route;
 

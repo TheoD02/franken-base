@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Trait\EntityManagerTrait;
 use App\User\Api\UserCollectionMeta;
 use App\User\Api\UserFilterQuery;
@@ -33,7 +34,9 @@ class GetCollectionUserController
     public function __invoke(
         #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery
     ): ApiResponse {
-        $collection = $this->em->getRepository(User::class)->findByFilterQuery($filterQuery);
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->em->getRepository(User::class);
+        $collection = $userRepository->findByFilterQuery($filterQuery);
 
         return new ApiResponse(data: $collection, groups: [UserGroups::READ]);
     }

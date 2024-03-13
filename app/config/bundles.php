@@ -16,5 +16,5 @@ return [
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     AutoMapperPlus\AutoMapperPlusBundle\AutoMapperPlusBundle::class => ['all' => true],
     Module\ExceptionHandlerBundle\ExceptionHandlerBundle::class => ['all' => true],
-    Sentry\SentryBundle\SentryBundle::class => ['dev' => true, 'prod' => true],
+    Sentry\SentryBundle\SentryBundle::class => ['all' => true],
 ];
