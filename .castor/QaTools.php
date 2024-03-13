@@ -86,7 +86,7 @@ class QaTools
         $this->add('phpstan', 'clear-result-cache')->runCommand();
 
         return $this
-            ->add('phpstan', 'analyse', 'src', '--level=8', '--configuration', '/app/phpstan.neon')
+            ->add('phpstan', 'analyse', '--level=8', '--configuration', '/app/phpstan.neon', '--memory-limit=1G')
             ->runCommand()
         ;
     }

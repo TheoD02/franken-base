@@ -110,6 +110,7 @@ enum HttpStatusEnum: int
 
     public function isInformational(): bool
     {
+        // @phpstan-ignore-next-line
         return $this->value >= 100 && $this->value < 200;
     }
 
@@ -130,6 +131,7 @@ enum HttpStatusEnum: int
 
     public function isServerError(): bool
     {
+        // @phpstan-ignore-next-line
         return $this->value >= 500 && $this->value < 600;
     }
 
@@ -223,6 +225,7 @@ enum HttpStatusEnum: int
             527 => 'Railgun Error',
             599 => 'Network Connect Timeout Error',
             598 => 'Network Read Timeout Error',
+            // @phpstan-ignore-next-line
             default => throw new \UnexpectedValueException("Unknown status code: {$this->value}"),
         };
     }

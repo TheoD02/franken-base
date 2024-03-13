@@ -10,19 +10,18 @@ use Module\Api\Adapter\ApiMetadataInterface;
 use Module\Api\Enum\HttpStatusEnum;
 
 /**
- * @template T
- * @template M
+ * @template T of ApiDataInterface|ApiDataCollectionInterface|bool|null
+ * @template M of ApiMetadataInterface|null
  */
 readonly class ApiResponse
 {
+    /**
+     * @param array<string> $groups
+     * @phpstan-param T $data
+     * @phpstan-param M $apiMetadata
+     */
     public function __construct(
-        /**
-         * @phpstan-var T
-         */
         public ApiDataInterface|ApiDataCollectionInterface|bool|null $data,
-        /**
-         * @phpstan-var M
-         */
         public ?ApiMetadataInterface $apiMetadata = null,
         public array $groups = [],
         public HttpStatusEnum $httpStatusEnum = HttpStatusEnum::OK,

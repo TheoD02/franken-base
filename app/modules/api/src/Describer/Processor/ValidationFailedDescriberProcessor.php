@@ -75,6 +75,7 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
         $jsonContent = $this->getJsonContent($annotation);
 
         $jsonContent->oneOf[] = $this->getValidationFailedSchema();
+        // @phpstan-ignore-next-line
         $jsonContent->examples[] = $this->getValidationFailedExamples();
     }
 

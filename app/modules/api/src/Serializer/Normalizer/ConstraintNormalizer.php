@@ -28,14 +28,20 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
 
     public const string VIOLATIONS = 'violations';
 
+    /**
+     * @param array<mixed> $defaultContext
+     */
     public function __construct(
-        private readonly ?ValidationFailedExceptionNormalizerHandler $validationFailedExceptionNormalizerHandler,
+        private readonly ValidationFailedExceptionNormalizerHandler $validationFailedExceptionNormalizerHandler,
         #[Autowire(param: 'kernel.debug')]
         private readonly bool $debug = false,
         private readonly array $defaultContext = [],
     ) {
     }
 
+    /**
+     * @return array<string, bool>
+     */
     public function getSupportedTypes(?string $format): array
     {
         return [
@@ -43,10 +49,14 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
         ];
     }
 
+    /**
+     * @param array<mixed> $context
+     * @return array<mixed>
+     */
     #[\Override]
     public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {
-        if (! $object instanceof FlattenException) {
+        if (!$object instanceof FlattenException) {
             throw new InvalidArgumentException(sprintf('The object must implement "%s".', FlattenException::class));
         }
 

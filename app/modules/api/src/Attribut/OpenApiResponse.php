@@ -28,8 +28,8 @@ class OpenApiResponse
             \assert($this->class === null, 'The class must be null if the response is empty.');
         } else {
             \assert($this->class !== null, 'The class must be defined if the response is not empty.');
-            if (class_exists($class) === false) {
-                throw new \RuntimeException(sprintf('The class "%s" does not exist.', $class));
+            if (class_exists($this->class) === false) {
+                throw new \RuntimeException(sprintf('The class "%s" does not exist.', $this->class));
             }
         }
     }

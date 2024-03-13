@@ -23,6 +23,10 @@ interface DescriberProcessorInterface
         array $mapQueryString
     ): bool;
 
+    /**
+     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>}> $mapRequestPayload
+     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>}> $mapQueryString
+     */
     public function process(
         OAnnotations\OpenApi $openApi,
         OAnnotations\Operation $operation,

@@ -15,12 +15,29 @@ use PhpParser\ParserFactory;
 
 class ApiResponseAstResolver
 {
+    /**
+     * @return array{HttpStatusEnum, array<string>}
+     */
     public function resolve(\ReflectionMethod $reflectionMethod): array
     {
         $parser = (new ParserFactory())->createForNewestSupportedVersion();
         $groups = [];
         try {
-            $ast = $parser->parse(file_get_contents($reflectionMethod->getFileName()));
+            if ($reflectionMethod->getFileName() === false) {
+                throw new \RuntimeException('The file does not exist.');
+            }
+
+            if (file_exists($reflectionMethod->getFileName()) === false) {
+                throw new \RuntimeException('The file does not exist.');
+            }
+
+            $content = file_get_contents($reflectionMethod->getFileName());
+
+            if ($content === false) {
+                throw new \RuntimeException('The file could not be read.');
+            }
+
+            $ast = $parser->parse($content);
 
             if ($ast === null) {
                 throw new \RuntimeException('The file could not be parsed.');
@@ -39,12 +56,13 @@ class ApiResponseAstResolver
             if (! $returnStmt instanceof Return_) {
                 $httpStatus = HttpStatusEnum::NO_CONTENT;
             } else {
+                // @phpstan-ignore-next-line
                 $name = $returnStmt->expr->class->toString();
                 if ($name !== 'ApiResponse') {
                     throw new \RuntimeException('The return type of the method must be ApiResponse.');
                 }
 
-                $httpStatus ??= $this->getHttpStatus($returnStmt, $ast);
+                $httpStatus = $this->getHttpStatus($returnStmt, $ast);
                 $groups = $this->getGroups($returnStmt, $ast);
             }
         } catch (Error $error) {
@@ -68,13 +86,17 @@ class ApiResponseAstResolver
             }
         }
 
+        if ($method === null) {
+            throw new \RuntimeException('The method must have a return statement.');
+        }
+
         return $method;
     }
 
     protected function getReturnStmt(ClassMethod $classMethod): ?Return_
     {
         $returnStmt = null;
-        foreach ($classMethod->stmts as $stmt) {
+        foreach ($classMethod->stmts ?? [] as $stmt) {
             if ($stmt instanceof Return_) {
                 if ($returnStmt instanceof Return_) {
                     throw new \RuntimeException('The method must have a return statement.');
@@ -88,12 +110,14 @@ class ApiResponseAstResolver
     }
 
     /**
-     * @return array<class-string, \BackedEnum>
+     * @param array<mixed>|null $ast
+     *
+     * @return array<string>
      */
     protected function getGroups(Return_ $return, ?array $ast): array
     {
         $groupsArgs = null;
-        foreach ($return->expr->args as $arg) {
+        foreach ($return->expr?->args ?? [] as $arg) {
             if ($arg->name?->name === 'groups') {
                 $groupsArgs = $arg;
             }
@@ -103,6 +127,7 @@ class ApiResponseAstResolver
         if ($groupsArgs !== null) {
             /** @var array<string, string> $groups {className, nameOfTheGroup} */
             $groups = array_map(
+                // @phpstan-ignore-next-line
                 static fn (ArrayItem $arrayItem): array => [$arrayItem->value?->class->name, $arrayItem->value?->name->name],
                 $groupsArgs->value->items
             );
@@ -113,15 +138,19 @@ class ApiResponseAstResolver
             $groupedByClass[$group[0]][] = $group[1];
         }
 
+        /**
+         * @var array<string> $groups
+         */
         $groups = [];
         // get the class fqcn from name of class
         foreach (array_keys($groupedByClass) as $className) {
-            foreach ($ast as $node) {
+            foreach ($ast ?? [] as $node) {
                 if ($node instanceof Namespace_) {
                     foreach ($node->stmts as $stmt) {
                         if ($stmt instanceof Use_) {
                             foreach ($stmt->uses as $use) {
-                                if ($use->alias === $className || $use->name->getLast() === $className) {
+                                if ($use->alias?->name === $className || $use->name->getLast() === $className) {
+                                    /** @var class-string $classFqcn */
                                     $classFqcn = $use->name->toString();
                                     $reflectionClass = new \ReflectionClass($classFqcn);
                                     if ($reflectionClass->isEnum()) {
@@ -143,10 +172,13 @@ class ApiResponseAstResolver
         return $groups;
     }
 
+    /**
+     * @param array<mixed> $ast
+     */
     private function getHttpStatus(Return_ $return, array $ast): HttpStatusEnum
     {
         $httpStatus = null;
-        foreach ($return->expr->args as $arg) {
+        foreach ($return->expr?->args ?? [] as $arg) {
             if ($arg->name?->name === 'httpStatus') {
                 $httpStatus = $arg;
             }
@@ -164,7 +196,9 @@ class ApiResponseAstResolver
                     if ($stmt instanceof Use_) {
                         foreach ($stmt->uses as $use) {
                             if ($use->alias === $httpStatusClassName || $use->name->getLast() === $httpStatusClassName) {
-                                $reflectionClass = new \ReflectionClass($use->name->toString());
+                                /** @var class-string $classFqcn */
+                                $classFqcn = $use->name->toString();
+                                $reflectionClass = new \ReflectionClass($classFqcn);
                                 if ($reflectionClass->isEnum()) {
                                     $cases = $reflectionClass->getConstants();
                                     $httpStatus = $cases[$value];

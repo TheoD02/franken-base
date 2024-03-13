@@ -10,6 +10,10 @@ namespace Module\Api\Attribut;
 #[\Attribute(\Attribute::TARGET_METHOD)]
 readonly class OpenApiMeta
 {
+    /**
+     * @param string $class
+     * @param array<string> $groups
+     */
     public function __construct(
         public string $class,
         public array $groups = [],

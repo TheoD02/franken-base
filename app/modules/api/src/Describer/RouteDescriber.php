@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Module\Api\Describer;
 
+use Module\Api\Describer\Processor\DescriberProcessorInterface;
 use Nelmio\ApiDocBundle\Controller\DocumentationController;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareInterface;
 use Nelmio\ApiDocBundle\Describer\ModelRegistryAwareTrait;
@@ -20,6 +21,9 @@ class RouteDescriber implements RouteDescriberInterface, ModelRegistryAwareInter
     use ModelRegistryAwareTrait;
     use RouteDescriberTrait;
 
+    /**
+     * @param iterable<DescriberProcessorInterface> $processors
+     */
     public function __construct(
         #[TaggedIterator(tag: 'module.api.describer.processor')]
         private readonly iterable $processors

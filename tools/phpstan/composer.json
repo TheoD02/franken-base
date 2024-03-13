@@ -1,5 +1,6 @@
 {
     "require": {
-        "phpstan/phpstan": "^1.10"
+        "phpstan/phpstan": "^1.10",
+        "tomasvotruba/type-coverage": "^0.2.2"
     }
 }

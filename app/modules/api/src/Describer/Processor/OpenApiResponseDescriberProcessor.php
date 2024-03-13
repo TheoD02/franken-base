@@ -29,10 +29,6 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     use JsonContentDescriberProcessTrait;
     use ModelRegistryAwareTrait;
 
-    private static array $responseSchemaList = [];
-
-    private static OAttributes\Schema $schema;
-
     #[\Override]
     public function supports(
         OAnnotations\Operation $operation,
@@ -57,11 +53,19 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     ): OAnnotations\OpenApi {
         [$httpStatus, $groups] = (new ApiResponseAstResolver())->resolve($reflectionMethod);
 
+        /**
+         * @var OpenApiResponse $openApiResponseInstance
+         * @var OpenApiMeta|null $openApiMetaInstance
+         */
         [$openApiResponseInstance, $openApiMetaInstance] = $this->getAttributesInstance($reflectionMethod);
 
         $statusCode = $httpStatus->value;
-        $responseType = $openApiResponseInstance->type;
+        $responseType = $openApiResponseInstance->responseTypeEnum;
         $responseClass = $openApiResponseInstance->class;
+
+        if ($responseClass === null) {
+            throw new \RuntimeException('The OpenApiResponse attribute must have a class property.');
+        }
 
         /** @var OAnnotations\Response $response */
         $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
@@ -94,6 +98,9 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         return $openApi;
     }
 
+    /**
+     * @param array<string> $groups
+     */
     private function getOpenApiModel(string $classFqcn, array $groups = []): string
     {
         $model = new Model(
@@ -106,6 +113,9 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         return $this->modelRegistry->register($model);
     }
 
+    /**
+     * @param array<string> $groups
+     */
     private function getDataProperty(string $responseClass, array $groups, ResponseTypeEnum $responseTypeEnum): Property
     {
         $dataProperty = new Property(property: 'data', description: 'The data of the response.');
@@ -121,7 +131,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         return $dataProperty;
     }
 
-    private function getMetaProperty(?OpenApiMeta $openApiMeta): ?Property
+    private function getMetaProperty(?OpenApiMeta $openApiMeta): Property
     {
         $metaProperty = new Property(property: 'meta', description: 'The meta of the response.', type: 'object');
 
@@ -129,10 +139,6 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
             $metaProperty->example = null;
 
             return $metaProperty;
-        }
-
-        if ($openApiMeta->class === null) {
-            throw new \RuntimeException('The OpenApiMeta attribute must have a class property.');
         }
 
         if (class_exists($openApiMeta->class) === false) {

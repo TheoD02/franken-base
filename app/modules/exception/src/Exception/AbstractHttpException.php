@@ -14,6 +14,9 @@ use function Symfony\Component\String\u;
 
 abstract class AbstractHttpException extends HttpException
 {
+    /**
+     * @param array<string, mixed> $context
+     */
     public function __construct(
         private readonly array $context = [],
         private readonly ?string $describe = null,
@@ -99,12 +102,15 @@ abstract class AbstractHttpException extends HttpException
      */
     public function getFormattedErrorCode(): string
     {
-        return u($this->getErrorCode()->value)
-            ->prepend($this->getParentErrorCode()->value . '_')
+        return u((string) $this->getErrorCode()->value)
+            ->prepend(((string) $this->getParentErrorCode()->value) . '_')
             ->toString()
         ;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getContext(): array
     {
         return $this->context;

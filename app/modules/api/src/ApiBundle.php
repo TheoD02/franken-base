@@ -17,6 +17,9 @@ class ApiBundle extends AbstractBundle
         return \dirname(__DIR__);
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     #[\Override]
     public function loadExtension(array $config, ContainerConfigurator $containerConfigurator, ContainerBuilder $containerBuilder): void
     {

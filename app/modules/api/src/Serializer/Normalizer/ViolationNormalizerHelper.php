@@ -6,6 +6,9 @@ namespace Module\Api\Serializer\Normalizer;
 
 class ViolationNormalizerHelper
 {
+    /**
+     * @return array{propertyPath: string, code: string, value: mixed, message: string}
+     */
     public static function createViolation(string $propertyPath, string $code, mixed $value, string $message): array
     {
         return [

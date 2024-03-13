@@ -46,7 +46,7 @@ readonly class ExceptionLoggerHandlerListener
                     'type' => $throwable->getParentErrorCode()->value,
                     'code' => $throwable->getFormattedErrorCode(),
                     'http_status_code' => $throwable->getStatusCode(),
-                    'debug' => $throwable->describe(),
+                    'debug' => $throwable->getDescribe(),
                 ]
             );
         }

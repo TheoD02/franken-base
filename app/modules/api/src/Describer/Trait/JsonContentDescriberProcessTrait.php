@@ -28,16 +28,14 @@ trait JsonContentDescriberProcessTrait
             $jsonContent->description = 'Bad request.';
         }
 
+        // @phpstan-ignore-next-line
         if ($jsonContent->oneOf === Generator::UNDEFINED) {
             $jsonContent->oneOf = [];
         }
 
+        // @phpstan-ignore-next-line
         if ($jsonContent->examples === Generator::UNDEFINED) {
             $jsonContent->examples = [];
-        }
-
-        if (\is_string($jsonContent)) {
-            throw new \RuntimeException('What ? JsonContent is a string ?');
         }
 
         return $jsonContent;

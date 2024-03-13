@@ -10,14 +10,21 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class CollectionNormalizer implements DenormalizerInterface, NormalizerInterface
 {
+    /**
+     * @param array<mixed> $context
+     *
+     * @return Collection<mixed>
+     */
     #[\Override]
-    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = [])
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): Collection
     {
         if (is_subclass_of($context['value_type']->getClassName(), \BackedEnum::class)) {
             $className = $context['value_type']->getClassName();
+            /** @var array<string|int> $data */
             $data = array_map(static fn ($value): \BackedEnum => $className::from($value), $data);
         }
 
+        // @phpstan-ignore-next-line
         return Collection::fromIterable($data);
     }
 
@@ -27,6 +34,10 @@ class CollectionNormalizer implements DenormalizerInterface, NormalizerInterface
         return $type === 'array' || str_ends_with($type, '[]');
     }
 
+    /**
+     * @param array<mixed> $context
+     * @return array<mixed>|bool|string|int|float|\ArrayObject|null
+     */
     #[\Override]
     public function normalize(mixed $object, ?string $format = null, array $context = []): array|bool|string|int|float|\ArrayObject|null
     {
@@ -48,6 +59,9 @@ class CollectionNormalizer implements DenormalizerInterface, NormalizerInterface
         return $data instanceof \loophp\collection\Contract\Collection;
     }
 
+    /**
+     * @return array<string, bool>
+     */
     public function getSupportedTypes(?string $format): array
     {
         return [

@@ -40,6 +40,6 @@ class GetCollectionUserController
         $entityRepository = $this->em->getRepository(User::class);
         $userCollection = $entityRepository->findByFilterQuery($filterQuery);
 
-        return new ApiResponse(data: $userCollection, groups: [UserGroups::READ]);
+        return new ApiResponse(data: $userCollection, apiMetadata: $userCollection->getMeta(), groups: [UserGroups::READ]);
     }
 }

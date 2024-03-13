@@ -18,6 +18,10 @@ use function Symfony\Component\String\u;
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_CLASS)]
 class ApiRoute extends Route
 {
+    /**
+     * @param array<mixed> $defaults
+     * @param array<mixed> $options
+     */
     public function __construct(
         string $path,
         array $requirements = [],

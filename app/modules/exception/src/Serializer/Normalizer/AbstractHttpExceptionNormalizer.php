@@ -25,6 +25,9 @@ class AbstractHttpExceptionNormalizer implements NormalizerInterface, Serializer
     ) {
     }
 
+    /**
+     * @return array<string, bool>
+     */
     public function getSupportedTypes(?string $format): array
     {
         return [
@@ -32,12 +35,20 @@ class AbstractHttpExceptionNormalizer implements NormalizerInterface, Serializer
         ];
     }
 
+    /**
+     * @param array<mixed> $context
+     */
     #[\Override]
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof FlattenException && $context['exception'] instanceof AbstractHttpException;
     }
 
+    /**
+     * @param array<mixed> $context
+     *
+     * @return array<mixed>
+     */
     #[\Override]
     public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {

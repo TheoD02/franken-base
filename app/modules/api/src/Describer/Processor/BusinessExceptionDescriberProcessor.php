@@ -55,7 +55,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
     ): OAnnotations\OpenApi {
         $apiExceptionsAttributes = $reflectionMethod->getAttributes(ApiException::class, \ReflectionAttribute::IS_INSTANCEOF);
 
-        /** @var array<int, AbstractHttpException> $exceptionByStatusCode */
+        /** @var array<int, array<AbstractHttpException>> $exceptionByStatusCode */
         $exceptionByStatusCode = [];
         foreach ($apiExceptionsAttributes as $apiExceptionAttribute) {
             /** @var ApiException $attributeInstance */
@@ -75,6 +75,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
             $jsonContent = $this->getJsonContent($response);
             foreach ($exceptionList as $exception) {
                 $jsonContent->oneOf[] = $this->getSchema($exception);
+                // @phpstan-ignore-next-line
                 $jsonContent->examples[] = $this->getExamples($exception);
             }
         }
@@ -139,8 +140,8 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
     private function getExamples(AbstractHttpException $httpException): OAttributes\Examples
     {
         return self::$businessExceptionExamples[$httpException::class] ??= new OAttributes\Examples(
-            $httpException->getErrorCode()->value,
-            $httpException->getErrorCode()->value,
+            (string) $httpException->getErrorCode()->value,
+            (string) $httpException->getErrorCode()->value,
             $httpException->getDescribe(),
             [
                 'status' => 'error',

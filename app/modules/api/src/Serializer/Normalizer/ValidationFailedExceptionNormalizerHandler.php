@@ -20,6 +20,9 @@ readonly class ValidationFailedExceptionNormalizerHandler
     ) {
     }
 
+    /**
+     * @return array<array{propertyPath: string, code: string, value: mixed, message: string}>
+     */
     public function normalize(ValidationFailedException $validationFailedException): array
     {
         $trans = $this->translator instanceof TranslatorInterface ? $this->translator->trans(...) : static fn ($m, $p): string => strtr($m, $p);
@@ -32,7 +35,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
                 $serializedName = $this->getSerializedName($reflectionProperty);
                 $serializedPath = $this->getSerializedPath($reflectionProperty);
 
-                if ($serializedName && $this->requestStack->getCurrentRequest()->query->has($serializedName)) {
+                if ($serializedName && $this->requestStack->getCurrentRequest()?->query->has($serializedName)) {
                     $propertyPath = $serializedName;
                 }
 
@@ -45,7 +48,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
 
             $errors[] = ViolationNormalizerHelper::createViolation(
                 propertyPath: $propertyPath,
-                code: $trans($violation->getMessage(), $violation->getParameters()),
+                code: $trans((string) $violation->getMessage(), $violation->getParameters()),
                 value: $violation->getInvalidValue(),
                 message: str_replace(array_keys($violation->getParameters()), $violation->getParameters(), $violation->getMessageTemplate()),
             );
@@ -77,11 +80,13 @@ readonly class ValidationFailedExceptionNormalizerHandler
         $fullyMatched = true;
         $queryElement = null;
 
-        foreach ($serializedPath->getSerializedPath()->getElements() as $element) {
+        foreach ($serializedPath?->getSerializedPath()->getElements() ?? [] as $element) {
             if ($queryElement === null) {
-                $queryElement = $this->requestStack->getCurrentRequest()
-                    ->query->all($element)
-                ;
+                $queryElement = $this->requestStack->getCurrentRequest()?->query->all($element);
+                if ($queryElement === null) {
+                    $fullyMatched = false;
+                    break;
+                }
                 continue;
             }
 
@@ -95,7 +100,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
 
         if ($fullyMatched) {
             $queryPath = u();
-            foreach ($serializedPath->getSerializedPath()->getElements() as $element) {
+            foreach ($serializedPath?->getSerializedPath()->getElements() ?? [] as $element) {
                 $queryPath = $queryPath->isEmpty() ? $queryPath->append($element) : $queryPath->append("[{$element}]");
             }
 
