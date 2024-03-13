@@ -37,9 +37,7 @@ class CollectionNormalizer implements DenormalizerInterface, NormalizerInterface
         /** @var Collection $object */
         $convertBackedEnum = $context['backed_enum_as_value'] ?? false;
         if ($convertBackedEnum) {
-            return $object->map(static fn ($value) => $value instanceof \BackedEnum ? $value->value : $value)->all(
-                false
-            );
+            return $object->map(static fn ($value) => $value instanceof \BackedEnum ? $value->value : $value)->all(false);
         }
 
         return $object->all(false);

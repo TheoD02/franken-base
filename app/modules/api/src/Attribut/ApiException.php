@@ -25,10 +25,7 @@ class ApiException
             throw new \RuntimeException(sprintf('The exception "%s" does not exist.', $exceptionFqcn));
         }
 
-        if (is_subclass_of(
-            $exceptionFqcn,
-            \Module\ExceptionHandlerBundle\Exception\AbstractHttpException::class
-        ) === false) {
+        if (is_subclass_of($exceptionFqcn, \Module\ExceptionHandlerBundle\Exception\AbstractHttpException::class) === false) {
             throw new \RuntimeException(sprintf(
                 'The exception "%s" must extend "%s".',
                 $exceptionFqcn,

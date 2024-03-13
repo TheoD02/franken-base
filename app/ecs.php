@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use PhpCsFixer\Fixer\ClassNotation\FinalInternalClassFixer;
 use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
+use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
 use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
+use Symplify\CodingStandard\Fixer\Spacing\StandaloneLineConstructorParamFixer;
 
 require_once dirname(__DIR__) . '/tools/ecs/BaseECSConfig.php';
 

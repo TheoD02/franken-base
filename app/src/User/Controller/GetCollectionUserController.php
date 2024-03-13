@@ -31,9 +31,8 @@ class GetCollectionUserController
      */
     #[OpenApiResponse(User::class, type: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(UserCollectionMeta::class)]
-    public function __invoke(
-        #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery
-    ): ApiResponse {
+    public function __invoke(#[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery): ApiResponse
+    {
         /** @var UserRepository $userRepository */
         $userRepository = $this->em->getRepository(User::class);
         $collection = $userRepository->findByFilterQuery($filterQuery);

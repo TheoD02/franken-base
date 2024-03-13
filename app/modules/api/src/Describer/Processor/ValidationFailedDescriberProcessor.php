@@ -63,11 +63,8 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
         return $api;
     }
 
-    private function addValidationFailedResponse(
-        mixed $api,
-        OAnnotations\Operation $operation,
-        int|string $statusCode
-    ): void {
+    private function addValidationFailedResponse(mixed $api, OAnnotations\Operation $operation, int|string $statusCode): void
+    {
         /** @var OAnnotations\Response $response */
         $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
 
@@ -88,28 +85,11 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
             title: 'Validation Failed Schema for MapQueryString, MapRequestPayload or Symfony Validator',
             description: 'This schema will be used when you will receive a validation error of payload or query string, or any Symfony Validator error.',
             properties: [
-                new Property(
-                    property: 'status',
-                    description: 'The status of the response.',
-                    type: 'string',
-                    example: 'success'
-                ),
+                new Property(property: 'status', description: 'The status of the response.', type: 'string', example: 'success'),
                 new Property(property: 'error', description: 'The error object.', properties: [
-                    new Property(
-                        property: 'context_code',
-                        description: 'The type of the error.',
-                        example: 'API_PROCESSING'
-                    ),
-                    new Property(
-                        property: 'parent_code',
-                        description: 'A short description of the error.',
-                        example: 'VALIDATION'
-                    ),
-                    new Property(
-                        property: 'error_code',
-                        description: 'A short description of the error.',
-                        example: 'VALIDATION_FAILED'
-                    ),
+                    new Property(property: 'context_code', description: 'The type of the error.', example: 'API_PROCESSING'),
+                    new Property(property: 'parent_code', description: 'A short description of the error.', example: 'VALIDATION'),
+                    new Property(property: 'error_code', description: 'A short description of the error.', example: 'VALIDATION_FAILED'),
                     new Property(property: 'status', description: 'The HTTP status code', example: 422),
                     new Property(
                         property: 'violations',

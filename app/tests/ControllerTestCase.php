@@ -91,20 +91,14 @@ class ControllerTestCase extends WebTestCase
         $uri = str_replace(
             array_map(static fn ($key) => sprintf('{%s}', $key), array_keys($uriParameters)),
             array_values($uriParameters),
-            $testRouteDescriber->uri,
+            $testRouteDescriber->uri
         );
 
         if (! empty($queryParameters)) {
             $uri .= '?' . http_build_query($queryParameters);
         }
 
-        return $this->client->request(
-            method: $testRouteDescriber->method,
-            uri: $uri,
-            server: $server,
-            content: $content,
-            changeHistory: $changeHistory,
-        );
+        return $this->client->request(method: $testRouteDescriber->method, uri: $uri, server: $server, content: $content, changeHistory: $changeHistory);
     }
 
     /**

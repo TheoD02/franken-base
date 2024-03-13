@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
+use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
+use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
+use Symplify\CodingStandard\Fixer\Spacing\StandaloneLineConstructorParamFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\Configuration\ECSConfigBuilder;
 
@@ -12,11 +15,18 @@ class BaseECSConfig
     {
         return ECSConfig::configure()
             ->withRootFiles()
-
             // add a single rule
             ->withRules([
                 NoUnusedImportsFixer::class,
+                StandaloneLineConstructorParamFixer::class,
+                StandaloneLineInMultilineArrayFixer::class
             ])
+            ->withConfiguredRule(
+                LineLengthFixer::class,
+                [
+                    LineLengthFixer::LINE_LENGTH => 160,
+                ]
+            )
             ->withPreparedSets(
                 psr12: true,
                 //common: true,

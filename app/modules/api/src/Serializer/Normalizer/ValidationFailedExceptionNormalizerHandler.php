@@ -47,11 +47,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
                 propertyPath: $propertyPath,
                 code: $trans($violation->getMessage(), $violation->getParameters()),
                 value: $violation->getInvalidValue(),
-                message: str_replace(
-                    array_keys($violation->getParameters()),
-                    $violation->getParameters(),
-                    $violation->getMessageTemplate()
-                ),
+                message: str_replace(array_keys($violation->getParameters()), $violation->getParameters(), $violation->getMessageTemplate()),
             );
         }
 

@@ -34,9 +34,7 @@ readonly class KernelViewListener
         $openApiResponseAttribute = $reflection->getAttributes(OpenApiResponse::class)[0] ?? null;
 
         if ($controllerResult instanceof ApiResponse && $openApiResponseAttribute === null) {
-            throw new \InvalidArgumentException(
-                'The controller must have an OpenApiResponse attribute when returning an instance of ApiResponse.'
-            );
+            throw new \InvalidArgumentException('The controller must have an OpenApiResponse attribute when returning an instance of ApiResponse.');
         }
 
         /** @var OpenApiResponse $openApiResponseInstance */
@@ -47,9 +45,7 @@ readonly class KernelViewListener
         }
 
         if ($controllerResult instanceof ApiResponse === false && $controllerResult?->httpStatus !== HttpStatusEnum::NO_CONTENT && $openApiResponseInstance->empty !== true) {
-            throw new \InvalidArgumentException(
-                'The controller must return an instance of ApiResponse when it has an OpenApiResponse attribute.'
-            );
+            throw new \InvalidArgumentException('The controller must return an instance of ApiResponse when it has an OpenApiResponse attribute.');
         }
 
         $jsonResponse = new JsonResponse();

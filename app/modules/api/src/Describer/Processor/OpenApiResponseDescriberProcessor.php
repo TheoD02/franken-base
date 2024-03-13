@@ -84,12 +84,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         $schema->type = 'object';
 
         $schema->properties = [
-            new Property(
-                property: 'status',
-                description: 'The status of the response.',
-                type: 'string',
-                example: 'success'
-            ),
+            new Property(property: 'status', description: 'The status of the response.', type: 'string', example: 'success'),
             $this->getDataProperty($responseClass, $groups, $responseType),
             $this->getMetaProperty($openApiMetaInstance),
         ];
@@ -115,11 +110,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         $ref = $this->getOpenApiModel($responseClass, $groups);
         if ($responseType === ResponseTypeEnum::COLLECTION) {
             $dataProperty->type = 'array';
-            $dataProperty->items = new Items(
-                ref: $ref,
-                description: 'The item of the collection.',
-                type: 'object',
-            );
+            $dataProperty->items = new Items(ref: $ref, description: 'The item of the collection.', type: 'object');
         } else {
             $dataProperty->type = 'object';
             $dataProperty->ref = $ref;

@@ -12,8 +12,6 @@ class BaseRectorConfig
     {
         return RectorConfig::configure()
             ->withRootFiles()
-            // uncomment to reach your current PHP version
-            // ->withPhpSets()
             ->withPhpSets(php83: true)
             ->withRules([
                 AddVoidReturnTypeWhereNoReturnRector::class,

@@ -53,10 +53,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
         array $mapRequestPayload,
         array $mapQueryString
     ): OAnnotations\OpenApi {
-        $apiExceptionsAttributes = $reflectionMethod->getAttributes(
-            ApiException::class,
-            \ReflectionAttribute::IS_INSTANCEOF
-        );
+        $apiExceptionsAttributes = $reflectionMethod->getAttributes(ApiException::class, \ReflectionAttribute::IS_INSTANCEOF);
 
         /** @var array<int, AbstractHttpException> $exceptionByStatusCode */
         $exceptionByStatusCode = [];
@@ -91,12 +88,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
             title: $exception->getErrorMessage(),
             description: $exception->describe(),
             properties: [
-                new Property(
-                    property: 'status',
-                    description: 'The status of the response.',
-                    type: 'string',
-                    example: 'error'
-                ),
+                new Property(property: 'status', description: 'The status of the response.', type: 'string', example: 'error'),
                 new Property(
                     property: 'error',
                     description: 'The error code.',
@@ -113,24 +105,9 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
                             type: 'string',
                             example: $exception->getParentErrorCode()->value
                         ),
-                        new Property(
-                            property: 'error_code',
-                            description: 'The error code.',
-                            type: 'string',
-                            example: $exception->getFormattedErrorCode()
-                        ),
-                        new Property(
-                            property: 'status',
-                            description: 'The status of the response.',
-                            type: 'integer',
-                            example: $exception->getHttpStatusCode()
-                        ),
-                        new Property(
-                            property: 'message',
-                            description: 'The message of the error.',
-                            type: 'string',
-                            example: $exception->getMessage()
-                        ),
+                        new Property(property: 'error_code', description: 'The error code.', type: 'string', example: $exception->getFormattedErrorCode()),
+                        new Property(property: 'status', description: 'The status of the response.', type: 'integer', example: $exception->getHttpStatusCode()),
+                        new Property(property: 'message', description: 'The message of the error.', type: 'string', example: $exception->getMessage()),
                         new Property(
                             property: 'debug_message',
                             description: 'The debug message of the error.',

@@ -36,15 +36,9 @@ class RouteDescriber implements RouteDescriberInterface, ModelRegistryAwareInter
         $mapRequestPayload = [];
         $mapQueryString = [];
         foreach ($reflectionMethod->getParameters() as $reflectionParameter) {
-            $mapRequestPayloadAttributes = $reflectionParameter->getAttributes(
-                MapRequestPayload::class,
-                \ReflectionAttribute::IS_INSTANCEOF
-            );
+            $mapRequestPayloadAttributes = $reflectionParameter->getAttributes(MapRequestPayload::class, \ReflectionAttribute::IS_INSTANCEOF);
 
-            $mapQueryStringAttributes = $reflectionParameter->getAttributes(
-                MapQueryString::class,
-                \ReflectionAttribute::IS_INSTANCEOF
-            );
+            $mapQueryStringAttributes = $reflectionParameter->getAttributes(MapQueryString::class, \ReflectionAttribute::IS_INSTANCEOF);
 
             if (\count($mapRequestPayloadAttributes) > 0) {
                 $mapRequestPayload[] = [
@@ -71,14 +65,7 @@ class RouteDescriber implements RouteDescriberInterface, ModelRegistryAwareInter
                     if ($processor instanceof ModelRegistryAwareInterface) {
                         $processor->setModelRegistry($this->modelRegistry);
                     }
-                    $api = $processor->process(
-                        $api,
-                        $operation,
-                        $route,
-                        $reflectionMethod,
-                        $mapRequestPayload,
-                        $mapQueryString
-                    );
+                    $api = $processor->process($api, $operation, $route, $reflectionMethod, $mapRequestPayload, $mapQueryString);
                 }
             }
         }
