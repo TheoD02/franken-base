@@ -47,10 +47,7 @@ class ApiResponseAstResolver
             throw new \RuntimeException('An error occurred while parsing the file.', 0, $e);
         }
 
-        return [
-            'httpStatus' => $httpStatus,
-            'groups' => $groups,
-        ];
+        return [$httpStatus, $groups];
     }
 
     protected function getMethod(mixed $class, \ReflectionMethod $reflectionMethod): ClassMethod
@@ -159,8 +156,7 @@ class ApiResponseAstResolver
                 foreach ($node->stmts as $stmt) {
                     if ($stmt instanceof Use_) {
                         foreach ($stmt->uses as $use) {
-                            if ($use->alias === $httpStatusClassName || $use->name->getLast(
-                                ) === $httpStatusClassName) {
+                            if ($use->alias === $httpStatusClassName || $use->name->getLast() === $httpStatusClassName) {
                                 $reflectionClass = new \ReflectionClass($use->name->toString());
                                 if ($reflectionClass->isEnum()) {
                                     $cases = $reflectionClass->getConstants();
