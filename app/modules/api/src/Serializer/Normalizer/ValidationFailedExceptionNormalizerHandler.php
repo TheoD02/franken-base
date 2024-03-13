@@ -57,13 +57,11 @@ readonly class ValidationFailedExceptionNormalizerHandler
     protected function getSerializedName(\ReflectionProperty $reflectionProperty): ?string
     {
         $serializedNameAttributs = $reflectionProperty->getAttributes(SerializedName::class);
-
-        $serializedName = null;
         if ($serializedNameAttributs !== []) {
-            $serializedName = $serializedNameAttributs[0]->newInstance()->getSerializedName();
+            return $serializedNameAttributs[0]->newInstance()->getSerializedName();
         }
 
-        return $serializedName;
+        return null;
     }
 
     private function getSerializedPath(\ReflectionProperty $reflectionProperty): ?string

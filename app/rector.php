@@ -29,7 +29,7 @@ return RectorConfig::configure()
         privatization: true,
         naming: true,
         instanceOf: true,
-        //earlyReturn: true,
+        earlyReturn: true,
         //strictBooleans: true,
     )
     ->withRules([
