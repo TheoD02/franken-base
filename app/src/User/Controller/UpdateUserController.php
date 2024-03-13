@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
  * @see \App\Tests\User\Controller\UpdateUserControllerTest
  */
 #[AsController]
-#[ApiRoute('/api/users/{id}', method: HttpMethodEnum::PATCH)]
+#[ApiRoute('/api/users/{id}', httpMethodEnum: HttpMethodEnum::PATCH)]
 class UpdateUserController
 {
     use EntityManagerTrait;

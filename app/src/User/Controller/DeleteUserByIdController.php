@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
  * @see \App\Tests\User\Controller\DeleteUserByIdControllerTest
  */
 #[AsController]
-#[ApiRoute('/api/users/{id}', method: HttpMethodEnum::DELETE)]
+#[ApiRoute('/api/users/{id}', httpMethodEnum: HttpMethodEnum::DELETE)]
 class DeleteUserByIdController
 {
     use EntityManagerTrait;

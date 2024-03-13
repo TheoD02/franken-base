@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryString;
  * @see \App\Tests\User\Controller\GetCollectionUserControllerTest
  */
 #[AsController]
-#[ApiRoute('/api/users', method: HttpMethodEnum::GET)]
+#[ApiRoute('/api/users', httpMethodEnum: HttpMethodEnum::GET)]
 class GetCollectionUserController
 {
     use EntityManagerTrait;
@@ -32,7 +32,7 @@ class GetCollectionUserController
     /**
      * @return ApiResponse<UserCollection, UserCollectionMeta>
      */
-    #[OpenApiResponse(User::class, type: ResponseTypeEnum::COLLECTION)]
+    #[OpenApiResponse(User::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(UserCollectionMeta::class)]
     public function __invoke(#[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery): ApiResponse
     {

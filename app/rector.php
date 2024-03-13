@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+
+use Rector\Naming\Rector\Class_\RenamePropertyToMatchTypeRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Doctrine\Set\DoctrineSetList;
 
@@ -56,4 +58,5 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         EncapsedStringsToSprintfRector::class,
+        RenamePropertyToMatchTypeRector::class,
     ]);

@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
  * @see \App\Tests\User\Controller\GetUserByIdControllerTest
  */
 #[AsController]
-#[ApiRoute('/api/users/{id}', method: HttpMethodEnum::GET)]
+#[ApiRoute('/api/users/{id}', httpMethodEnum: HttpMethodEnum::GET)]
 class GetUserByIdController
 {
     use EntityManagerTrait;

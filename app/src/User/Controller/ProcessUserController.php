@@ -19,13 +19,13 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
  * @see \App\Tests\User\Controller\ProcessUserControllerTest
  */
 #[AsController]
-#[ApiRoute('/api/users/{id}/process', method: HttpMethodEnum::GET)]
+#[ApiRoute('/api/users/{id}/process', httpMethodEnum: HttpMethodEnum::GET)]
 class ProcessUserController
 {
     /**
      * @return ApiResponse<User, null>
      */
-    #[OpenApiResponse(User::class, type: ResponseTypeEnum::COLLECTION)]
+    #[OpenApiResponse(User::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[ApiException(UserProcessingException::class)]
     #[ApiException(UserNotFound::class)]
     public function __invoke(int $id): ApiResponse

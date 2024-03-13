@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
  * @see \App\Tests\User\Controller\CreateUserControllerTest
  */
 #[AsController]
-#[ApiRoute('/api/users', method: HttpMethodEnum::POST)]
+#[ApiRoute('/api/users', httpMethodEnum: HttpMethodEnum::POST)]
 class CreateUserController
 {
     use EntityManagerTrait;
@@ -38,6 +38,6 @@ class CreateUserController
         $this->em->persist($user);
         $this->em->flush();
 
-        return new ApiResponse(data: $user, groups: [UserGroups::READ, UserGroups::READ_ROLES], httpStatus: HttpStatusEnum::CREATED);
+        return new ApiResponse(data: $user, groups: [UserGroups::READ, UserGroups::READ_ROLES], httpStatusEnum: HttpStatusEnum::CREATED);
     }
 }
