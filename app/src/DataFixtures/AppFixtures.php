@@ -11,7 +11,7 @@ use Doctrine\Persistence\ObjectManager;
 class AppFixtures extends Fixture
 {
     #[\Override]
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $objectManager): void
     {
         UserFactory::createMany(10);
     }

@@ -17,8 +17,8 @@ class ExceptionHandlerBundle extends AbstractBundle
     }
 
     #[\Override]
-    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    public function loadExtension(array $config, ContainerConfigurator $containerConfigurator, ContainerBuilder $containerBuilder): void
     {
-        $container->import(__DIR__ . '/../config/services.yaml');
+        $containerConfigurator->import(__DIR__ . '/../config/services.yaml');
     }
 }

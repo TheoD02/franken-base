@@ -69,10 +69,10 @@ class ApiResponseAstResolver
         return $method;
     }
 
-    protected function getReturnStmt(ClassMethod $method): ?\PhpParser\Node\Stmt\Return_
+    protected function getReturnStmt(ClassMethod $classMethod): ?\PhpParser\Node\Stmt\Return_
     {
         $returnStmt = null;
-        foreach ($method->stmts as $stmt) {
+        foreach ($classMethod->stmts as $stmt) {
             if ($stmt instanceof \PhpParser\Node\Stmt\Return_) {
                 if ($returnStmt instanceof \PhpParser\Node\Stmt\Return_) {
                     throw new \RuntimeException('The method must have a return statement.');
@@ -88,10 +88,10 @@ class ApiResponseAstResolver
     /**
      * @return array<class-string, \BackedEnum>
      */
-    protected function getGroups(\PhpParser\Node\Stmt\Return_ $returnStmt, ?array $ast): array
+    protected function getGroups(\PhpParser\Node\Stmt\Return_ $return, ?array $ast): array
     {
         $groupsArgs = null;
-        foreach ($returnStmt->expr->args as $arg) {
+        foreach ($return->expr->args as $arg) {
             if ($arg->name?->name === 'groups') {
                 $groupsArgs = $arg;
             }
@@ -100,7 +100,10 @@ class ApiResponseAstResolver
         $groups = [];
         if ($groupsArgs !== null) {
             /** @var array<string, string> $groups {className, nameOfTheGroup} */
-            $groups = array_map(static fn (ArrayItem $group): array => [$group->value?->class->name, $group->value?->name->name], $groupsArgs->value->items);
+            $groups = array_map(
+                static fn (ArrayItem $arrayItem): array => [$arrayItem->value?->class->name, $arrayItem->value?->name->name],
+                $groupsArgs->value->items
+            );
         }
 
         $groupedByClass = [];
@@ -138,10 +141,10 @@ class ApiResponseAstResolver
         return $groups;
     }
 
-    private function getHttpStatus(\PhpParser\Node\Stmt\Return_ $returnStmt, array $ast): HttpStatusEnum
+    private function getHttpStatus(\PhpParser\Node\Stmt\Return_ $return, array $ast): HttpStatusEnum
     {
         $httpStatus = null;
-        foreach ($returnStmt->expr->args as $arg) {
+        foreach ($return->expr->args as $arg) {
             if ($arg->name?->name === 'httpStatus') {
                 $httpStatus = $arg;
             }

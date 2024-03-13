@@ -24,9 +24,9 @@ readonly class ExceptionLoggerHandlerListener
     ) {
     }
 
-    public function __invoke(ExceptionEvent $event): void
+    public function __invoke(ExceptionEvent $exceptionEvent): void
     {
-        $throwable = $event->getThrowable();
+        $throwable = $exceptionEvent->getThrowable();
 
         if ($throwable instanceof AbstractHttpException) {
             $logLevel = $throwable->getLogLevel();

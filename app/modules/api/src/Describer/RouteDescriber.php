@@ -27,7 +27,7 @@ class RouteDescriber implements RouteDescriberInterface, ModelRegistryAwareInter
     }
 
     #[\Override]
-    public function describe(OAnnotations\OpenApi $api, Route $route, \ReflectionMethod $reflectionMethod): void
+    public function describe(OAnnotations\OpenApi $openApi, Route $route, \ReflectionMethod $reflectionMethod): void
     {
         if ($reflectionMethod->getDeclaringClass()->getName() === DocumentationController::class) {
             return;
@@ -59,14 +59,14 @@ class RouteDescriber implements RouteDescriberInterface, ModelRegistryAwareInter
             throw new \RuntimeException('Only one MapRequestPayload attribute is allowed per method.');
         }
 
-        foreach ($this->getOperations($api, $route) as $operation) {
+        foreach ($this->getOperations($openApi, $route) as $operation) {
             foreach ($this->processors as $processor) {
                 if ($processor->supports($operation, $route, $reflectionMethod, $mapRequestPayload, $mapQueryString)) {
                     if ($processor instanceof ModelRegistryAwareInterface) {
                         $processor->setModelRegistry($this->modelRegistry);
                     }
 
-                    $api = $processor->process($api, $operation, $route, $reflectionMethod, $mapRequestPayload, $mapQueryString);
+                    $openApi = $processor->process($openApi, $operation, $route, $reflectionMethod, $mapRequestPayload, $mapQueryString);
                 }
             }
         }

@@ -24,13 +24,13 @@ class GetCollectionUserControllerTest extends ControllerTestCase
     public function testGetCollectionUser(): void
     {
         // Arrange
-        $expectedUser = UserCollection::fromIterable(ProxyToObjectHelper::proxyToObject(UserFactory::createMany(2)));
+        $userCollection = UserCollection::fromIterable(ProxyToObjectHelper::proxyToObject(UserFactory::createMany(2)));
 
         // Act
         $this->requestAction(GetCollectionUserController::class);
 
         // Assert
         self::assertResponseStatusCodeSame(200);
-        $this->assertApiResponseEquals($expectedUser, groups: [UserGroups::READ]);
+        $this->assertApiResponseEquals($userCollection, groups: [UserGroups::READ]);
     }
 }

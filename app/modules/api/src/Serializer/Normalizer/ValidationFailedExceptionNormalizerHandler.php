@@ -20,12 +20,12 @@ readonly class ValidationFailedExceptionNormalizerHandler
     ) {
     }
 
-    public function normalize(ValidationFailedException $exception): array
+    public function normalize(ValidationFailedException $validationFailedException): array
     {
         $trans = $this->translator instanceof TranslatorInterface ? $this->translator->trans(...) : static fn ($m, $p): string => strtr($m, $p);
         $errors = [];
 
-        foreach ($exception->getViolations() as $violation) {
+        foreach ($validationFailedException->getViolations() as $violation) {
             $propertyPath = $violation->getPropertyPath();
             try {
                 $reflectionProperty = new \ReflectionProperty($violation->getRoot(), $violation->getPropertyPath());

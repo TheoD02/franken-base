@@ -23,9 +23,9 @@ readonly class ApiResponse
         /**
          * @phpstan-var M
          */
-        public ?ApiMetadataInterface $meta = null,
+        public ?ApiMetadataInterface $apiMetadata = null,
         public array $groups = [],
-        public HttpStatusEnum $httpStatus = HttpStatusEnum::OK,
+        public HttpStatusEnum $httpStatusEnum = HttpStatusEnum::OK,
     ) {
     }
 }

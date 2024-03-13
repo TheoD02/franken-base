@@ -11,9 +11,9 @@ use AutoMapperPlus\Configuration\AutoMapperConfigInterface;
 class AutoMapperConfig implements AutoMapperConfiguratorInterface
 {
     #[\Override]
-    public function configure(AutoMapperConfigInterface $config): void
+    public function configure(AutoMapperConfigInterface $autoMapperConfig): void
     {
-        $config->getOptions()->ignoreNullProperties();
-        $config->registerMapping(User::class, User::class);
+        $autoMapperConfig->getOptions()->ignoreNullProperties();
+        $autoMapperConfig->registerMapping(User::class, User::class);
     }
 }

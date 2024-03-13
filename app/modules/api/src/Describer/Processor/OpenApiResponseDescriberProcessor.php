@@ -48,7 +48,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
 
     #[\Override]
     public function process(
-        OAnnotations\OpenApi $api,
+        OAnnotations\OpenApi $openApi,
         OAnnotations\Operation $operation,
         Route $route,
         \ReflectionMethod $reflectionMethod,
@@ -78,7 +78,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         if ($httpStatus === HttpStatusEnum::NO_CONTENT) {
             $response->description = $httpStatus->getShortName();
 
-            return $api;
+            return $openApi;
         }
 
         /** @var Schema $schema */
@@ -91,7 +91,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
             $this->getMetaProperty($openApiMetaInstance),
         ];
 
-        return $api;
+        return $openApi;
     }
 
     private function getOpenApiModel(string $classFqcn, array $groups = []): string
@@ -106,11 +106,11 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         return $this->modelRegistry->register($model);
     }
 
-    private function getDataProperty(string $responseClass, array $groups, ResponseTypeEnum $responseType): Property
+    private function getDataProperty(string $responseClass, array $groups, ResponseTypeEnum $responseTypeEnum): Property
     {
         $dataProperty = new Property(property: 'data', description: 'The data of the response.');
         $ref = $this->getOpenApiModel($responseClass, $groups);
-        if ($responseType === ResponseTypeEnum::COLLECTION) {
+        if ($responseTypeEnum === ResponseTypeEnum::COLLECTION) {
             $dataProperty->type = 'array';
             $dataProperty->items = new Items(ref: $ref, description: 'The item of the collection.', type: 'object');
         } else {
@@ -121,26 +121,26 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         return $dataProperty;
     }
 
-    private function getMetaProperty(?OpenApiMeta $openApiMetaInstance): ?Property
+    private function getMetaProperty(?OpenApiMeta $openApiMeta): ?Property
     {
         $metaProperty = new Property(property: 'meta', description: 'The meta of the response.', type: 'object');
 
-        if (! $openApiMetaInstance instanceof OpenApiMeta) {
+        if (! $openApiMeta instanceof OpenApiMeta) {
             $metaProperty->example = null;
 
             return $metaProperty;
         }
 
-        if ($openApiMetaInstance->class === null) {
+        if ($openApiMeta->class === null) {
             throw new \RuntimeException('The OpenApiMeta attribute must have a class property.');
         }
 
-        if (class_exists($openApiMetaInstance->class) === false) {
+        if (class_exists($openApiMeta->class) === false) {
             throw new \RuntimeException('The class of the OpenApiMeta attribute does not exist.');
         }
 
         $metaProperty->type = 'object';
-        $metaProperty->ref = $this->getOpenApiModel($openApiMetaInstance->class);
+        $metaProperty->ref = $this->getOpenApiModel($openApiMeta->class);
 
         return $metaProperty;
     }

@@ -28,11 +28,11 @@ class ProcessUserControllerTest extends ControllerTestCase
         // Assert
         self::assertResponseStatusCodeSame(422);
 
-        $exception = new UserProcessingException();
+        $userProcessingException = new UserProcessingException();
         $expected = [
-            'context_code' => $exception->getContextCode()->value,
-            'parent_code' => $exception->getParentErrorCode()->value,
-            'error_code' => $exception->getFormattedErrorCode(),
+            'context_code' => $userProcessingException->getContextCode()->value,
+            'parent_code' => $userProcessingException->getParentErrorCode()->value,
+            'error_code' => $userProcessingException->getFormattedErrorCode(),
             'status' => 422,
         ];
         $this->assertJsonArray($expected, onlyKeys: array_keys($expected));

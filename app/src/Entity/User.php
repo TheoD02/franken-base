@@ -41,11 +41,11 @@ class User implements ApiDataInterface
      */
     #[ORM\Column(type: CollectionType::NAME)]
     #[Groups([UserGroups::READ_ROLES])]
-    private Collection $roles;
+    private Collection $collection;
 
     public function __construct()
     {
-        $this->roles = Collection::fromIterable([UserRoleEnum::USER]);
+        $this->collection = Collection::fromIterable([UserRoleEnum::USER]);
     }
 
     public function getId(): ?int
@@ -100,15 +100,15 @@ class User implements ApiDataInterface
      */
     public function getRoles(): Collection
     {
-        return $this->roles;
+        return $this->collection;
     }
 
     /**
-     * @param Collection<array-key, UserRoleEnum> $roles
+     * @param Collection<array-key, UserRoleEnum> $collection
      */
-    public function setRoles(Collection $roles): static
+    public function setRoles(Collection $collection): static
     {
-        $this->roles = $roles;
+        $this->collection = $collection;
 
         return $this;
     }

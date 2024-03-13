@@ -24,7 +24,7 @@ class ApiRoute extends Route
         array $options = [],
         array $defaults = [],
         ?string $host = null,
-        HttpMethodEnum $method = HttpMethodEnum::GET,
+        HttpMethodEnum $httpMethodEnum = HttpMethodEnum::GET,
         array|string $schemes = [],
         ?string $condition = null,
         ?int $priority = null,
@@ -34,7 +34,7 @@ class ApiRoute extends Route
         ?bool $stateless = null,
         ?string $env = null
     ) {
-        $name = $this->describeNameFromPath($path, $method);
+        $name = $this->describeNameFromPath($path, $httpMethodEnum);
         parent::__construct(
             $path,
             $name,
@@ -42,7 +42,7 @@ class ApiRoute extends Route
             $options,
             $defaults,
             $host,
-            $method->value,
+            $httpMethodEnum->value,
             $schemes,
             $condition,
             $priority,
@@ -54,14 +54,14 @@ class ApiRoute extends Route
         );
     }
 
-    private function describeNameFromPath(string $path, HttpMethodEnum $method): string
+    private function describeNameFromPath(string $path, HttpMethodEnum $httpMethodEnum): string
     {
-        $name = u($path)
+        $unicodeString = u($path)
             ->ensureStart('/')
-            ->prepend(strtolower($method->value))
+            ->prepend(strtolower($httpMethodEnum->value))
             ->replace('/', '_')
         ;
 
-        return $name->toString();
+        return $unicodeString->toString();
     }
 }

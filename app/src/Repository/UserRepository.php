@@ -21,37 +21,37 @@ use Doctrine\Persistence\ManagerRegistry;
 class UserRepository extends ServiceEntityRepository
 {
     public function __construct(
-        ManagerRegistry $registry
+        ManagerRegistry $managerRegistry
     ) {
-        parent::__construct($registry, User::class);
+        parent::__construct($managerRegistry, User::class);
     }
 
-    public function findByFilterQuery(?UserFilterQuery $filterQuery): UserCollection
+    public function findByFilterQuery(?UserFilterQuery $userFilterQuery): UserCollection
     {
-        $qb = $this->createQueryBuilder('u');
+        $queryBuilder = $this->createQueryBuilder('u');
 
-        $qb
+        $queryBuilder
             ->select('u')
             ->orderBy('u.id', 'ASC')
         ;
 
-        if ($filterQuery instanceof UserFilterQuery && $filterQuery->query !== null) {
-            $qb
+        if ($userFilterQuery instanceof UserFilterQuery && $userFilterQuery->query !== null) {
+            $queryBuilder
                 ->orWhere('u.email LIKE :query')
-                ->setParameter('query', '%' . $filterQuery->query . '%')
+                ->setParameter('query', '%' . $userFilterQuery->query . '%')
             ;
 
-            $qb
+            $queryBuilder
                 ->orWhere('u.lastName LIKE :query')
-                ->setParameter('query', '%' . $filterQuery->query . '%')
+                ->setParameter('query', '%' . $userFilterQuery->query . '%')
             ;
 
-            $qb
+            $queryBuilder
                 ->orWhere('u.firstName LIKE :query')
-                ->setParameter('query', '%' . $filterQuery->query . '%')
+                ->setParameter('query', '%' . $userFilterQuery->query . '%')
             ;
         }
 
-        return UserCollection::fromIterable($qb->getQuery()->getResult());
+        return UserCollection::fromIterable($queryBuilder->getQuery()->getResult());
     }
 }

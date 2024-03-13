@@ -11,8 +11,8 @@ trait EntityManagerTrait
     protected EntityManagerInterface $em;
 
     public function __construct(
-        EntityManagerInterface $em
+        EntityManagerInterface $entityManager
     ) {
-        $this->em = $em;
+        $this->em = $entityManager;
     }
 }

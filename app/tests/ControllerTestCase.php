@@ -42,14 +42,14 @@ class ControllerTestCase extends WebTestCase
             throw new \Exception('No route found');
         }
 
-        /** @var ApiRoute $routeInstance */
-        $routeInstance = $route[0]->newInstance();
+        /** @var ApiRoute $apiRoute */
+        $apiRoute = $route[0]->newInstance();
 
-        if ($routeInstance->getPath() === null) {
+        if ($apiRoute->getPath() === null) {
             throw new \Exception('No path found');
         }
 
-        return new TestRouteDescriber(current($routeInstance->getMethods()), $routeInstance->getPath());
+        return new TestRouteDescriber(current($apiRoute->getMethods()), $apiRoute->getPath());
     }
 
     /**

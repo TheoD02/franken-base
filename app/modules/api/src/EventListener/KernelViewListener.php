@@ -25,13 +25,13 @@ readonly class KernelViewListener
 
     // TODO: Review the nullable type check, the case of empty with, without attribute and no return to handle case more fine-grained/proper way
     #[NoReturn]
-    public function onKernelView(ViewEvent $event): void
+    public function onKernelView(ViewEvent $viewEvent): void
     {
         /** @var ?ApiResponse $controllerResult */
-        $controllerResult = $event->getControllerResult();
+        $controllerResult = $viewEvent->getControllerResult();
 
-        $reflection = $this->getControllerMethodReflectionClass($event);
-        $openApiResponseAttribute = $reflection->getAttributes(OpenApiResponse::class)[0] ?? null;
+        $reflectionMethod = $this->getControllerMethodReflectionClass($viewEvent);
+        $openApiResponseAttribute = $reflectionMethod->getAttributes(OpenApiResponse::class)[0] ?? null;
 
         if ($controllerResult instanceof ApiResponse && $openApiResponseAttribute === null) {
             throw new \InvalidArgumentException('The controller must have an OpenApiResponse attribute when returning an instance of ApiResponse.');
@@ -53,7 +53,7 @@ readonly class KernelViewListener
         $jsonResponse->setStatusCode(($controllerResult?->httpStatus ?? $defaultStatusCode)->value);
 
         if ($controllerResult?->httpStatus === HttpStatusEnum::NO_CONTENT) {
-            $event->setResponse($jsonResponse);
+            $viewEvent->setResponse($jsonResponse);
 
             return;
         }
@@ -80,12 +80,12 @@ readonly class KernelViewListener
 
         $jsonResponse->setData($response);
 
-        $event->setResponse($jsonResponse);
+        $viewEvent->setResponse($jsonResponse);
     }
 
-    protected function getControllerMethodReflectionClass(ViewEvent $event): \ReflectionMethod
+    protected function getControllerMethodReflectionClass(ViewEvent $viewEvent): \ReflectionMethod
     {
-        $controller = $event->getRequest()->attributes->get('_controller');
+        $controller = $viewEvent->getRequest()->attributes->get('_controller');
         $controller = explode('::', (string) $controller);
         $controller = \count($controller) !== 2 ? "{$controller[0]}::__invoke" : "{$controller[0]}::{$controller[1]}";
 

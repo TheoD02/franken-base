@@ -38,7 +38,7 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
 
     #[\Override]
     public function process(
-        OAnnotations\OpenApi $api,
+        OAnnotations\OpenApi $openApi,
         OAnnotations\Operation $operation,
         Route $route,
         \ReflectionMethod $reflectionMethod,
@@ -60,19 +60,19 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
             $this->addValidationFailedResponse($operation, $statusCode);
         }
 
-        return $api;
+        return $openApi;
     }
 
     private function addValidationFailedResponse(OAnnotations\Operation $operation, int|string $statusCode): void
     {
-        /** @var OAnnotations\Response $response */
-        $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
+        /** @var OAnnotations\Response $annotation */
+        $annotation = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
 
-        if ($response->description === Generator::UNDEFINED) {
-            $response->description = HttpStatusEnum::from($statusCode)->getShortName() . ' response.';
+        if ($annotation->description === Generator::UNDEFINED) {
+            $annotation->description = HttpStatusEnum::from($statusCode)->getShortName() . ' response.';
         }
 
-        $jsonContent = $this->getJsonContent($response);
+        $jsonContent = $this->getJsonContent($annotation);
 
         $jsonContent->oneOf[] = $this->getValidationFailedSchema();
         $jsonContent->examples[] = $this->getValidationFailedExamples();

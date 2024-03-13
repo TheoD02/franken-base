@@ -24,7 +24,7 @@ interface DescriberProcessorInterface
     ): bool;
 
     public function process(
-        OAnnotations\OpenApi $api,
+        OAnnotations\OpenApi $openApi,
         OAnnotations\Operation $operation,
         Route $route,
         \ReflectionMethod $reflectionMethod,

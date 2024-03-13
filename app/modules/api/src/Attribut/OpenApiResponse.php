@@ -21,7 +21,7 @@ class OpenApiResponse
 {
     public function __construct(
         public ?string $class = null,
-        public ResponseTypeEnum $type = ResponseTypeEnum::ITEM,
+        public ResponseTypeEnum $responseTypeEnum = ResponseTypeEnum::ITEM,
         public bool $empty = false,
     ) {
         if ($this->empty) {
@@ -36,6 +36,6 @@ class OpenApiResponse
 
     public function isCollection(): bool
     {
-        return $this->type === ResponseTypeEnum::COLLECTION;
+        return $this->responseTypeEnum === ResponseTypeEnum::COLLECTION;
     }
 }
