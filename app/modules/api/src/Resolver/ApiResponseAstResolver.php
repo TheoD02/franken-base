@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Module\Api\Resolver;
 
-use PhpParser\Node\Stmt\Return_;
-use PhpParser\Error;
 use Module\Api\Enum\HttpStatusEnum;
+use PhpParser\Error;
 use PhpParser\Node\ArrayItem;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\ParserFactory;
 

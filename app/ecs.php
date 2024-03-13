@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use PhpCsFixer\Fixer\ClassNotation\FinalInternalClassFixer;
 use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestCaseStaticMethodCallsFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestClassRequiresCoversFixer;
 use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
 use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
@@ -33,6 +34,7 @@ return ECSConfig::configure()
         MethodChainingNewlineFixer::class,
         StandaloneLinePromotedPropertyFixer::class,
         FinalInternalClassFixer::class,
+        PhpUnitTestCaseStaticMethodCallsFixer::class,
     ])
     ->withConfiguredRule(
         LineLengthFixer::class,

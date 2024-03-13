@@ -28,7 +28,7 @@ class CollectionNormalizer implements DenormalizerInterface, NormalizerInterface
     }
 
     #[\Override]
-    public function normalize(mixed $object, ?string $format = null, array $context = []): array|bool|string|int|float|null|\ArrayObject
+    public function normalize(mixed $object, ?string $format = null, array $context = []): array|bool|string|int|float|\ArrayObject|null
     {
         if ($object->isEmpty()) {
             return $object;
