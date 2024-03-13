@@ -38,7 +38,7 @@ class ControllerTestCase extends WebTestCase
     protected function getRouteFromReflectionClass(\ReflectionClass $reflectionClass): TestRouteDescriber
     {
         $route = $reflectionClass->getAttributes(ApiRoute::class);
-        if (empty($route)) {
+        if ($route === []) {
             throw new \Exception('No route found');
         }
 
@@ -92,7 +92,7 @@ class ControllerTestCase extends WebTestCase
             $testRouteDescriber->uri
         );
 
-        if (! empty($queryParameters)) {
+        if ($queryParameters !== []) {
             $uri .= '?' . http_build_query($queryParameters);
         }
 
@@ -157,7 +157,7 @@ class ControllerTestCase extends WebTestCase
 
         $response = $this->getResponse();
 
-        foreach ($response as $key => $value) {
+        foreach (array_keys($response) as $key) {
             if ($excludeKeys !== [] && \in_array($key, $excludeKeys, true)) {
                 unset($response[$key]);
                 continue;

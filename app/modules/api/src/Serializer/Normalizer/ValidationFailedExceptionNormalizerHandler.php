@@ -22,7 +22,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
 
     public function normalize(ValidationFailedException $exception): array
     {
-        $trans = $this->translator ? $this->translator->trans(...) : static fn ($m, $p) => strtr($m, $p);
+        $trans = $this->translator instanceof TranslatorInterface ? $this->translator->trans(...) : static fn ($m, $p) => strtr($m, $p);
         $errors = [];
 
         foreach ($exception->getViolations() as $violation) {
@@ -59,7 +59,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
         $serializedNameAttributs = $reflectionProperty->getAttributes(SerializedName::class);
 
         $serializedName = null;
-        if (\count($serializedNameAttributs) > 0) {
+        if ($serializedNameAttributs !== []) {
             $serializedName = $serializedNameAttributs[0]->newInstance()->getSerializedName();
         }
 
@@ -71,7 +71,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
         $serializedPathAttributs = $reflectionProperty->getAttributes(SerializedPath::class);
 
         $serializedPath = null;
-        if (\count($serializedPathAttributs) > 0) {
+        if ($serializedPathAttributs !== []) {
             /** @var SerializedPath $serializedPath */
             $serializedPath = $serializedPathAttributs[0]->newInstance();
         }
@@ -98,11 +98,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
         if ($fullyMatched) {
             $queryPath = u();
             foreach ($serializedPath->getSerializedPath()->getElements() as $element) {
-                if ($queryPath->isEmpty()) {
-                    $queryPath = $queryPath->append($element);
-                } else {
-                    $queryPath = $queryPath->append("[{$element}]");
-                }
+                $queryPath = $queryPath->isEmpty() ? $queryPath->append($element) : $queryPath->append("[{$element}]");
             }
 
             return $queryPath->toString();

@@ -35,7 +35,7 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.id', 'ASC')
         ;
 
-        if ($filterQuery !== null && $filterQuery->query !== null) {
+        if ($filterQuery instanceof UserFilterQuery && $filterQuery->query !== null) {
             $qb
                 ->orWhere('u.email LIKE :query')
                 ->setParameter('query', '%' . $filterQuery->query . '%')

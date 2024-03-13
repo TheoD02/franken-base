@@ -41,7 +41,7 @@ class BusinessExceptionDescriberProcessor implements DescriberProcessorInterface
             return false;
         }
 
-        return \count($reflectionMethod->getAttributes(ApiException::class, \ReflectionAttribute::IS_INSTANCEOF)) > 0;
+        return $reflectionMethod->getAttributes(ApiException::class, \ReflectionAttribute::IS_INSTANCEOF) !== [];
     }
 
     #[\Override]

@@ -34,7 +34,7 @@ class ApiResponseAstResolver
             $method = $this->getMethod($class, $reflectionMethod);
             $returnStmt = $this->getReturnStmt($method);
 
-            if ($returnStmt === null) {
+            if (! $returnStmt instanceof \PhpParser\Node\Stmt\Return_) {
                 $httpStatus = HttpStatusEnum::NO_CONTENT;
             } else {
                 $name = $returnStmt->expr->class->toString();
@@ -73,7 +73,7 @@ class ApiResponseAstResolver
         $returnStmt = null;
         foreach ($method->stmts as $stmt) {
             if ($stmt instanceof \PhpParser\Node\Stmt\Return_) {
-                if ($returnStmt !== null) {
+                if ($returnStmt instanceof \PhpParser\Node\Stmt\Return_) {
                     throw new \RuntimeException('The method must have a return statement.');
                 }
                 $returnStmt = $stmt;

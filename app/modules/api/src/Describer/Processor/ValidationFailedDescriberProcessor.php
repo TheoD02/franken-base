@@ -32,7 +32,7 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
         array $mapRequestPayload,
         array $mapQueryString
     ): bool {
-        return \count($mapQueryString) > 0 || \count($mapRequestPayload) > 0;
+        return $mapQueryString !== [] || $mapRequestPayload !== [];
     }
 
     #[\Override]
@@ -55,7 +55,7 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
             }
         }
 
-        foreach ($mapToStatusCode as $statusCode => $value) {
+        foreach (array_keys($mapToStatusCode) as $statusCode) {
             $this->addValidationFailedResponse($operation, $statusCode);
         }
 

@@ -51,31 +51,26 @@ return static function (Config $config): void {
 
 function getCommonNamingRulesForNamespace(string $namespace): array
 {
-    $namingRules = [];
-    $namingRules[] = Rule::allClasses()
-        ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Controller"))
-        ->should(new HaveNameMatching('*Controller'))
-        ->because('we want uniform naming for controllers');
-
-    $namingRules[] = Rule::allClasses()
-        ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Manager"))
-        ->should(new HaveNameMatching('*Manager'))
-        ->because('we want uniform naming for managers');
-
-    $namingRules[] = Rule::allClasses()
-        ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Enum"))
-        ->should(new HaveNameMatching('*Enum'))
-        ->because('we want uniform naming for enums');
-
-    $namingRules[] = Rule::allClasses()
-        ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Trait"))
-        ->should(new HaveNameMatching('*Trait'))
-        ->because('we want uniform naming for traits');
-
-    $namingRules[] = Rule::allClasses()
-        ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Service"))
-        ->should(new HaveNameMatching('*Repository'))
-        ->because('we want uniform naming for repositories');
-
-    return $namingRules;
+    return [
+        Rule::allClasses()
+            ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Controller"))
+            ->should(new HaveNameMatching('*Controller'))
+            ->because('we want uniform naming for controllers'),
+        Rule::allClasses()
+            ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Manager"))
+            ->should(new HaveNameMatching('*Manager'))
+            ->because('we want uniform naming for managers'),
+        Rule::allClasses()
+            ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Enum"))
+            ->should(new HaveNameMatching('*Enum'))
+            ->because('we want uniform naming for enums'),
+        Rule::allClasses()
+            ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Trait"))
+            ->should(new HaveNameMatching('*Trait'))
+            ->because('we want uniform naming for traits'),
+        Rule::allClasses()
+            ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Service"))
+            ->should(new HaveNameMatching('*Repository'))
+            ->because('we want uniform naming for repositories')
+    ];
 }

@@ -24,7 +24,7 @@ class OpenApiResponse
         public ResponseTypeEnum $type = ResponseTypeEnum::ITEM,
         public bool $empty = false,
     ) {
-        if ($this->empty === true) {
+        if ($this->empty) {
             \assert($this->class === null, 'The class must be null if the response is empty.');
         } else {
             \assert($this->class !== null, 'The class must be defined if the response is not empty.');

@@ -42,7 +42,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     ): bool {
         $openApiResponseAttributes = $reflectionMethod->getAttributes(OpenApiResponse::class);
 
-        return \count($openApiResponseAttributes) > 0;
+        return $openApiResponseAttributes !== [];
     }
 
     #[\Override]
@@ -123,7 +123,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     {
         $metaProperty = new Property(property: 'meta', description: 'The meta of the response.', type: 'object');
 
-        if ($openApiMetaInstance === null) {
+        if (! $openApiMetaInstance instanceof OpenApiMeta) {
             $metaProperty->example = null;
 
             return $metaProperty;
@@ -164,7 +164,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
 
         /** @var ?OpenApiMeta $openApiMetaInstance */
         $openApiMetaInstance = null;
-        if (\count($openApiMetaAttributes) > 0) {
+        if ($openApiMetaAttributes !== []) {
             $openApiMetaInstance = $openApiMetaAttributes[0]->newInstance();
         }
 

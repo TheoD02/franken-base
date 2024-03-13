@@ -20,10 +20,6 @@ class CollectionType extends JsonType
             throw new \InvalidArgumentException('The value must be an instance of Collection.');
         }
 
-        if ($value === null) {
-            return null;
-        }
-
         try {
             return json_encode($value, \JSON_THROW_ON_ERROR | \JSON_PRESERVE_ZERO_FRACTION);
         } catch (\JsonException $e) {
