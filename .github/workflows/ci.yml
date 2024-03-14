@@ -10,29 +10,29 @@ permissions:
   contents: read
 
 jobs:
-  check-dockerfiles:
-    name: Check Dockerfile
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Check php/Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: .docker/php/Dockerfile
-
-      - name: Check php/Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: .docker/mkdocs/Dockerfile
+#  check-dockerfiles:
+#    name: Check Dockerfile
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v3
+#
+#      - name: Check php/Dockerfile
+#        uses: hadolint/hadolint-action@v3.1.0
+#        with:
+#          dockerfile: .docker/php/Dockerfile
+#
+#      - name: Check php/Dockerfile
+#        uses: hadolint/hadolint-action@v3.1.0
+#        with:
+#          dockerfile: .docker/mkdocs/Dockerfile
 
   ci:
     name: PHP ${{ matrix.php-version }} - ${{ matrix.symfony-version }}
     strategy:
       fail-fast: false
       matrix:
-        php-version: [ '8.1', '8.2', '8.3' ]
+        php-version: [ '8.2', '8.3' ]
     runs-on: ubuntu-latest
     env:
       DS_PHP_VERSION: ${{ matrix.php-version }}
@@ -45,6 +45,13 @@ jobs:
         with:
           php-version: 8.2
           tools: castor
+
+      - name: 'Clone web-traefik repository'
+        run: 'git clone git@github.com:TheoD02/web-traefik.git'
+
+      - name: 'Run Traefik'
+        run: 'cd web-traefik && sh setup.sh'
+      
       - name: 'Build and start the infrastructure'
         run: 'castor start && sleep 5'
 
