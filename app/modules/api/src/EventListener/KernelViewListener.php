@@ -52,12 +52,21 @@ readonly class KernelViewListener
             throw new \RuntimeException('The controller must return null or void when the status code is 204.');
         }
 
-        if ($controllerResult?->httpStatusEnum !== HttpStatusEnum::NO_CONTENT && $openApiResponseInstance->empty !== true) {
+        if ($controllerResult === null && $openApiResponseInstance->empty === false) {
             throw new \InvalidArgumentException('The controller must return an instance of ApiResponse when it has an OpenApiResponse attribute.');
         }
 
         $jsonResponse = new JsonResponse();
-        $statusCode = $controllerResult?->httpStatusEnum->value ?? HttpStatusEnum::OK->value;
+        $statusCode = $controllerResult?->httpStatusEnum->value ?? null;
+
+        if ($statusCode === null && ($controllerResult?->httpStatusEnum === HttpStatusEnum::NO_CONTENT || $openApiResponseInstance->empty === true)) {
+            $statusCode = HttpStatusEnum::NO_CONTENT->value;
+        }
+
+        if ($statusCode === null) {
+            throw new \InvalidArgumentException('The controller must return an instance of ApiResponse with a valid httpStatusEnum.');
+        }
+
         $jsonResponse->setStatusCode($statusCode);
 
         if ($controllerResult?->httpStatusEnum === HttpStatusEnum::NO_CONTENT) {

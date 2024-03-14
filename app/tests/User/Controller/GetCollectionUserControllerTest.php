@@ -31,6 +31,10 @@ class GetCollectionUserControllerTest extends ControllerTestCase
 
         // Assert
         $this->assertResponseStatusCodeSame(200);
-        $this->assertApiResponseEquals($userCollection, groups: [UserGroups::READ]);
+        $this->assertApiResponseEquals($userCollection, meta: [
+            'total' => 2,
+            'page' => 1,
+            'limit' => 10,
+        ], groups: [UserGroups::READ]);
     }
 }
