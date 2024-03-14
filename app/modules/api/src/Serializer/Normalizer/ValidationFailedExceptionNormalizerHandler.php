@@ -49,7 +49,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
 
             $errors[] = ViolationNormalizerHelper::createViolation(
                 propertyPath: $propertyPath,
-                code: $trans((string)$violation->getMessage(), $violation->getParameters()),
+                code: $trans((string) $violation->getMessage(), $violation->getParameters()),
                 value: $violation->getInvalidValue(),
                 message: str_replace(array_keys($violation->getParameters()), $violation->getParameters(), $violation->getMessageTemplate()),
             );

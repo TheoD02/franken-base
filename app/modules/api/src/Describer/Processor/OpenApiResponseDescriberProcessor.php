@@ -53,7 +53,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         [$httpStatus, $groups] = (new ApiResponseAstResolver())->resolve($reflectionMethod);
 
         /**
-         * @var OpenApiResponse $openApiResponseInstance
+         * @var OpenApiResponse  $openApiResponseInstance
          * @var OpenApiMeta|null $openApiMetaInstance
          */
         [$openApiResponseInstance, $openApiMetaInstance] = $this->getAttributesInstance($reflectionMethod);
@@ -134,7 +134,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     {
         $metaProperty = new Property(property: 'meta', description: 'The meta of the response.', type: 'object');
 
-        if (!$openApiMeta instanceof OpenApiMeta) {
+        if (! $openApiMeta instanceof OpenApiMeta) {
             $metaProperty->example = null;
 
             return $metaProperty;

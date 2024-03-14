@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\Entity\User;
-use App\User\Exception\UserNotFoundException;
 use App\User\Exception\AbstractUserProcessingException;
+use App\User\Exception\UserNotFoundException;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
