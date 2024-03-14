@@ -39,7 +39,7 @@ build-qa:
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - |
       cd ../tools
-      for tool in "ecs" "rector" "phpstan" "ecs"; do
+      for tool in "ecs" "rector" "phpstan" "phparkitect"; do
         cd $tool
         composer install --no-interaction
         cd ..
