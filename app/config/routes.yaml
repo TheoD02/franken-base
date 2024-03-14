@@ -1,5 +1,18 @@
+home:
+    path: /{path?}
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: base.html.twig
+    requirements:
+        # All but not /api
+        path: '^(?!api).*$'
+
 controllers:
     resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+        path: ../src/User/Controller/
+        namespace: App\User\Controller
     type: attribute
+    requirements:
+        _format: 'json|xml'
+    defaults:
+        _format: json
