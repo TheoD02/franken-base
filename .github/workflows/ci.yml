@@ -10,22 +10,22 @@ permissions:
   contents: read
 
 jobs:
-#  check-dockerfiles:
-#    name: Check Dockerfile
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v3
-#
-#      - name: Check php/Dockerfile
-#        uses: hadolint/hadolint-action@v3.1.0
-#        with:
-#          dockerfile: .docker/php/Dockerfile
-#
-#      - name: Check php/Dockerfile
-#        uses: hadolint/hadolint-action@v3.1.0
-#        with:
-#          dockerfile: .docker/mkdocs/Dockerfile
+  #  check-dockerfiles:
+  #    name: Check Dockerfile
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - name: Checkout
+  #        uses: actions/checkout@v3
+  #
+  #      - name: Check php/Dockerfile
+  #        uses: hadolint/hadolint-action@v3.1.0
+  #        with:
+  #          dockerfile: .docker/php/Dockerfile
+  #
+  #      - name: Check php/Dockerfile
+  #        uses: hadolint/hadolint-action@v3.1.0
+  #        with:
+  #          dockerfile: .docker/mkdocs/Dockerfile
 
   ci:
     name: PHP ${{ matrix.php-version }} - ${{ matrix.symfony-version }}
@@ -36,30 +36,52 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DS_PHP_VERSION: ${{ matrix.php-version }}
-      BUILDKIT_PROGRESS: plain
       CI: 1
     steps:
       - uses: actions/checkout@v3
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: 8.3
           tools: castor
 
-      - name: 'Clone web-traefik repository'
-        run: 'git clone https://github.com/TheoD02/web-traefik.git'
+  install-app:
+    name: Install App Dependencies
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Composer
+        run: composer install
 
-      - name: 'Run Traefik'
-        run: 'cd web-traefik && sh setup.sh'
-      
-      - name: 'Build and start the infrastructure'
-        run: 'castor start && sleep 5'
+  install-tools:
+    name: Install Tools
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Tools
+        run: |
+          for dir in tools/*; do
+              # Check if dir is a directory
+              if [ -d "$dir" ]; then
+              # Change to dir
+              cd $dir
+              # Install tools
+              composer install
+              # Change back to root
+              cd ../../
+              fi
+          done
 
-      - name: 'Check ECS'
-        run: 'castor qa:ecs'
-
-      - name: 'Run PHPStan'
-        run: 'castor qa:phpstan'
-
-      - name: 'Run Rector'
-        run: 'castor qa:rector'
+  run-ecs:
+    name: Run ECS
+    runs-on: ubuntu-latest
+    needs: install-tools
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run ECS
+        run: cd tools/ecs && ./vendor/bin/ecs check
