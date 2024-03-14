@@ -46,7 +46,7 @@ abstract class AbstractHttpException extends HttpException
      *
      * e.g. "BUSINESS" for business logic exceptions, "DATABASE" for database exceptions, etc.
      *
-     * @return ApiExceptionContextCodeInterface&\BackedEnum the context code defining the specific context (prefer string enum)
+     * @return ApiExceptionContextCodeInterface the context code defining the specific context (prefer string enum)
      */
     abstract public function getContextCode(): ApiExceptionContextCodeInterface;
 
@@ -57,7 +57,7 @@ abstract class AbstractHttpException extends HttpException
      *
      * e.g. "USER" for user-related exceptions, "ORDER" for order-related exceptions, etc.
      *
-     * @return ApiExceptionParentCodeInterface&\BackedEnum the parent error code defining the category of the exception (prefer string enum)
+     * @return ApiExceptionParentCodeInterface the parent error code defining the category of the exception (prefer string enum)
      */
     abstract public function getParentErrorCode(): ApiExceptionParentCodeInterface;
 
@@ -68,7 +68,7 @@ abstract class AbstractHttpException extends HttpException
      *
      * e.g.
      *
-     * @return ApiExceptionErrorCodeInterface&\BackedEnum the error code representing the specific nature of the exception (prefer string enum)
+     * @return ApiExceptionErrorCodeInterface the error code representing the specific nature of the exception (prefer string enum)
      */
     abstract public function getErrorCode(): ApiExceptionErrorCodeInterface;
 
@@ -92,7 +92,7 @@ abstract class AbstractHttpException extends HttpException
      */
     abstract protected function describe(): string;
 
-    public function getDescribe(): ?string
+    public function getDescribe(): string
     {
         return $this->describe ?? $this->describe();
     }

@@ -12,8 +12,8 @@ use Symfony\Component\Routing\Route;
 interface DescriberProcessorInterface
 {
     /**
-     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>}> $mapRequestPayload
-     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>}> $mapQueryString
+     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute<object>>}> $mapRequestPayload
+     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute<object>>}> $mapQueryString
      */
     public function supports(
         OAnnotations\Operation $operation,
@@ -24,8 +24,8 @@ interface DescriberProcessorInterface
     ): bool;
 
     /**
-     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>}> $mapRequestPayload
-     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute>}> $mapQueryString
+     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute<object>>}> $mapRequestPayload
+     * @param array<int, array{parameter: \ReflectionParameter, attributes: array<int, \ReflectionAttribute<object>>}> $mapQueryString
      */
     public function process(
         OAnnotations\OpenApi $openApi,

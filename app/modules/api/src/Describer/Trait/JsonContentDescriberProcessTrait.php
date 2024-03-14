@@ -13,9 +13,10 @@ trait JsonContentDescriberProcessTrait
 {
     protected function getJsonContent(OAnnotations\Response $response): OAttributes\JsonContent
     {
-        $jsonContent = current(array_filter($response->_unmerged, static fn ($item): bool => $item instanceof OAttributes\JsonContent));
+        $jsonContent = current(array_filter($response->_unmerged, static fn (mixed $item): bool => $item instanceof OAttributes\JsonContent));
 
         if ($jsonContent === false) {
+            // @phpstan-ignore-next-line
             $jsonContent = new OAttributes\JsonContent();
             $context = Util::createContext([
                 'nested' => $response,

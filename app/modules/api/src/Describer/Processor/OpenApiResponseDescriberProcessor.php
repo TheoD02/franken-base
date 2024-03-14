@@ -53,7 +53,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         [$httpStatus, $groups] = (new ApiResponseAstResolver())->resolve($reflectionMethod);
 
         /**
-         * @var OpenApiResponse  $openApiResponseInstance
+         * @var OpenApiResponse $openApiResponseInstance
          * @var OpenApiMeta|null $openApiMetaInstance
          */
         [$openApiResponseInstance, $openApiMetaInstance] = $this->getAttributesInstance($reflectionMethod);
@@ -61,10 +61,6 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         $statusCode = $httpStatus->value;
         $responseType = $openApiResponseInstance->responseTypeEnum;
         $responseClass = $openApiResponseInstance->class;
-
-        if ($responseClass === null) {
-            throw new \RuntimeException('The OpenApiResponse attribute must have a class property.');
-        }
 
         /** @var OAnnotations\Response $response */
         $response = Util::getIndexedCollectionItem($operation, OAnnotations\Response::class, $statusCode);
@@ -89,10 +85,14 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
         $schema->type = 'object';
 
         $schema->properties = [
-            new Property(property: 'status', description: 'The status of the response.', type: 'string', example: 'success'),
-            $this->getDataProperty($responseClass, $groups, $responseType),
-            $this->getMetaProperty($openApiMetaInstance),
+            'status' => new Property(property: 'status', description: 'The status of the response.', type: 'string', example: 'success'),
         ];
+
+        if ($responseClass !== null) {
+            $schema->properties['data'] = $this->getDataProperty($responseClass, $groups, $responseType);
+        }
+
+        $schema->properties['meta'] = $this->getMetaProperty($openApiMetaInstance);
 
         return $openApi;
     }
@@ -134,7 +134,7 @@ class OpenApiResponseDescriberProcessor implements DescriberProcessorInterface, 
     {
         $metaProperty = new Property(property: 'meta', description: 'The meta of the response.', type: 'object');
 
-        if (! $openApiMeta instanceof OpenApiMeta) {
+        if (!$openApiMeta instanceof OpenApiMeta) {
             $metaProperty->example = null;
 
             return $metaProperty;

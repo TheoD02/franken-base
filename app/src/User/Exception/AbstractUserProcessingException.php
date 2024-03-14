@@ -7,7 +7,7 @@ namespace App\User\Exception;
 use Module\Api\Enum\HttpStatusEnum;
 use Psr\Log\LogLevel;
 
-class UserProcessingException extends UserException
+class AbstractUserProcessingException extends AbstractUserException
 {
     #[\Override]
     public function getHttpStatusCode(): HttpStatusEnum

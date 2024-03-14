@@ -6,7 +6,7 @@ namespace App\Tests\User\Controller;
 
 use App\Tests\ControllerTestCase;
 use App\User\Controller\ProcessUserController;
-use App\User\Exception\UserProcessingException;
+use App\User\Exception\AbstractUserProcessingException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -28,7 +28,7 @@ class ProcessUserControllerTest extends ControllerTestCase
         // Assert
         $this->assertResponseStatusCodeSame(422);
 
-        $userProcessingException = new UserProcessingException();
+        $userProcessingException = new AbstractUserProcessingException();
         $expected = [
             'context_code' => $userProcessingException->getContextCode()->value,
             'parent_code' => $userProcessingException->getParentErrorCode()->value,

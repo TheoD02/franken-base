@@ -14,7 +14,7 @@ class CollectionType extends JsonType
     public const string NAME = 'collection';
 
     #[\Override]
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
         if ($value instanceof Collection === false) {
             throw new \InvalidArgumentException('The value must be an instance of Collection.');
@@ -27,25 +27,29 @@ class CollectionType extends JsonType
         }
     }
 
+    /**
+     * @return Collection<int, object>
+     */
     #[\Override]
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): Collection
     {
         if ($value === null || $value === '') {
             return Collection::empty();
         }
 
+        $content = $value;
         if (\is_resource($value)) {
-            $value = stream_get_contents($value);
+            $content = stream_get_contents($value);
         }
 
         try {
-            $value = json_decode((string) $value, true, 512, \JSON_THROW_ON_ERROR);
+            $decoded = json_decode((string) $content, true, 512, \JSON_THROW_ON_ERROR);
         } catch (\JsonException $jsonException) {
             throw ConversionException::conversionFailed($value, $this->getName(), $jsonException);
         }
 
         // @phpstan-ignore-next-line
-        return Collection::fromIterable($value);
+        return Collection::fromIterable($decoded);
     }
 
     #[\Override]

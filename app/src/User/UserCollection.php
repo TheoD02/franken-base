@@ -10,7 +10,7 @@ use loophp\collection\CollectionDecorator;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 
 /**
- * @extends CollectionDecorator<mixed, User>
+ * @extends CollectionDecorator<array-key, User>
  */
 class UserCollection extends CollectionDecorator implements ApiDataCollectionInterface, \Countable
 {

@@ -36,6 +36,9 @@ class ValidationFailedDescriberProcessor implements DescriberProcessorInterface
         return $mapQueryString !== [] || $mapRequestPayload !== [];
     }
 
+    /**
+     * @inheritDoc
+     */
     #[\Override]
     public function process(
         OAnnotations\OpenApi $openApi,

@@ -45,6 +45,7 @@ class AbstractHttpExceptionNormalizer implements NormalizerInterface, Serializer
     }
 
     /**
+     * @param FlattenException $object
      * @param array<mixed> $context
      *
      * @return array<mixed>

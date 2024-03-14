@@ -11,7 +11,7 @@ use Psr\Log\LogLevel;
 //
 // throw new UserNotFound('User was not found because of the wrong email.');
 
-class UserNotFound extends UserException
+class UserNotFoundException extends AbstractUserException
 {
     #[\Override]
     public function getErrorMessage(): string

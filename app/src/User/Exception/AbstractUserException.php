@@ -10,7 +10,7 @@ use Module\ExceptionHandlerBundle\Adapter\ApiExceptionParentCodeInterface;
 use Module\ExceptionHandlerBundle\Enum\ContextErrorCodeEnum;
 use Module\ExceptionHandlerBundle\Exception\AbstractHttpException;
 
-abstract class UserException extends AbstractHttpException
+abstract class AbstractUserException extends AbstractHttpException
 {
     #[\Override]
     public function getContextCode(): ApiExceptionContextCodeInterface

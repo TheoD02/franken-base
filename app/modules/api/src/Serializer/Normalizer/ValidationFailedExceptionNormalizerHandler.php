@@ -25,7 +25,7 @@ readonly class ValidationFailedExceptionNormalizerHandler
      */
     public function normalize(ValidationFailedException $validationFailedException): array
     {
-        $trans = $this->translator instanceof TranslatorInterface ? $this->translator->trans(...) : static fn ($m, $p): string => strtr($m, $p);
+        $trans = $this->translator instanceof TranslatorInterface ? $this->translator->trans(...) : static fn (string $m, array $p): string => strtr($m, $p);
         $errors = [];
 
         foreach ($validationFailedException->getViolations() as $violation) {
@@ -42,13 +42,14 @@ readonly class ValidationFailedExceptionNormalizerHandler
                 if ($serializedPath !== null && $serializedPath !== '' && $serializedPath !== '0') {
                     $propertyPath = $serializedPath;
                 }
-            } catch (\Throwable) {
+            } catch (\Throwable) { // @phpstan-ignore-line
+                // @ignoreException
                 // Do nothing prevent crash when anything goes wrong
             }
 
             $errors[] = ViolationNormalizerHelper::createViolation(
                 propertyPath: $propertyPath,
-                code: $trans((string) $violation->getMessage(), $violation->getParameters()),
+                code: $trans((string)$violation->getMessage(), $violation->getParameters()),
                 value: $violation->getInvalidValue(),
                 message: str_replace(array_keys($violation->getParameters()), $violation->getParameters(), $violation->getMessageTemplate()),
             );

@@ -78,7 +78,7 @@ class User implements ApiDataInterface
     }
 
     #[Groups([UserGroups::READ])]
-    public function getFullName(): ?string
+    public function getFullName(): string
     {
         return $this->firstName . ' ' . $this->lastName;
     }

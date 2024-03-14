@@ -6,6 +6,8 @@ namespace Module\Api\EventListener;
 
 use JetBrains\PhpStorm\NoReturn;
 use Module\Api\Adapter\ApiDataCollectionInterface;
+use Module\Api\Adapter\ApiDataInterface;
+use Module\Api\Adapter\ApiMetadataInterface;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpStatusEnum;
@@ -29,7 +31,9 @@ readonly class KernelViewListener
     #[NoReturn]
     public function onKernelView(ViewEvent $viewEvent): void
     {
-        /** @var ApiResponse|Response|null $controllerResult */
+        /**
+         * @var ApiResponse<ApiDataInterface|ApiDataCollectionInterface|bool|null, ApiMetadataInterface|null>|Response|null $controllerResult
+         */
         $controllerResult = $viewEvent->getControllerResult();
 
         $reflectionMethod = $this->getControllerMethodReflectionClass($viewEvent);
@@ -77,6 +81,7 @@ readonly class KernelViewListener
 
         $data = $controllerResult?->data;
         if ($data instanceof ApiDataCollectionInterface) {
+            // @phpstan-ignore-next-line
             $data = $data->all(false);
         }
 
@@ -94,13 +99,15 @@ readonly class KernelViewListener
     protected function getControllerMethodReflectionClass(ViewEvent $viewEvent): \ReflectionMethod
     {
         $controller = $viewEvent->getRequest()->attributes->get('_controller');
-        $controller = explode('::', (string) $controller);
-        $controller = \count($controller) !== 2 ? "{$controller[0]}::__invoke" : "{$controller[0]}::{$controller[1]}";
+        $controller = explode('::', (string)$controller);
+        $controllerFqcn = \count($controller) !== 2 ? "{$controller[0]}::__invoke" : "{$controller[0]}::{$controller[1]}";
 
-        return new \ReflectionMethod($controller);
+        return new \ReflectionMethod($controllerFqcn);
     }
 
     /**
+     * @param ApiResponse<ApiDataInterface|ApiDataCollectionInterface|bool|null, ApiMetadataInterface|null>|null $apiResponse
+     *
      * @return array{json_encode_options: int, groups?: array<string>}
      */
     protected function prepareSerializerContext(?ApiResponse $apiResponse): array
