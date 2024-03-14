@@ -27,16 +27,9 @@ jobs:
   #        with:
   #          dockerfile: .docker/mkdocs/Dockerfile
 
-  ci:
-    name: PHP ${{ matrix.php-version }} - ${{ matrix.symfony-version }}
-    strategy:
-      fail-fast: false
-      matrix:
-        php-version: [ '8.3' ]
+  install-app:
+    name: Install App Dependencies
     runs-on: ubuntu-latest
-    env:
-      DS_PHP_VERSION: ${{ matrix.php-version }}
-      CI: 1
     steps:
       - uses: actions/checkout@v3
       - name: Setup PHP
@@ -44,24 +37,19 @@ jobs:
         with:
           php-version: 8.3
           tools: castor
-
-  install-app:
-    name: Install App Dependencies
-    runs-on: ubuntu-latest
-    needs: ci
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Install Composer
         run: cd ./app && composer install
 
   install-tools:
     name: Install Tools
     runs-on: ubuntu-latest
-    needs: ci
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          tools: castor
       - name: Install Tools
         run: |
           for dir in tools/*; do
@@ -77,8 +65,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: install-tools
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          tools: castor
       - name: Run ECS
         run: cd tools/ecs && ./vendor/bin/ecs check
 
@@ -87,8 +79,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: install-tools
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          tools: castor
       - name: Run PHPStan
         run: cd tools/phpstan && ./vendor/bin/phpstan analyse
 
@@ -97,7 +93,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: install-app
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          tools: castor
       - name: Run Tests
         run: vendor/bin/phpunit
