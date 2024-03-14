@@ -45,7 +45,7 @@ function default_context(): Context
             ],
         ],
         currentDirectory: $appPath,
-        tty: true, // Required for docker exec (interactive mode), see how to handle it in the future
+        tty: $_SERVER['CI'] ?? false ? false : true,
         pty: !($_SERVER['CI'] ?? false),
         timeout: 0
     );
