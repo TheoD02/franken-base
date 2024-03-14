@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: [ '8.2', '8.3' ]
+        php-version: [ '8.3' ]
     runs-on: ubuntu-latest
     env:
       DS_PHP_VERSION: ${{ matrix.php-version }}
@@ -47,7 +47,7 @@ jobs:
           tools: castor
 
       - name: 'Clone web-traefik repository'
-        run: 'git clone git@github.com:TheoD02/web-traefik.git'
+        run: 'git clone https://github.com/TheoD02/web-traefik.git'
 
       - name: 'Run Traefik'
         run: 'cd web-traefik && sh setup.sh'
