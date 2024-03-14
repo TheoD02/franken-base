@@ -27,100 +27,66 @@ jobs:
   #        with:
   #          dockerfile: .docker/mkdocs/Dockerfile
 
-  install-app:
-    name: Install App Dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.3
-          tools: castor
-      - name: Install Composer
-        run: cd ./app && composer install
-      - name: Cache Composer
-        uses: actions/cache@v2
-        with:
-          path: ~/.composer/cache
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-  install-tools:
-    name: Install Tools
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.3
-          tools: castor
-      - name: Install Tools
-        run: |
-          for dir in tools/*; do
-              if [ -f "$dir/composer.json" ]; then
-              cd $dir
-              composer install
-              cd ../..
-              fi
-          done
-      - name: Cache Tools
-        uses: actions/cache@v2
-        with:
-          path: ~/.composer/cache
-          key: ${{ runner.os }}-composer-${{ hashFiles('tools/**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-  common-tools-run: &common-tools-run
-    runs-on: ubuntu-latest
-    needs: install-tools
-    steps: &common-tools-run-steps
-      - uses: actions/checkout@v3
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.3
-          tools: castor
-
   run-ecs:
     name: Run ECS
-    <<: *common-tools-run
+    runs-on: ubuntu-latest
+    needs: install-tools
     steps:
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          tools: castor
+      - name: Install ECS
+        run: cd ./tools/ecs && composer install
       - name: Run ECS
-        run: vendor/bin/ecs check src
+        run: cd ./tools/ecs && ./vendor/bin/ecs check src
 
   run-rector:
     name: Run Rector
-    <<: *common-tools-run
-    steps:
-      - name: Run Rector
-        run: vendor/bin/rector process src
-
-  run-phpstan:
-    name: Run PHPStan
-    <<: *common-tools-run
-    steps:
-      - name: Run PHPStan
-        run: vendor/bin/phpstan analyse src
-
-  common-app-run: &common-app-run
     runs-on: ubuntu-latest
-    needs: install-app
-    steps: &common-app-run-steps
+    needs: install-tools
+    steps:
       - uses: actions/checkout@v3
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
           tools: castor
+      - name: Install Rector
+        run: cd ./tools/rector && composer install
+      - name: Run Rector
+        run: cd ./tools/rector && ./vendor/bin/rector process
+
+  run-phpstan:
+    name: Run PHPStan
+    runs-on: ubuntu-latest
+    needs: install-tools
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          tools: castor
+      - name: Install PHPStan
+        run: cd ./tools/phpstan && composer install
+      - name: Run PHPStan
+        run: cd ./tools/phpstan && ./vendor/bin/phpstan analyse
 
   run-tests:
     name: Run Tests
-    <<: *common-app-run
+    runs-on: ubuntu-latest
+    needs: install-app
     steps:
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          tools: castor
+      - name: Install App
+        run: cd ./app && composer install
       - name: Run Tests
-        run: cd ./app && vendor/bin/phpunit
-
+        run: cd ./app && ./vendor/bin/phpunit
