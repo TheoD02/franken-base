@@ -65,14 +65,10 @@ jobs:
       - name: Install Tools
         run: |
           for dir in tools/*; do
-              # Check if dir is a directory
-              if [ -d "$dir" ]; then
-              # Change to dir
+              if [ -f "$dir/composer.json" ]; then
               cd $dir
-              # Install tools
               composer install
-              # Change back to root
-              cd ../../
+              cd ../..
               fi
           done
 
