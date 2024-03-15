@@ -255,7 +255,7 @@ class Docker
         false|int $ulimit = false,
         /* Username or UID (format: <name|uid>[:<group|gid>]) */
         false|string $user = false,
-        /* User namespace to use */
+        /* UserEntity namespace to use */
         false|string $userns = false,
         /* UTS namespace to use */
         false|string $uts = false,
@@ -1088,7 +1088,7 @@ class Docker
         false|int $ulimit = false,
         /* Username or UID (format: <name|uid>[:<group|gid>]) */
         false|string $user = false,
-        /* User namespace to use */
+        /* UserEntity namespace to use */
         false|string $userns = false,
         /* UTS namespace to use */
         false|string $uts = false,
@@ -3624,7 +3624,7 @@ class DockerContainer
         false|int $ulimit = false,
         /* Username or UID (format: <name|uid>[:<group|gid>]) */
         false|string $user = false,
-        /* User namespace to use */
+        /* UserEntity namespace to use */
         false|string $userns = false,
         /* UTS namespace to use */
         false|string $uts = false,
@@ -4199,7 +4199,7 @@ class DockerContainer
         false|int $ulimit = false,
         /* Username or UID (format: <name|uid>[:<group|gid>]) */
         false|string $user = false,
-        /* User namespace to use */
+        /* UserEntity namespace to use */
         false|string $userns = false,
         /* UTS namespace to use */
         false|string $uts = false,

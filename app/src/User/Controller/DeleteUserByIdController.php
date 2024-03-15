@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\Entity\User;
 use App\Trait\EntityManagerTrait;
+use App\User\Entity\UserEntity;
 use App\User\Exception\UserNotFoundException;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
@@ -26,7 +26,7 @@ class DeleteUserByIdController
     #[ApiException(UserNotFoundException::class)]
     public function __invoke(int $id): void
     {
-        $user = $this->em->find(User::class, $id);
+        $user = $this->em->find(UserEntity::class, $id);
 
         if ($user === null) {
             throw new UserNotFoundException();

@@ -2,36 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\User\ValueObject;
 
-use App\Repository\UserRepository;
 use App\User\Enum\UserRoleEnum;
-use App\User\UserGroups;
-use Doctrine\ORM\Mapping as ORM;
+use App\User\Serialization\UserGroups;
 use loophp\collection\Collection;
 use Module\Api\Adapter\ApiDataInterface;
-use Module\Api\Doctrine\CollectionType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
 class User implements ApiDataInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
     #[Groups([UserGroups::READ])]
     private ?string $firstName = null;
 
-    #[ORM\Column(length: 255)]
     #[Groups([UserGroups::READ])]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 255)]
     #[Groups([UserGroups::READ])]
     #[Assert\Email]
     private ?string $email = null;
@@ -39,7 +28,6 @@ class User implements ApiDataInterface
     /**
      * @var Collection<array-key, UserRoleEnum> $roles
      */
-    #[ORM\Column(type: CollectionType::NAME)]
     #[Groups([UserGroups::READ_ROLES])]
     private Collection $roles;
 

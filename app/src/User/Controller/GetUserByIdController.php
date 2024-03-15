@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\Entity\User;
 use App\Trait\EntityManagerTrait;
+use App\User\Entity\UserEntity;
 use App\User\Exception\UserNotFoundException;
-use App\User\UserGroups;
+use App\User\Serialization\UserGroups;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
@@ -24,12 +24,12 @@ class GetUserByIdController
     use EntityManagerTrait;
 
     /**
-     * @return ApiResponse<User, null>
+     * @return ApiResponse<UserEntity, null>
      */
-    #[OpenApiResponse(User::class)]
+    #[OpenApiResponse(UserEntity::class)]
     public function __invoke(int $id): ApiResponse
     {
-        $user = $this->em->find(User::class, $id);
+        $user = $this->em->find(UserEntity::class, $id);
 
         if ($user === null) {
             throw new UserNotFoundException([

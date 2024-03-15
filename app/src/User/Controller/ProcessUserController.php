@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\Entity\User;
+use App\User\Entity\UserEntity;
 use App\User\Exception\AbstractUserProcessingException;
 use App\User\Exception\UserNotFoundException;
 use Module\Api\Attribut\ApiException;
@@ -23,9 +23,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class ProcessUserController
 {
     /**
-     * @return ApiResponse<User, null>
+     * @return ApiResponse<UserEntity, null>
      */
-    #[OpenApiResponse(User::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
+    #[OpenApiResponse(UserEntity::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[ApiException(AbstractUserProcessingException::class)]
     #[ApiException(UserNotFoundException::class)]
     public function __invoke(int $id): ApiResponse

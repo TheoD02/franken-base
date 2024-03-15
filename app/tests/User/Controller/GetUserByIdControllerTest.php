@@ -7,7 +7,7 @@ namespace App\Tests\User\Controller;
 use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
 use App\User\Controller\GetUserByIdController;
-use App\User\UserGroups;
+use App\User\Serialization\UserGroups;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;
 

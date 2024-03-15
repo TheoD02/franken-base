@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\User;
+namespace App\User\Serialization;
 
 enum UserGroups
 {

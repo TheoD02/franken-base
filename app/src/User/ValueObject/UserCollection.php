@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\User;
+namespace App\User\ValueObject;
 
-use App\Entity\User;
 use App\User\Api\UserCollectionMeta;
+use App\User\Entity\UserEntity;
 use loophp\collection\CollectionDecorator;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 
 /**
- * @extends CollectionDecorator<array-key, User>
+ * @extends CollectionDecorator<array-key, UserEntity>
  */
 class UserCollection extends CollectionDecorator implements ApiDataCollectionInterface, \Countable
 {

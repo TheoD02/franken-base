@@ -9,20 +9,20 @@ use Psr\Log\LogLevel;
 
 // Anywhere in code
 //
-// throw new UserNotFound('User was not found because of the wrong email.');
+// throw new UserNotFound('UserEntity was not found because of the wrong email.');
 
 class UserNotFoundException extends AbstractUserException
 {
     #[\Override]
     public function getErrorMessage(): string
     {
-        return 'User not found';
+        return 'UserEntity not found';
     }
 
     #[\Override]
     protected function describe(): string
     {
-        return 'User was not found by the given criteria.';
+        return 'UserEntity was not found by the given criteria.';
     }
 
     #[\Override]
