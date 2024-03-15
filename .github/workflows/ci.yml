@@ -31,8 +31,6 @@ jobs:
     name: Run ECS
     runs-on: ubuntu-latest
     steps:
-      - name: list env
-        run: env
       - uses: actions/checkout@v3
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -40,9 +38,9 @@ jobs:
           php-version: 8.3
           tools: castor
       - name: Install ECS
-        run: cd $GITHUB_ACTION_PATH/tools/ecs && composer install
+        run: cd $GITHUB_WORKSPACE/tools/ecs && composer install
       - name: Run ECS
-        run: cd $GITHUB_ACTION_PATH/tools/ecs && $GITHUB_ACTION_PATH/tools/ecs/vendor/bin/ecs check --config $GITHUB_ACTION_PATH/app/ecs.php
+        run: cd $GITHUB_WORKSPACE/tools/ecs && $GITHUB_WORKSPACE/tools/ecs/vendor/bin/ecs check --config $GITHUB_WORKSPACE/app/ecs.php
 
   run-rector:
     name: Run Rector
@@ -55,9 +53,9 @@ jobs:
           php-version: 8.3
           tools: castor
       - name: Install Rector
-        run: cd $GITHUB_ACTION_PATH/tools/rector && composer install
+        run: cd $GITHUB_WORKSPACE/tools/rector && composer install
       - name: Run Rector
-        run: cd $GITHUB_ACTION_PATH/tools/rector && $GITHUB_ACTION_PATH/tools/rector/vendor/bin/rector process --config $GITHUB_ACTION_PATH/app/rector.php
+        run: cd $GITHUB_WORKSPACE/tools/rector && $GITHUB_WORKSPACE/tools/rector/vendor/bin/rector process --config $GITHUB_WORKSPACE/app/rector.php
 
   run-phpstan:
     name: Run PHPStan
@@ -70,9 +68,9 @@ jobs:
           php-version: 8.3
           tools: castor
       - name: Install PHPStan
-        run: cd $GITHUB_ACTION_PATH/tools/phpstan && composer install
+        run: cd $GITHUB_WORKSPACE/tools/phpstan && composer install
       - name: Run PHPStan
-        run: cd $GITHUB_ACTION_PATH/tools/phpstan && $GITHUB_ACTION_PATH/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $GITHUB_ACTION_PATH/app/phpstan.neon --memory-limit=1G
+        run: cd $GITHUB_WORKSPACE/tools/phpstan && $GITHUB_WORKSPACE/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $GITHUB_WORKSPACE/app/phpstan.neon --memory-limit=1G
 
   run-tests:
     name: Run Tests
@@ -85,6 +83,6 @@ jobs:
           php-version: 8.3
           tools: castor
       - name: Install App
-        run: cd $GITHUB_ACTION_PATH/app && composer install
+        run: cd $GITHUB_WORKSPACE/app && composer install
       - name: Run Tests
-        run: cd $GITHUB_ACTION_PATH/app && $GITHUB_ACTION_PATH/vendor/bin/phpunit
+        run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/vendor/bin/phpunit
