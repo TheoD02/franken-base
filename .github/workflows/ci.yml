@@ -38,9 +38,9 @@ jobs:
           php-version: 8.3
           tools: castor
       - name: Install ECS
-        run: cd ./tools/ecs && composer install
+        run: cd $GITHUB_ACTION_PATH/tools/ecs && composer install
       - name: Run ECS
-        run: cd ./tools/ecs && ./vendor/bin/ecs check src
+        run: cd $GITHUB_ACTION_PATH/tools/ecs && $GITHUB_ACTION_PATH/tools/ecs/vendor/bin/ecs check --config $GITHUB_ACTION_PATH/app/ecs.php
 
   run-rector:
     name: Run Rector
@@ -53,9 +53,9 @@ jobs:
           php-version: 8.3
           tools: castor
       - name: Install Rector
-        run: cd ./tools/rector && composer install
+        run: cd $GITHUB_ACTION_PATH/tools/rector && composer install
       - name: Run Rector
-        run: cd ./tools/rector && ./vendor/bin/rector process
+        run: cd $GITHUB_ACTION_PATH/tools/rector && $GITHUB_ACTION_PATH/tools/rector/vendor/bin/rector process --config $GITHUB_ACTION_PATH/app/rector.php
 
   run-phpstan:
     name: Run PHPStan
@@ -68,9 +68,9 @@ jobs:
           php-version: 8.3
           tools: castor
       - name: Install PHPStan
-        run: cd ./tools/phpstan && composer install
+        run: cd $GITHUB_ACTION_PATH/tools/phpstan && composer install
       - name: Run PHPStan
-        run: cd ./tools/phpstan && ./vendor/bin/phpstan analyse
+        run: cd $GITHUB_ACTION_PATH/tools/phpstan && $GITHUB_ACTION_PATH/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $GITHUB_ACTION_PATH/app/phpstan.neon --memory-limit=1G
 
   run-tests:
     name: Run Tests
@@ -83,6 +83,6 @@ jobs:
           php-version: 8.3
           tools: castor
       - name: Install App
-        run: cd ./app && composer install
+        run: cd $GITHUB_ACTION_PATH/app && composer install
       - name: Run Tests
-        run: cd ./app && ./vendor/bin/phpunit
+        run: cd $GITHUB_ACTION_PATH/app && $GITHUB_ACTION_PATH/vendor/bin/phpunit
