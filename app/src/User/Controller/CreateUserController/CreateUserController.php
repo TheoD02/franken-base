@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\User\Controller\CreateUserController;
 
-use App\Trait\EntityManagerTrait;
 use App\User\Exception\UserNotFoundException;
 use App\User\Serialization\UserGroups;
 use App\User\Service\UserService;
 use App\User\ValueObject\User;
-use AutoMapperPlus\AutoMapperInterface;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
@@ -26,18 +24,13 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 #[ApiRoute('/api/users', httpMethodEnum: HttpMethodEnum::POST)]
 class CreateUserController
 {
-    use EntityManagerTrait;
-
     /**
      * @return ApiResponse<User, null>
      */
     #[OpenApiResponse(User::class)]
     #[ApiException(UserNotFoundException::class)]
-    public function __invoke(
-        #[MapRequestPayload] CreateUserPayload $createUserPayload,
-        UserService $userService,
-        AutoMapperInterface $mapper,
-    ): ApiResponse {
+    public function __invoke(#[MapRequestPayload] CreateUserPayload $createUserPayload, UserService $userService): ApiResponse
+    {
         $user = $userService->create($createUserPayload);
 
         return new ApiResponse(data: $user, groups: [UserGroups::READ, UserGroups::READ_ROLES], httpStatusEnum: HttpStatusEnum::CREATED);

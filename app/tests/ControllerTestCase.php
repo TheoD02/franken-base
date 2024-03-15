@@ -61,6 +61,7 @@ class ControllerTestCase extends WebTestCase
      */
     protected function requestAction(
         string $controllerFqcn,
+        string $uri,
         array $uriParameters = [],
         array $queryParameters = [],
         array|object $requestBody = [],
@@ -85,6 +86,14 @@ class ControllerTestCase extends WebTestCase
         $content = null;
         if ($canHaveBody && ! empty($requestBody)) {
             $content = $this->serializer->serialize($requestBody, 'json');
+        }
+
+        if ($uri !== $testRouteDescriber->uri) {
+            throw new \RuntimeException(sprintf(
+                'The uri declared in the test is not the same as the uri declared in the controller. Test: "%s", Controller: "%s"',
+                $uri,
+                $testRouteDescriber->uri
+            ));
         }
 
         $uri = str_replace(

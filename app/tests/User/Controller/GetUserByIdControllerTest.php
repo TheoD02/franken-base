@@ -25,7 +25,7 @@ class GetUserByIdControllerTest extends ControllerTestCase
         $user = UserFactory::createOne()->object();
 
         // Act
-        $this->requestAction(GetUserByIdController::class, uriParameters: [
+        $this->requestAction(GetUserByIdController::class, '/api/users/{id}', uriParameters: [
             'id' => 1,
         ]);
 

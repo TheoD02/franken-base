@@ -25,7 +25,7 @@ class UpdateUserControllerTest extends ControllerTestCase
         $user = UserFactory::createOne()->object();
 
         // Act
-        $this->requestAction(UpdateUserController::class, uriParameters: [
+        $this->requestAction(UpdateUserController::class, '/api/users/{id}', uriParameters: [
             'id' => 1,
         ], requestBody: $user);
 

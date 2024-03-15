@@ -21,7 +21,7 @@ class ProcessUserControllerTest extends ControllerTestCase
     public function testInvokeWithUserCreation(): void
     {
         // Act
-        $this->requestAction(ProcessUserController::class, [
+        $this->requestAction(ProcessUserController::class, '/api/users/{id}/process', uriParameters: [
             'id' => 1,
         ]);
 
