@@ -6,7 +6,6 @@ namespace Module\Api\Service;
 
 use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
-use loophp\collection\Collection;
 use loophp\collection\CollectionDecorator;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Adapter\ORMFilterQueryInterface;
@@ -22,7 +21,7 @@ class PaginatorService
      * @template T of ApiDataCollectionInterface
      *
      * @param array<ORMFilterQueryInterface|null> $filterQueryList
-     * @param class-string<T> $collectionFqcn
+     * @param class-string<T>                     $collectionFqcn
      *
      * @return T
      */

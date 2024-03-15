@@ -33,7 +33,9 @@ class CreateUserController
      */
     #[OpenApiResponse(User::class)]
     #[ApiException(UserNotFoundException::class)]
-    public function __invoke(#[MapRequestPayload] User $user, #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQueryInterface $filterQuery): ApiResponse
+    public function __invoke(#[MapRequestPayload] User $user, #[MapQueryString(
+        validationFailedStatusCode: 400
+    )] ?UserFilterQueryInterface $filterQuery): ApiResponse
     {
         $this->em->persist($user);
         $this->em->flush();

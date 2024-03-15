@@ -11,7 +11,6 @@ use App\User\Api\UserCollectionMeta;
 use App\User\Api\UserFilterQueryInterface;
 use App\User\UserCollection;
 use App\User\UserGroups;
-use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiMeta;
 use Module\Api\Attribut\OpenApiResponse;
@@ -36,7 +35,9 @@ class GetCollectionUserController
      */
     #[OpenApiResponse(User::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(UserCollectionMeta::class)]
-    public function __invoke(PaginatorService $paginator, #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQueryInterface $filterQuery): ApiResponse
+    public function __invoke(PaginatorService $paginator, #[MapQueryString(
+        validationFailedStatusCode: 400
+    )] ?UserFilterQueryInterface $filterQuery): ApiResponse
     {
         /** @var UserRepository $entityRepository */
         $entityRepository = $this->em->getRepository(User::class);
