@@ -13,4 +13,8 @@ use loophp\collection\Contract\Collection;
  */
 interface ApiDataCollectionInterface extends Collection
 {
+    /**
+     * Get the meta data for the collection.
+     */
+    public function getMeta(): ApiMetadataInterface;
 }

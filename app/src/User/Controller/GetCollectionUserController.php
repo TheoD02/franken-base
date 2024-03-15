@@ -17,6 +17,7 @@ use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethodEnum;
 use Module\Api\Enum\ResponseTypeEnum;
+use Module\Api\Service\PaginatorService;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 
@@ -34,11 +35,15 @@ class GetCollectionUserController
      */
     #[OpenApiResponse(User::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(UserCollectionMeta::class)]
-    public function __invoke(#[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery): ApiResponse
-    {
+    public function __invoke(
+        PaginatorService $paginator,
+        #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery
+    ): ApiResponse {
         /** @var UserRepository $entityRepository */
         $entityRepository = $this->em->getRepository(User::class);
-        $userCollection = $entityRepository->findByFilterQuery($filterQuery);
+        $qb = $entityRepository->createQueryBuilder('entity');
+
+        $userCollection = $paginator->paginate($qb, UserCollection::class, [$filterQuery]);
 
         return new ApiResponse(data: $userCollection, apiMetadata: $userCollection->getMeta(), groups: [UserGroups::READ]);
     }
