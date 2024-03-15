@@ -6,7 +6,7 @@ namespace App\User\Controller;
 
 use App\Entity\User;
 use App\Trait\EntityManagerTrait;
-use App\User\Api\UserFilterQuery;
+use App\User\Api\UserFilterQueryInterface;
 use App\User\Exception\UserNotFoundException;
 use App\User\UserGroups;
 use Module\Api\Attribut\ApiException;
@@ -33,7 +33,7 @@ class CreateUserController
      */
     #[OpenApiResponse(User::class)]
     #[ApiException(UserNotFoundException::class)]
-    public function __invoke(#[MapRequestPayload] User $user, #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery): ApiResponse
+    public function __invoke(#[MapRequestPayload] User $user, #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQueryInterface $filterQuery): ApiResponse
     {
         $this->em->persist($user);
         $this->em->flush();

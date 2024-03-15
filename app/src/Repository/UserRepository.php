@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\User;
-use App\User\Api\UserFilterQuery;
+use App\User\Api\UserFilterQueryInterface;
 use App\User\UserCollection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,7 +26,7 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, User::class);
     }
 
-    public function findByFilterQuery(?UserFilterQuery $userFilterQuery): UserCollection
+    public function findByFilterQuery(?UserFilterQueryInterface $userFilterQuery): UserCollection
     {
         $queryBuilder = $this->createQueryBuilder('u');
 
@@ -35,7 +35,7 @@ class UserRepository extends ServiceEntityRepository
             ->orderBy('u.id', 'ASC')
         ;
 
-        if ($userFilterQuery instanceof UserFilterQuery && $userFilterQuery->query !== null) {
+        if ($userFilterQuery instanceof UserFilterQueryInterface && $userFilterQuery->query !== null) {
             $queryBuilder
                 ->orWhere('u.email LIKE :query')
                 ->setParameter('query', '%' . $userFilterQuery->query . '%')

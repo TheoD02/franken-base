@@ -11,7 +11,7 @@ use loophp\collection\Contract\Collection;
  *
  * @template-extends Collection<array-key, object>
  */
-interface ApiDataCollectionInterface extends Collection
+interface ApiDataCollectionInterface extends Collection, ApiMetadataInterface
 {
     /**
      * Get the meta data for the collection.

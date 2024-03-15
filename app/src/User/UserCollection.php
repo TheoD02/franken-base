@@ -14,6 +14,7 @@ use Module\Api\Adapter\ApiDataCollectionInterface;
  */
 class UserCollection extends CollectionDecorator implements ApiDataCollectionInterface, \Countable
 {
+    #[\Override]
     public function getMeta(): UserCollectionMeta
     {
         return new UserCollectionMeta(total: $this->count(), page: 1, limit: 10);

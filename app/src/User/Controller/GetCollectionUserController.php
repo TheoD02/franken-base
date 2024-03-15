@@ -8,9 +8,10 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Trait\EntityManagerTrait;
 use App\User\Api\UserCollectionMeta;
-use App\User\Api\UserFilterQuery;
+use App\User\Api\UserFilterQueryInterface;
 use App\User\UserCollection;
 use App\User\UserGroups;
+use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiMeta;
 use Module\Api\Attribut\OpenApiResponse;
@@ -35,15 +36,13 @@ class GetCollectionUserController
      */
     #[OpenApiResponse(User::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(UserCollectionMeta::class)]
-    public function __invoke(
-        PaginatorService $paginator,
-        #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQuery $filterQuery
-    ): ApiResponse {
+    public function __invoke(PaginatorService $paginator, #[MapQueryString(validationFailedStatusCode: 400)] ?UserFilterQueryInterface $filterQuery): ApiResponse
+    {
         /** @var UserRepository $entityRepository */
         $entityRepository = $this->em->getRepository(User::class);
-        $qb = $entityRepository->createQueryBuilder('entity');
+        $queryBuilder = $entityRepository->createQueryBuilder('entity');
 
-        $userCollection = $paginator->paginate($qb, UserCollection::class, [$filterQuery]);
+        $userCollection = $paginator->paginate($queryBuilder, UserCollection::class, [$filterQuery]);
 
         return new ApiResponse(data: $userCollection, apiMetadata: $userCollection->getMeta(), groups: [UserGroups::READ]);
     }
