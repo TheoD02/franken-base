@@ -69,6 +69,8 @@ jobs:
           tools: castor
       - name: Install PHPStan
         run: cd $GITHUB_WORKSPACE/tools/phpstan && composer install
+      - name: Install App
+        run: cd $GITHUB_WORKSPACE/app && composer install
       - name: Run PHPStan
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $GITHUB_WORKSPACE/app/phpstan.neon --memory-limit=1G
 
