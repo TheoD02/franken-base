@@ -12,12 +12,12 @@
 
 
 includes:
-    - /tools/phpstan/vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
-    - /tools/phpstan/vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
-    - /tools/phpstan/vendor/spaze/phpstan-disallowed-calls/disallowed-insecure-calls.neon
-    - /tools/phpstan/vendor/spaze/phpstan-disallowed-calls/disallowed-loose-calls.neon
-    - /tools/phpstan/vendor/slam/phpstan-extensions/conf/not-now-rules.neon
-    - /tools/phpstan/vendor/slam/phpstan-extensions/conf/symfony-rules.neon
+    - %rootDir%/../../spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+    - %rootDir%/../../spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+    - %rootDir%/../../spaze/phpstan-disallowed-calls/disallowed-insecure-calls.neon
+    - %rootDir%/../../spaze/phpstan-disallowed-calls/disallowed-loose-calls.neon
+    - %rootDir%/../../slam/phpstan-extensions/conf/not-now-rules.neon
+    - %rootDir%/../../slam/phpstan-extensions/conf/symfony-rules.neon
 
 parameters:
     level: 8
@@ -35,7 +35,7 @@ parameters:
         - '#^Interface IteratorAggregate specifies template type TValue of interface Traversable.*$#'
         - '#^Attribute class JetBrains\\PhpStorm.*$#'
     symfony:
-        containerXmlPath: /app/var/cache/dev/App_KernelDevDebugContainer.xml
+        containerXmlPath: %currentWorkingDirectory%/var/cache/dev/App_KernelDevDebugContainer.xml
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkUninitializedProperties: true
     checkDynamicProperties: true
