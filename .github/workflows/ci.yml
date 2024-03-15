@@ -87,4 +87,7 @@ jobs:
       - name: Install App
         run: cd $GITHUB_WORKSPACE/app && composer install
       - name: Run Tests
+        env:
+          APP_ENV: test
+          DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/app/vendor/bin/phpunit
