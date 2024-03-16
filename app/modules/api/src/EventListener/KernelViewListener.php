@@ -89,7 +89,7 @@ readonly class KernelViewListener
         $data = $controllerResult?->data;
         if ($data instanceof ApiDataCollectionInterface) {
             /** @phpstan-ignore-next-line */
-            $data = $data->all(false);
+            $data = $data->toArray();
         }
 
         $response = [

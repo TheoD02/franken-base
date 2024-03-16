@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Module\Api\Adapter;
 
-use loophp\collection\Contract\Collection;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Selectable;
 
 /**
  * Use this interface to mark a class as valid to be used as a response data collection.
  *
- * @template-extends Collection<array-key, object>
+ * @template-extends ArrayCollection<array-key, object>
  */
-interface ApiDataCollectionInterface extends Collection, ApiMetadataInterface
+interface ApiDataCollectionInterface extends ApiMetadataInterface, Collection, Selectable, \Stringable
 {
     /**
      * Get the meta data for the collection.

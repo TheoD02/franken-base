@@ -13,8 +13,8 @@ use App\User\Enum\UserRoleEnum;
 use App\User\Exception\UserNotFoundException;
 use App\User\ValueObject\User;
 use App\User\ValueObject\UserCollection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use loophp\collection\Collection;
 use Module\Api\Service\PaginatorService;
 
 class UserService
@@ -48,7 +48,7 @@ class UserService
     {
         $userEntity = $this->mapper->map($createUserPayload, UserEntity::class);
 
-        $userEntity->setRoles(Collection::fromIterable([UserRoleEnum::USER]));
+        $userEntity->setRoles(new ArrayCollection([UserRoleEnum::USER]));
 
         $this->em->persist($userEntity);
         $this->em->flush();
@@ -73,7 +73,7 @@ class UserService
 
         $userFilterQuery?->applyFilter($queryBuilder);
 
-        return $this->paginatorService->paginate($queryBuilder, UserCollection::class);
+        return $this->paginatorService->paginate($queryBuilder, UserCollection::class, User::class, [$userFilterQuery]);
     }
 
     public function delete(int $id): void

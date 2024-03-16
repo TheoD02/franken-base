@@ -12,7 +12,3 @@ controllers:
         path: ../src/User/Controller/
         namespace: App\User\Controller
     type: attribute
-    requirements:
-        _format: 'json|xml'
-    defaults:
-        _format: json

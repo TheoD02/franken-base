@@ -10,6 +10,7 @@ use App\User\Api\UserFilterQuery;
 use App\User\Entity\UserEntity;
 use App\User\Serialization\UserGroups;
 use App\User\Service\UserService;
+use App\User\ValueObject\User;
 use App\User\ValueObject\UserCollection;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiMeta;
@@ -32,7 +33,7 @@ class GetCollectionUserController
     /**
      * @return ApiResponse<UserCollection, UserCollectionMeta>
      */
-    #[OpenApiResponse(UserEntity::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
+    #[OpenApiResponse(User::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(UserCollectionMeta::class)]
     public function __invoke(
         UserService $userService,

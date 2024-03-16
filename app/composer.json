@@ -14,7 +14,6 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^2.18",
         "knplabs/knp-paginator-bundle": "^6.3",
-        "loophp/collection": "^7.5",
         "mark-gerarts/automapper-plus-bundle": "^1.4",
         "nelmio/api-doc-bundle": "^4.20",
         "nyholm/psr7": "^1.8",
@@ -36,12 +35,14 @@
         "symfony/translation": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
         "symfony/validator": "6.4.*",
-        "symfony/yaml": "6.4.*"
+        "symfony/yaml": "6.4.*",
+        "voku/arrayy": "^7.9"
     },
     "require-dev": {
         "brianium/paratest": "^7.4",
         "ergebnis/phpunit-slow-test-detector": "^2.10",
         "osteel/openapi-httpfoundation-testing": "^0.11.0",
+        "phpbench/phpbench": "^1.2",
         "phpunit/phpunit": "^10.0",
         "symfony/browser-kit": "6.4.*",
         "symfony/css-selector": "6.4.*",

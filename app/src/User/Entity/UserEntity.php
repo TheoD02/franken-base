@@ -7,8 +7,9 @@ namespace App\User\Entity;
 use App\Repository\UserRepository;
 use App\User\Enum\UserRoleEnum;
 use App\User\Serialization\UserGroups;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use loophp\collection\Collection;
 use Module\Api\Adapter\ApiDataInterface;
 use Module\Api\Doctrine\CollectionType;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -24,28 +25,24 @@ class UserEntity implements ApiDataInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([UserGroups::READ])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([UserGroups::READ])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([UserGroups::READ])]
     #[Assert\Email]
     private ?string $email = null;
 
     /**
-     * @var Collection<array-key, UserRoleEnum> $roles
+     * @var ArrayCollection<array-key, UserRoleEnum> $roles
      */
     #[ORM\Column(type: CollectionType::NAME)]
-    #[Groups([UserGroups::READ_ROLES])]
-    private Collection $roles;
+    private ArrayCollection $roles;
 
     public function __construct()
     {
-        $this->roles = Collection::fromIterable([UserRoleEnum::USER]);
+        $this->roles = new ArrayCollection([UserRoleEnum::USER]);
     }
 
     public function getId(): ?int
@@ -90,17 +87,17 @@ class UserEntity implements ApiDataInterface
     }
 
     /**
-     * @return Collection<array-key, UserRoleEnum>
+     * @return ArrayCollection<array-key, UserRoleEnum>
      */
-    public function getRoles(): Collection
+    public function getRoles(): ArrayCollection
     {
         return $this->roles;
     }
 
     /**
-     * @param Collection<array-key, UserRoleEnum> $collection
+     * @param ArrayCollection<array-key, UserRoleEnum> $collection
      */
-    public function setRoles(Collection $collection): static
+    public function setRoles(ArrayCollection $collection): static
     {
         $this->roles = $collection;
 

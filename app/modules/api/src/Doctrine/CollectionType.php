@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Module\Api\Doctrine;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\JsonType;
-use loophp\collection\Collection;
 
 class CollectionType extends JsonType
 {
@@ -16,25 +16,25 @@ class CollectionType extends JsonType
     #[\Override]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
-        if ($value instanceof Collection === false) {
+        if ($value instanceof ArrayCollection === false) {
             throw new \InvalidArgumentException('The value must be an instance of Collection.');
         }
 
         try {
-            return json_encode($value, \JSON_THROW_ON_ERROR | \JSON_PRESERVE_ZERO_FRACTION);
+            return json_encode($value->toArray(), \JSON_THROW_ON_ERROR | \JSON_PRESERVE_ZERO_FRACTION);
         } catch (\JsonException $jsonException) {
-            throw ConversionException::conversionFailedSerialization($value->all(false), 'json', $jsonException->getMessage(), $jsonException);
+            throw ConversionException::conversionFailedSerialization($value->toArray(), 'json', $jsonException->getMessage(), $jsonException);
         }
     }
 
     /**
-     * @return Collection<int, object>
+     * @return ArrayCollection<int, object>
      */
     #[\Override]
-    public function convertToPHPValue($value, AbstractPlatform $platform): Collection
+    public function convertToPHPValue($value, AbstractPlatform $platform): ArrayCollection
     {
         if ($value === null || $value === '') {
-            return Collection::empty();
+            return new ArrayCollection();
         }
 
         $content = $value;
@@ -49,7 +49,7 @@ class CollectionType extends JsonType
         }
 
         // @phpstan-ignore-next-line
-        return Collection::fromIterable($decoded);
+        return new ArrayCollection($decoded);
     }
 
     #[\Override]

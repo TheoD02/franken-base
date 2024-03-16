@@ -29,7 +29,3 @@ services:
   Module\Api\Serializer\Normalizer\ConstraintNormalizer:
     tags:
       - { name: serializer.normalizer, priority: 9500 }
-
-  Module\Api\Serializer\CollectionNormalizer:
-    tags:
-      - { name: serializer.normalizer, priority: 10000 }

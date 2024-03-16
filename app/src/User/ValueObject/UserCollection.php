@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\User\ValueObject;
 
 use App\User\Api\UserCollectionMeta;
-use App\User\Entity\UserEntity;
-use loophp\collection\CollectionDecorator;
+use Doctrine\Common\Collections\ArrayCollection;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 
 /**
- * @extends CollectionDecorator<array-key, UserEntity>
+ * @extends ArrayCollection<array-key, User>
  */
-class UserCollection extends CollectionDecorator implements ApiDataCollectionInterface, \Countable
+class UserCollection extends ArrayCollection implements ApiDataCollectionInterface
 {
     #[\Override]
     public function getMeta(): UserCollectionMeta

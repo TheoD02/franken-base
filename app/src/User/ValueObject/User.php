@@ -6,7 +6,7 @@ namespace App\User\ValueObject;
 
 use App\User\Enum\UserRoleEnum;
 use App\User\Serialization\UserGroups;
-use loophp\collection\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Module\Api\Adapter\ApiDataInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -27,14 +27,14 @@ class User implements ApiDataInterface
     private ?string $email = null;
 
     /**
-     * @var Collection<array-key, UserRoleEnum> $roles
+     * @var ArrayCollection<array-key, UserRoleEnum> $roles
      */
-    #[Groups([UserGroups::READ_ROLES])]
-    private Collection $roles;
+    #[Groups([UserGroups::READ, UserGroups::READ_ROLES])]
+    private ArrayCollection $roles;
 
     public function __construct()
     {
-        $this->roles = Collection::fromIterable([UserRoleEnum::USER]);
+        $this->roles = new ArrayCollection([UserRoleEnum::USER]);
     }
 
     public function getId(): ?int
@@ -85,17 +85,17 @@ class User implements ApiDataInterface
     }
 
     /**
-     * @return Collection<array-key, UserRoleEnum>
+     * @return ArrayCollection<array-key, UserRoleEnum>
      */
-    public function getRoles(): Collection
+    public function getRoles(): ArrayCollection
     {
         return $this->roles;
     }
 
     /**
-     * @param Collection<array-key, UserRoleEnum> $collection
+     * @param ArrayCollection<array-key, UserRoleEnum> $collection
      */
-    public function setRoles(Collection $collection): static
+    public function setRoles(ArrayCollection $collection): static
     {
         $this->roles = $collection;
 

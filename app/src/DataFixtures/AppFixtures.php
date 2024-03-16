@@ -13,6 +13,6 @@ class AppFixtures extends Fixture
     #[\Override]
     public function load(ObjectManager $objectManager): void
     {
-        UserFactory::createMany(10);
+        UserFactory::new()->many(1, 20)->create();
     }
 }
