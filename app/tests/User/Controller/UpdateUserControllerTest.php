@@ -6,7 +6,7 @@ namespace App\Tests\User\Controller;
 
 use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
-use App\User\Controller\UpdateUserController;
+use App\User\Controller\UpdateUserController\UpdateUserController;
 use App\User\Serialization\UserGroups;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\User\Controller;
+namespace App\User\Controller\UpdateUserController;
 
 use App\Trait\EntityManagerTrait;
 use App\User\Entity\UserEntity;
@@ -10,12 +10,12 @@ use App\User\Exception\UserNotFoundException;
 use App\User\Serialization\UserGroups;
 use App\User\Service\UserService;
 use App\User\ValueObject\User;
-use AutoMapperPlus\AutoMapperInterface;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethodEnum;
+use Module\Api\Resolver\PatchRequestPayloadResolver;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 
@@ -34,7 +34,7 @@ class UpdateUserController
     #[OpenApiResponse(User::class)]
     #[ApiException(UserNotFoundException::class)]
     public function __invoke(
-        #[MapRequestPayload] UserEntity $payload, // TODO: Change for Payload object
+        #[MapRequestPayload] UpdateUserPayload $payload,
         int $id,
         UserService $userService,
     ): ApiResponse {

@@ -7,6 +7,7 @@ namespace App\User\Service;
 use App\Service\AutoMapper;
 use App\User\Api\UserFilterQuery;
 use App\User\Controller\CreateUserController\CreateUserPayload;
+use App\User\Controller\UpdateUserController\UpdateUserPayload;
 use App\User\Entity\UserEntity;
 use App\User\Enum\UserRoleEnum;
 use App\User\Exception\UserNotFoundException;
@@ -52,7 +53,7 @@ class UserService
         return $this->mapper->map($userEntity, User::class);
     }
 
-    public function update(int $id, UserEntity $payload): User
+    public function update(int $id, UpdateUserPayload $payload): User
     {
         $userEntity = $this->getOneByIdOrFail($id, true);
 
