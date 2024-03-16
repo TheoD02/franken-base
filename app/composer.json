@@ -35,8 +35,7 @@
         "symfony/translation": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
         "symfony/validator": "6.4.*",
-        "symfony/yaml": "6.4.*",
-        "voku/arrayy": "^7.9"
+        "symfony/yaml": "6.4.*"
     },
     "require-dev": {
         "brianium/paratest": "^7.4",
