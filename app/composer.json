@@ -39,6 +39,7 @@
         "symfony/yaml": "~6.4.0"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "brianium/paratest": "^7.4",
         "ergebnis/composer-normalize": "^2.42",
         "ergebnis/phpunit-slow-test-detector": "^2.10",
