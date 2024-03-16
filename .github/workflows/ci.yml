@@ -32,12 +32,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: Install ECS
         run: cd $GITHUB_WORKSPACE/tools/ecs && composer install
+
       - name: Run ECS
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/ecs/vendor/bin/ecs check --config $GITHUB_WORKSPACE/app/ecs.php
 
@@ -46,12 +60,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: Install Rector
         run: cd $GITHUB_WORKSPACE/tools/rector && composer install
+
       - name: Run Rector
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=rector.php
 
@@ -60,14 +88,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: Install PHPStan
         run: cd $GITHUB_WORKSPACE/tools/phpstan && composer install
+
       - name: Install App
         run: cd $GITHUB_WORKSPACE/app && composer install
+
       - name: Run PHPStan
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $GITHUB_WORKSPACE/app/phpstan.neon --memory-limit=1G
 
@@ -76,19 +119,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
           tools: composer-normalize, composer-require-checker, composer-unused
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: Check PHP syntax errors
         uses: overtrue/phplint@9.1.2
+
       - name: Install App
         run: cd $GITHUB_WORKSPACE/app && composer install
+
       - name: Check composer.json
         run: cd $GITHUB_WORKSPACE/app && composer validate
+
       - name: Check composer normalization
         run: cd $GITHUB_WORKSPACE/app && composer normalize --dry-run
+
       - name: Check composer unused
         run: |
           cd $GITHUB_WORKSPACE/app && composer-unused \
@@ -112,14 +172,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.3
           ini-values: pcov.directory=$GITHUB_WORKSPACE/app, pcov.exclude=vendor, pcov.enabled=1
           coverage: pcov
+
       - name: Install App
         run: cd $GITHUB_WORKSPACE/app && composer install
+
       - name: Run Tests
         env:
           APP_ENV: test
