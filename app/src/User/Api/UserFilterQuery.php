@@ -9,7 +9,7 @@ use Module\Api\Adapter\ORMFilterQueryInterface;
 use OpenApi\Attributes\Property;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UserFilterQueryInterface implements ORMFilterQueryInterface
+class UserFilterQuery implements ORMFilterQueryInterface
 {
     #[Property(description: 'The query to search for')]
     #[Assert\Length(min: 3, max: 255)]

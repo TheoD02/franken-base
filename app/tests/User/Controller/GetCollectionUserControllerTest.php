@@ -27,7 +27,7 @@ class GetCollectionUserControllerTest extends ControllerTestCase
         $userCollection = UserCollection::fromIterable(ProxyToObjectHelper::proxyToObject(UserFactory::createMany(2)));
 
         // Act
-        $this->requestAction(GetCollectionUserController::class);
+        $this->requestAction(GetCollectionUserController::class, '/api/users');
 
         // Assert
         $this->assertResponseStatusCodeSame(200);

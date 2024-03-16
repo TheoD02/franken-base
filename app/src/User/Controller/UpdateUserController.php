@@ -8,6 +8,8 @@ use App\Trait\EntityManagerTrait;
 use App\User\Entity\UserEntity;
 use App\User\Exception\UserNotFoundException;
 use App\User\Serialization\UserGroups;
+use App\User\Service\UserService;
+use App\User\ValueObject\User;
 use AutoMapperPlus\AutoMapperInterface;
 use Module\Api\Attribut\ApiException;
 use Module\Api\Attribut\ApiRoute;
@@ -27,22 +29,17 @@ class UpdateUserController
     use EntityManagerTrait;
 
     /**
-     * @return ApiResponse<UserEntity, null>
+     * @return ApiResponse<User, null>
      */
-    #[OpenApiResponse(UserEntity::class)]
+    #[OpenApiResponse(User::class)]
     #[ApiException(UserNotFoundException::class)]
-    public function __invoke(#[MapRequestPayload] UserEntity $user, int $id, AutoMapperInterface $mapper): ApiResponse
-    {
-        $userEntity = $this->em->find(UserEntity::class, $id);
+    public function __invoke(
+        #[MapRequestPayload] UserEntity $payload, // TODO: Change for Payload object
+        int $id,
+        UserService $userService,
+    ): ApiResponse {
+        $user = $userService->update($id, $payload);
 
-        if ($userEntity === null) {
-            throw new UserNotFoundException();
-        }
-
-        /** @var UserEntity $userEntity */
-        $userEntity = $mapper->mapToObject($user, $userEntity);
-        $this->em->flush();
-
-        return new ApiResponse(data: $userEntity, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
+        return new ApiResponse(data: $user, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
     }
 }

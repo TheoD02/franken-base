@@ -8,6 +8,7 @@ use App\Trait\EntityManagerTrait;
 use App\User\Entity\UserEntity;
 use App\User\Exception\UserNotFoundException;
 use App\User\Serialization\UserGroups;
+use App\User\Service\UserService;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
@@ -27,15 +28,9 @@ class GetUserByIdController
      * @return ApiResponse<UserEntity, null>
      */
     #[OpenApiResponse(UserEntity::class)]
-    public function __invoke(int $id): ApiResponse
+    public function __invoke(int $id, UserService $userService): ApiResponse
     {
-        $user = $this->em->find(UserEntity::class, $id);
-
-        if ($user === null) {
-            throw new UserNotFoundException([
-                'userId' => $id,
-            ]);
-        }
+        $user = $userService->getOneByIdOrFail($id);
 
         return new ApiResponse(data: $user, groups: [UserGroups::READ]);
     }

@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class User implements ApiDataInterface
 {
+    #[Groups([UserGroups::READ])]
     private ?int $id = null;
 
     #[Groups([UserGroups::READ])]
