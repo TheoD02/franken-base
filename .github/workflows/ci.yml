@@ -55,7 +55,7 @@ jobs:
       - name: Install Rector
         run: cd $GITHUB_WORKSPACE/tools/rector && composer install
       - name: Run Rector
-        run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/rector/vendor/bin/rector --dry-run --clear-cache --config $GITHUB_WORKSPACE/app/rector.php
+        run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/rector/vendor/bin/rector --dry-run --clear-cache --config rector.php
 
   run-phpstan:
     name: Run PHPStan
