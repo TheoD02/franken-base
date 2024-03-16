@@ -1,6 +1,9 @@
 {
+    "name": "theod02/base-project",
+    "description": "Base project for Symfony 6.4",
     "license": "proprietary",
     "type": "project",
+    "version": "1.0.0",
     "require": {
         "php": ">=8.3",
         "ext-ctype": "*",
