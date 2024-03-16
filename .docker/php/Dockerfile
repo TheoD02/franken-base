@@ -3,16 +3,6 @@ FROM dunglas/frankenphp:1-php8.3.3 as frankenphp
 WORKDIR /app
 USER root
 
-#RUN apk update --no-cache && apk add --no-cache \
-#    bash \
-#    nano \
-#    git \
-#    acl \
-#    file \
-#    gettext \
-#    openssh-client \
-#    yarn
-
 RUN apt-get update && apt-get install -y \
     bash \
     nano \
@@ -72,6 +62,11 @@ RUN echo "xdebug.mode=debug,develop,profile" >> $PHP_INI_DIR/conf.d/.docker-php-
     && echo "xdebug.start_with_request=trigger" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini \
     && echo "xdebug.output_dir=/tmp/xdebug" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini \
     && echo "xdebug.client_host=host.docker.internal" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini
+
+# Config pcov
+RUN echo "pcov.enabled=1" >> $PHP_INI_DIR/conf.d/pcov.ini \
+    && echo "pcov.directory=/app" >> $PHP_INI_DIR/conf.d/pcov.ini \
+    && echo "pcov.exclude=vendor" >> $PHP_INI_DIR/conf.d/pcov.ini
 
 
 # Init non-root user
