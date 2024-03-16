@@ -198,12 +198,12 @@ jobs:
         env:
           APP_ENV: test
           DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
-        run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/app/vendor/bin/phpunit --coverage-cobertura=$GITHUB_WORKSPACE/coverage.xml
+        run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/app/vendor/bin/phpunit --coverage-cobertura=coverage.xml
 
       - name: Code Coverage Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: $GITHUB_WORKSPACE/coverage.xml
+          filename: ./app/coverage.xml
           badge: true
           fail_below_min: true
           format: markdown
