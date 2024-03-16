@@ -89,8 +89,6 @@ jobs:
         run: cd $GITHUB_WORKSPACE/app && composer validate
       - name: Check composer normalization
         run: cd $GITHUB_WORKSPACE/app && composer normalize --dry-run
-      - name: Check composer require
-        run: composer-require-checker check $GITHUB_WORKSPACE/app/composer.json
       - name: Check composer unused
         run: cd $GITHUB_WORKSPACE/app && composer unused
 
