@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Module\Api\Service;
 
 use App\Service\AutoMapper;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
 use Module\Api\Adapter\ApiDataCollectionInterface;
@@ -36,9 +37,9 @@ class PaginatorService
             throw new \InvalidArgumentException(sprintf('The collection class "%s" does not exist.', $collectionFqcn));
         }
 
-//        if (is_subclass_of($collectionFqcn, CollectionDecorator::class) === false) {
-//            throw new \InvalidArgumentException(sprintf('The collection class "%s" must be a subclass of "%s".', $collectionFqcn, CollectionDecorator::class));
-//        }
+        if (is_subclass_of($collectionFqcn, ArrayCollection::class) === false) {
+            throw new \InvalidArgumentException(sprintf('The collection class "%s" must be a subclass of "%s".', $collectionFqcn, ArrayCollection::class));
+        }
 
         $items = $this->paginator->paginate($queryBuilder)->getItems();
 
