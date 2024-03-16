@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Repository\UserRepository;
 use App\User\Entity\UserEntity;
 use App\User\Enum\UserRoleEnum;
+use App\User\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;

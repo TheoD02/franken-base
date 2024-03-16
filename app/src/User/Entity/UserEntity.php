@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\User\Entity;
 
-use App\Repository\UserRepository;
 use App\User\Enum\UserRoleEnum;
+use App\User\Repository\UserRepository;
 use App\User\ValueObject\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;

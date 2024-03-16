@@ -41,9 +41,6 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v6.3.0"
     },
-    "mark-gerarts/automapper-plus-bundle": {
-        "version": "1.4.1"
-    },
     "nelmio/api-doc-bundle": {
         "version": "4.20",
         "recipe": {
