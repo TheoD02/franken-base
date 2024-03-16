@@ -84,13 +84,13 @@ jobs:
       - name: Check PHP syntax errors
         uses: overtrue/phplint@9.1.2
       - name: Check composer.json
-        run: composer validate
+        run: cd $GITHUB_WORKSPACE/app && composer validate
       - name: Check composer normalization
-        run: composer normalize --dry-run
+        run: cd $GITHUB_WORKSPACE/app && composer normalize --dry-run
       - name: Check composer require
-        run: composer require-checker --config-file=$GITHUB_WORKSPACE/app/composer.json
+        run: composer-require-checker check $GITHUB_WORKSPACE/app/composer.json
       - name: Check composer unused
-        run: composer unused --no-dev --no-interaction --working-dir=$GITHUB_WORKSPACE/app
+        run: cd $GITHUB_WORKSPACE/app && composer unused
 
   run-tests:
     name: Run Tests
