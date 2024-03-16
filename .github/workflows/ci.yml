@@ -81,10 +81,10 @@ jobs:
         with:
           php-version: 8.3
           tools: composer-normalize, composer-require-checker, composer-unused
-      - name: Install App
-        run: cd $GITHUB_WORKSPACE/app && composer install
       - name: Check PHP syntax errors
         uses: overtrue/phplint@9.1.2
+      - name: Install App
+        run: cd $GITHUB_WORKSPACE/app && composer install
       - name: Check composer.json
         run: cd $GITHUB_WORKSPACE/app && composer validate
       - name: Check composer normalization
