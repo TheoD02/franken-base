@@ -9,7 +9,6 @@ use App\Tests\ControllerTestCase;
 use App\Tests\Helper\ProxyToObjectHelper;
 use App\User\Controller\GetCollectionUserController;
 use App\User\Serialization\UserGroups;
-use App\User\ValueObject\UserCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;
