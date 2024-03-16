@@ -60,7 +60,7 @@ class UserService
     {
         $userEntity = $this->getOneByIdOrFail($id, true);
 
-        $userEntity = $this->mapper->mapToObject($updateUserPayload, $userEntity);
+        $userEntity = $this->mapper->map($updateUserPayload, $userEntity);
 
         $this->em->flush();
 

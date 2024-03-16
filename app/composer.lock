@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "893db7f9683c69860a753b973def75a0",
+    "content-hash": "5aa8219c97080defdce72cf7c7af9e5d",
     "packages": [
         {
             "name": "archtechx/enums",
@@ -5558,6 +5558,61 @@
                 }
             ],
             "time": "2024-03-04T21:00:47+00:00"
+        },
+        {
+            "name": "symfony/mapper",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/soyuka/mapper.git",
+                "reference": "fb2448d9ca20cacc9723a23c3de375dc0906deb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/soyuka/mapper/zipball/fb2448d9ca20cacc9723a23c3de375dc0906deb0",
+                "reference": "fb2448d9ca20cacc9723a23c3de375dc0906deb0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "psr/container": "^2.0"
+            },
+            "require-dev": {
+                "symfony/property-access": "^6.3"
+            },
+            "suggest": {
+                "symfony/property-access": "To use getters and setters"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Mapper\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Object to object mapper",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/soyuka/mapper/tree/main",
+                "issues": "https://github.com/soyuka/mapper/issues"
+            },
+            "time": "2024-03-06T08:49:58+00:00"
         },
         {
             "name": "symfony/messenger",
@@ -13035,6 +13090,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "symfony/mapper": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,

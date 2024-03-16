@@ -6,14 +6,17 @@ namespace App\User\Entity;
 
 use App\Repository\UserRepository;
 use App\User\Enum\UserRoleEnum;
+use App\User\ValueObject\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Module\Api\Adapter\ApiDataInterface;
 use Module\Api\Doctrine\CollectionType;
+use Symfony\Component\Mapper\Attributes\Map;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[Map(to: User::class)]
 class UserEntity implements ApiDataInterface
 {
     #[ORM\Id]

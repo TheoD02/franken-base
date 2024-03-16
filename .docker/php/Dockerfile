@@ -64,9 +64,9 @@ RUN echo "xdebug.mode=debug,develop,profile" >> $PHP_INI_DIR/conf.d/.docker-php-
     && echo "xdebug.client_host=host.docker.internal" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini
 
 # Config pcov
-RUN echo "pcov.enabled=1" >> $PHP_INI_DIR/conf.d/pcov.ini \
-    && echo "pcov.directory=/app" >> $PHP_INI_DIR/conf.d/pcov.ini \
-    && echo "pcov.exclude=vendor" >> $PHP_INI_DIR/conf.d/pcov.ini
+#RUN echo "pcov.enabled=1" >> $PHP_INI_DIR/conf.d/pcov.ini \
+#    && echo "pcov.directory=/app" >> $PHP_INI_DIR/conf.d/pcov.ini \
+#    && echo "pcov.exclude=vendor" >> $PHP_INI_DIR/conf.d/pcov.ini
 
 
 # Init non-root user
