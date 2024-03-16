@@ -90,7 +90,7 @@ jobs:
       - name: Check composer normalization
         run: cd $GITHUB_WORKSPACE/app && composer normalize --dry-run
       - name: Check composer unused
-        run: cd $GITHUB_WORKSPACE/app && composer unused
+        run: cd $GITHUB_WORKSPACE/app && composer-unused
 
   run-tests:
     name: Run Tests
