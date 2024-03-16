@@ -28,7 +28,6 @@ parameters:
 #        - tests
     excludePaths:
         - modules/api/src/Resolver/ApiResponseAstResolver.php
-        - modules/api/src/Serializer/CollectionNormalizer.php
     ignoreErrors:
         - '#^Attribute class JetBrains\\PhpStorm.*$#'
         - '#^Class .*[Payload] has an uninitialized property.*$#'

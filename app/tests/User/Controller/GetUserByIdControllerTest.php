@@ -31,6 +31,15 @@ class GetUserByIdControllerTest extends ControllerTestCase
 
         // Assert
         $this->assertResponseStatusCodeSame(200);
-        $this->assertApiResponseEquals($user, groups: [UserGroups::READ]);
+
+        $expected = [
+            'id' => 1,
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'email' => $user->getEmail(),
+            'roles' => ['user'],
+            'fullName' => $user->getFirstName() . ' ' . $user->getLastName(),
+        ];
+        $this->assertApiResponseEquals($expected, groups: [UserGroups::READ]);
     }
 }

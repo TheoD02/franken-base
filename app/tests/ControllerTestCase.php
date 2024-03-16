@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Module\Api\Attribut\ApiRoute;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -143,8 +144,8 @@ class ControllerTestCase extends WebTestCase
         }
 
         $expected = $data;
-        if ($data instanceof Collection) {
-            $expected = $this->serializer->normalize($data->all(false), context: $context);
+        if ($data instanceof ArrayCollection) {
+            $expected = $this->serializer->normalize($data->toArray(), context: $context);
         } elseif (\is_object($data)) {
             $expected = $this->serializer->normalize($data, context: $context);
         }

@@ -32,6 +32,15 @@ class CreateUserControllerTest extends ControllerTestCase
 
         // Assert
         $this->assertResponseStatusCodeSame(201);
-        $this->assertApiResponseEquals($createUserPayload, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
+
+        $expected = [
+            'id' => 1,
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+            'email' => 'john@doe.fr',
+            'roles' => ['user'],
+            'fullName' => 'John Doe',
+        ];
+        $this->assertApiResponseEquals($expected, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
     }
 }

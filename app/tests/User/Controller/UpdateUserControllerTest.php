@@ -31,6 +31,15 @@ class UpdateUserControllerTest extends ControllerTestCase
 
         // Assert
         $this->assertResponseIsSuccessful();
-        $this->assertApiResponseEquals($user, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
+
+        $expected = [
+            'id' => 1,
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'email' => $user->getEmail(),
+            'roles' => ['user'],
+            'fullName' => $user->getFirstName() . ' ' . $user->getLastName(),
+        ];
+        $this->assertApiResponseEquals($expected, groups: [UserGroups::READ, UserGroups::READ_ROLES]);
     }
 }
