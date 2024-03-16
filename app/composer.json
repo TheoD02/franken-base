@@ -7,7 +7,6 @@
     "require": {
         "php": ">=8.3",
         "ext-ctype": "*",
-        "ext-iconv": "*",
         "archtechx/enums": "^1.0",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.11",
