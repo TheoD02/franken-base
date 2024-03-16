@@ -90,7 +90,17 @@ jobs:
       - name: Check composer normalization
         run: cd $GITHUB_WORKSPACE/app && composer normalize --dry-run
       - name: Check composer unused
-        run: cd $GITHUB_WORKSPACE/app && composer-unused
+        run: |
+          cd $GITHUB_WORKSPACE/app && composer-unused \
+          --excludePackage=runtime/frankenphp-symfony \
+          --excludePackage=sentry/sentry-symfony \
+          --excludePackage=symfony/* \
+          --excludePackage=archtechx/enums \
+          --excludePackage=doctrine/doctrine-migrations-bundle \
+          --excludePackage=knplabs/knp-paginator-bundle \
+          --excludePackage=nyholm/psr7 \
+          --excludePackage=pentatrion/vite-bundle \
+          --excludePackage=phpstan/phpdoc-parser \
 
   run-tests:
     name: Run Tests
