@@ -94,7 +94,12 @@ jobs:
           cd $GITHUB_WORKSPACE/app && composer-unused \
           --excludePackage=runtime/frankenphp-symfony \
           --excludePackage=sentry/sentry-symfony \
-          --excludePackage=symfony/* \
+          --excludePackage=symfony/dotenv \
+          --excludePackage=symfony/flex \
+          --excludePackage=symfony/messenger \
+          --excludePackage=symfony/runtime \
+          --excludePackage=symfony/scheduler \
+          --excludePackage=symfony/translation \
           --excludePackage=archtechx/enums \
           --excludePackage=doctrine/doctrine-migrations-bundle \
           --excludePackage=knplabs/knp-paginator-bundle \
