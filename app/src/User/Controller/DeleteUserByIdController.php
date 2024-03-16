@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\Trait\EntityManagerTrait;
-use App\User\Entity\UserEntity;
 use App\User\Exception\UserNotFoundException;
 use App\User\Service\UserService;
 use Module\Api\Attribut\ApiException;

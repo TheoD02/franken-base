@@ -7,16 +7,12 @@ use Castor\Attribute\AsTask;
 use Castor\Utils\Docker\DockerUtils;
 
 use function Castor\context;
-use function Castor\finder;
 use function Castor\fingerprint;
 use function Castor\fs;
-use function Castor\http_client;
 use function Castor\import;
 use function Castor\input;
 use function Castor\io;
-use function Castor\run;
 use function Castor\Utils\Docker\docker;
-use function Castor\with;
 use function fingerprints\composer_fingerprint;
 use function fingerprints\dockerfile_fingerprint;
 use function utils\path;

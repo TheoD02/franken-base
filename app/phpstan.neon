@@ -34,6 +34,7 @@ parameters:
         - '#^Class loophp\\collection\\CollectionDecorator specifies template type T.*$#'
         - '#^Interface IteratorAggregate specifies template type TValue of interface Traversable.*$#'
         - '#^Attribute class JetBrains\\PhpStorm.*$#'
+        - '#^Class .*[Payload] has an uninitialized property.*$#'
     symfony:
         containerXmlPath: %currentWorkingDirectory%/var/cache/dev/App_KernelDevDebugContainer.xml
     checkTooWideReturnTypesInProtectedAndPublicMethods: true

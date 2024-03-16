@@ -26,6 +26,9 @@ class UserService
     ) {
     }
 
+    /**
+     * @return ($getEntity is true ? UserEntity : User)
+     */
     public function getOneByIdOrFail(int $id, bool $getEntity = false): User|UserEntity
     {
         $userEntity = $this->em->find(UserEntity::class, $id);
@@ -34,7 +37,7 @@ class UserService
             throw new UserNotFoundException();
         }
 
-        if ($getEntity === true) {
+        if ($getEntity) {
             return $userEntity;
         }
 
@@ -53,11 +56,12 @@ class UserService
         return $this->mapper->map($userEntity, User::class);
     }
 
-    public function update(int $id, UpdateUserPayload $payload): User
+    public function update(int $id, UpdateUserPayload $updateUserPayload): User
     {
         $userEntity = $this->getOneByIdOrFail($id, true);
 
-        $userEntity = $this->mapper->mapToObject($payload, $userEntity);
+        $userEntity = $this->mapper->mapToObject($updateUserPayload, $userEntity);
+
         $this->em->flush();
 
         return $this->mapper->map($userEntity, User::class);

@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\Repository\UserRepository;
 use App\Trait\EntityManagerTrait;
 use App\User\Api\UserCollectionMeta;
 use App\User\Api\UserFilterQuery;
-use App\User\Api\UserFilterQueryInterface;
 use App\User\Entity\UserEntity;
 use App\User\Serialization\UserGroups;
 use App\User\Service\UserService;
@@ -19,7 +17,6 @@ use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;
 use Module\Api\Enum\HttpMethodEnum;
 use Module\Api\Enum\ResponseTypeEnum;
-use Module\Api\Service\PaginatorService;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 
