@@ -9,7 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 
 /**
- * @extends ArrayCollection<array-key, User>
+ * @template TKey of array-key
+ * @template T of User
+ *
+ * @implements ApiDataCollectionInterface<TKey, T>
+ *
+ * @extends ArrayCollection<TKey, T>
  */
 class UserCollection extends ArrayCollection implements ApiDataCollectionInterface
 {
@@ -17,11 +22,5 @@ class UserCollection extends ArrayCollection implements ApiDataCollectionInterfa
     public function getMeta(): UserCollectionMeta
     {
         return new UserCollectionMeta(total: $this->count(), page: 1, limit: 10);
-    }
-
-    #[\Override]
-    public function count(): int
-    {
-        return iterator_count($this->getIterator());
     }
 }

@@ -48,7 +48,6 @@ class CollectionType extends JsonType
             throw ConversionException::conversionFailed($value, $this->getName(), $jsonException);
         }
 
-        // @phpstan-ignore-next-line
         return new ArrayCollection($decoded);
     }
 

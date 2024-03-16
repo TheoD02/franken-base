@@ -19,6 +19,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * @template T
+ */
 #[AsEventListener(event: KernelEvents::VIEW)]
 readonly class KernelViewListener
 {
@@ -31,7 +34,7 @@ readonly class KernelViewListener
     #[NoReturn]
     public function onKernelView(ViewEvent $viewEvent): void
     {
-        /** @var ApiResponse<ApiDataInterface|ApiDataCollectionInterface|bool|null, ApiMetadataInterface|null>|Response|null $controllerResult */
+        /** @var ApiResponse<ApiDataInterface|ApiDataCollectionInterface<array-key, T>|bool|null, ApiMetadataInterface|null>|Response|null $controllerResult */
         $controllerResult = $viewEvent->getControllerResult();
 
         $reflectionMethod = $this->getControllerMethodReflectionClass($viewEvent);
@@ -114,7 +117,7 @@ readonly class KernelViewListener
     }
 
     /**
-     * @param ApiResponse<ApiDataInterface|ApiDataCollectionInterface|bool|null, ApiMetadataInterface|null>|null $apiResponse
+     * @param ApiResponse<ApiDataInterface|ApiDataCollectionInterface<array-key, T>|bool|null, ApiMetadataInterface|null>|null $apiResponse
      *
      * @return array{json_encode_options: int, groups?: array<string>}
      */

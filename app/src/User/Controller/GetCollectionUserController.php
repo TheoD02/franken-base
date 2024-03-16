@@ -7,7 +7,6 @@ namespace App\User\Controller;
 use App\Trait\EntityManagerTrait;
 use App\User\Api\UserCollectionMeta;
 use App\User\Api\UserFilterQuery;
-use App\User\Entity\UserEntity;
 use App\User\Serialization\UserGroups;
 use App\User\Service\UserService;
 use App\User\ValueObject\User;
@@ -31,7 +30,7 @@ class GetCollectionUserController
     use EntityManagerTrait;
 
     /**
-     * @return ApiResponse<UserCollection, UserCollectionMeta>
+     * @return ApiResponse<UserCollection<array-key, User>, UserCollectionMeta>
      */
     #[OpenApiResponse(User::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(UserCollectionMeta::class)]

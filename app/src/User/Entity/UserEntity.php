@@ -6,13 +6,10 @@ namespace App\User\Entity;
 
 use App\Repository\UserRepository;
 use App\User\Enum\UserRoleEnum;
-use App\User\Serialization\UserGroups;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Module\Api\Adapter\ApiDataInterface;
 use Module\Api\Doctrine\CollectionType;
-use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]

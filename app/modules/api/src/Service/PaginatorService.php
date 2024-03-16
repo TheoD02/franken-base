@@ -23,12 +23,17 @@ class PaginatorService
      * @template T of ApiDataCollectionInterface
      *
      * @param array<ORMFilterQueryInterface|null> $filterQueryList
-     * @param class-string<T> $collectionFqcn
+     * @param class-string<T>                     $collectionFqcn
+     * @param class-string|null                   $mappedClass
      *
      * @return T
      */
-    public function paginate(QueryBuilder $queryBuilder, string $collectionFqcn, ?string $mappedClass = null, array $filterQueryList = []): ApiDataCollectionInterface
-    {
+    public function paginate(
+        QueryBuilder $queryBuilder,
+        string $collectionFqcn,
+        ?string $mappedClass = null,
+        array $filterQueryList = []
+    ): ApiDataCollectionInterface {
         foreach ($filterQueryList as $filterQuery) {
             $filterQuery?->applyFilter($queryBuilder);
         }

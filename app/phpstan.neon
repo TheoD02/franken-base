@@ -30,9 +30,6 @@ parameters:
         - modules/api/src/Resolver/ApiResponseAstResolver.php
         - modules/api/src/Serializer/CollectionNormalizer.php
     ignoreErrors:
-        - '#^Interface loophp\\collection\\Contract\\Collection specifies template type T.*$#'
-        - '#^Class loophp\\collection\\CollectionDecorator specifies template type T.*$#'
-        - '#^Interface IteratorAggregate specifies template type TValue of interface Traversable.*$#'
         - '#^Attribute class JetBrains\\PhpStorm.*$#'
         - '#^Class .*[Payload] has an uninitialized property.*$#'
     symfony:

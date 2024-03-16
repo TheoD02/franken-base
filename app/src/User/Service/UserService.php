@@ -67,6 +67,9 @@ class UserService
         return $this->mapper->map($userEntity, User::class);
     }
 
+    /**
+     * @return UserCollection<array-key, User>
+     */
     public function paginate(?UserFilterQuery $userFilterQuery = null): UserCollection
     {
         $queryBuilder = $this->em->getRepository(UserEntity::class)->createQueryBuilder('entity');

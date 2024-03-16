@@ -17,13 +17,13 @@ class AutoMapper
     /**
      * @template T
      *
-     * @param array<object>        $sourceCollection
-     * @param class-string<T>      $targetClass
-     * @param array<string, mixed> $context
+     * @param iterable<object|iterable<mixed>> $sourceCollection
+     * @param class-string<T>                  $targetClass
+     * @param array<string, mixed>             $context
      *
      * @return array<T>
      */
-    public function mapMultiple(array $sourceCollection, string $targetClass, array $context = []): array
+    public function mapMultiple(iterable $sourceCollection, string $targetClass, array $context = []): array
     {
         // @phpstan-ignore-next-line
         return $this->autoMapper->mapMultiple($sourceCollection, $targetClass, $context);
