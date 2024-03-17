@@ -26,6 +26,15 @@ sentry:
 #        Monolog\Processor\PsrLogMessageProcessor:
 #            tags: { name: monolog.processor, handler: sentry }
 
+when@dev:
+  sentry:
+    dsn: null
+    tracing:
+      enabled: false
+    options:
+      traces_sample_rate: 0.0
+      profiles_sample_rate: 0.0
+
 when@test:
   sentry:
     dsn: null
