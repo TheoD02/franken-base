@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\User\Entity;
 
-use App\Attribute\LazyFetchResource;
 use App\Todo\ValueObject\Todo;
 use App\Todo\ValueObject\TodoCollection;
 use App\User\Enum\UserRoleEnum;
@@ -15,8 +14,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Module\Api\Adapter\ApiDataInterface;
 use Module\Api\Doctrine\CollectionType;
-use Module\Api\ValueObject\Identifier;
-use Module\Api\ValueObject\IdentifierCollection;
 use Symfony\Component\Mapper\Attributes\Map;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -47,17 +44,16 @@ class UserEntity implements ApiDataInterface
     private Collection $roles;
 
     /**
-     * @var IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo> $todos Here should only accept IdentifierCollection, but please forbid fetching the collection from Entity
+     * @var TodoCollection<array-key, Todo> $todos
      */
-    #[LazyFetchResource(TodoCollection::class)]
     #[ORM\Column(type: CollectionType::NAME)]
     #[Map(to: 'todos')]
-    private Collection $todos;
+    private TodoCollection $todos;
 
     public function __construct()
     {
         $this->roles = new ArrayCollection([UserRoleEnum::USER]);
-        $this->todos = new IdentifierCollection();
+        $this->todos = new TodoCollection();
     }
 
     public function getId(): ?int
@@ -120,17 +116,17 @@ class UserEntity implements ApiDataInterface
     }
 
     /**
-     * @return IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo>
+     * @return TodoCollection<array-key, Todo>
      */
-    public function getTodos(): IdentifierCollection|TodoCollection
+    public function getTodos(): TodoCollection
     {
         return $this->todos;
     }
 
     /**
-     * @param IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo> $todos
+     * @param TodoCollection<array-key, Todo> $todos
      */
-    public function setTodos(IdentifierCollection|TodoCollection $todos): static
+    public function setTodos(TodoCollection $todos): static
     {
         $this->todos = $todos;
 

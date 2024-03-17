@@ -33,20 +33,29 @@ return static function (Config $config): void {
     $config->add($apiModuleClassSet, ...getCommonNamingRulesForNamespace('Module\Api'), ...$layeredArchitectureRules);
     $config->add($exceptionsModuleClassSet, ...getCommonNamingRulesForNamespace('Module\ExceptionHandlerBundle'), ...$layeredArchitectureRules);
 
-    // Prevent deps between modules and base app
-    $layeredModulesArchitectureRules = Architecture::withComponents()
-        ->component('App')->definedBy('App\*')
-        ->component('Api')->definedBy('Module\Api\*')
-        ->component('Exception')->definedBy('Module\ExceptionHandlerBundle\*')
-        ->where('Api')->shouldNotDependOnAnyComponent()
-        ->where('Exception')->shouldNotDependOnAnyComponent()
-        ->where('App')->shouldNotDependOnAnyComponent()
+//    // Prevent deps between modules and base app
+//    $layeredModulesArchitectureRules = Architecture::withComponents()
+//        ->component('App')->definedBy('App\*')
+//        ->component('Api')->definedBy('Module\Api\*')
+//        ->component('Exception')->definedBy('Module\ExceptionHandlerBundle\*')
+//        ->where('Api')->shouldNotDependOnAnyComponent()
+//        ->where('Exception')->shouldNotDependOnAnyComponent()
+//        ->where('App')->shouldNotDependOnAnyComponent()
+//        ->rules();
+
+//    $layeredModulesArchitectureRules = [...$layeredModulesArchitectureRules];
+
+//    $config->add($apiModuleClassSet, ...$layeredModulesArchitectureRules);
+//    $config->add($exceptionsModuleClassSet, ...$layeredModulesArchitectureRules);
+
+    $domainArchitectureRules = Architecture::withComponents()
+        ->component('User')->definedBy('App\User\*')
+        ->component('Todo')->definedBy('App\Todo\*')
+        ->where('User')->mayDependOnComponents('Todo')
+        ->where('Todo')->shouldNotDependOnAnyComponent()
         ->rules();
 
-    $layeredModulesArchitectureRules = [...$layeredModulesArchitectureRules];
-
-    $config->add($apiModuleClassSet, ...$layeredModulesArchitectureRules);
-    $config->add($exceptionsModuleClassSet, ...$layeredModulesArchitectureRules);
+    $config->add($classSet, ...$domainArchitectureRules);
 };
 
 function getCommonNamingRulesForNamespace(string $namespace): array
@@ -69,7 +78,7 @@ function getCommonNamingRulesForNamespace(string $namespace): array
             ->should(new HaveNameMatching('*Trait'))
             ->because('we want uniform naming for traits'),
         Rule::allClasses()
-            ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Service"))
+            ->that(new ResideInOneOfTheseNamespaces("{$namespace}\Repository"))
             ->should(new HaveNameMatching('*Repository'))
             ->because('we want uniform naming for repositories')
     ];

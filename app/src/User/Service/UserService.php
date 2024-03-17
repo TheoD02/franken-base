@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\User\Service;
 
 use App\Service\AutoMapper;
+use App\Todo\Client\Endpoint\Todos\TodoFilterQuery;
+use App\Todo\Service\TodoService;
+use App\Todo\ValueObject\TodoCollection;
 use App\User\Controller\CreateUserController\CreateUserPayload;
 use App\User\Controller\GetUserCollectionController\UserFilterQuery;
 use App\User\Controller\UpdateUserController\UpdateUserPayload;
@@ -14,6 +17,7 @@ use App\User\Exception\UserNotFoundException;
 use App\User\ValueObject\User;
 use App\User\ValueObject\UserCollection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Module\Api\Dto\PaginationFilterQuery;
 use Module\Api\Service\PaginatorService;
@@ -23,7 +27,8 @@ class UserService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly AutoMapper $mapper,
-        private readonly PaginatorService $paginatorService
+        private readonly PaginatorService $paginatorService,
+        private readonly TodoService $todoService,
     ) {
     }
 
@@ -47,7 +52,7 @@ class UserService
 
     public function create(CreateUserPayload $createUserPayload): User
     {
-        $userEntity = $this->mapper->map($createUserPayload, UserEntity::class);
+        $userEntity = $this->mapper->map($createUserPayload, new UserEntity());
 
         $userEntity->setRoles(new ArrayCollection([UserRoleEnum::USER]));
 
@@ -75,7 +80,11 @@ class UserService
     {
         $queryBuilder = $this->em->getRepository(UserEntity::class)->createQueryBuilder('entity');
 
-        return $this->paginatorService->paginate($queryBuilder, UserCollection::class, User::class, [$userFilterQuery, $paginationFilterQuery]);
+        $items = $this->paginatorService->paginate($queryBuilder, UserCollection::class, User::class, [$userFilterQuery, $paginationFilterQuery]);
+
+        $this->resolveTodosForUsers($items);
+
+        return $items;
     }
 
     public function delete(int $id): void
@@ -84,5 +93,25 @@ class UserService
 
         $this->em->remove($userEntity);
         $this->em->flush();
+    }
+
+    public function resolveTodosForUsers(UserCollection $items): void
+    {
+        $todoIdentifiers = $items->map(static fn (User $user): int => $user->getId())->toArray();
+
+        $todoFilterQuery = new TodoFilterQuery();
+        $todoFilterQuery->userIdentifiers = $todoIdentifiers;
+
+        $todos = $this->todoService->getTodos($todoFilterQuery);
+
+        $items->map(static function (User $user) use ($todos): void {
+            $criteria = Criteria::create()
+                ->where(Criteria::expr()->eq('userId', $user->getId()))
+            ;
+
+            $todosForUser = $todos->matching($criteria);
+
+            $user->setTodos(new TodoCollection($todosForUser->getValues()));
+        });
     }
 }

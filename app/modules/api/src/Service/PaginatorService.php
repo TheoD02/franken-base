@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Module\Api\Service;
 
 use App\Service\AutoMapper;
-use App\Service\FetcherService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -16,7 +15,6 @@ class PaginatorService
 {
     public function __construct(
         private readonly AutoMapper $mapper,
-        private readonly FetcherService $fetcherService,
     ) {
     }
 
@@ -48,11 +46,7 @@ class PaginatorService
             throw new \InvalidArgumentException(sprintf('The collection class "%s" must be a subclass of "%s".', $collectionFqcn, ArrayCollection::class));
         }
 
-        $items = (new Paginator($queryBuilder))->getIterator()->getArrayCopy();
-
-        foreach ($items as $item) {
-            $this->fetcherService->fetchRemoteResourceFor($item);
-        }
+        $items = (new Paginator($queryBuilder))->getIterator();
 
         if ($mappedClass !== null) {
             $items = $this->mapper->mapMultiple($items, $mappedClass);

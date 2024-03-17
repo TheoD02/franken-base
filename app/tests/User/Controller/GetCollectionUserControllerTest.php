@@ -11,6 +11,9 @@ use App\User\Controller\GetUserCollectionController\GetUserCollectionController;
 use App\User\Serialization\UserGroups;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
@@ -21,9 +24,20 @@ class GetCollectionUserControllerTest extends ControllerTestCase
 {
     use ResetDatabase;
 
+    private HttpClientInterface&MockObject $jsonPlaceholderClientMock;
+
+    #[\Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->jsonPlaceholderClientMock = $this->createMock(HttpClientInterface::class);
+        $this->getContainer()->set('http_client.json_placeholder', $this->jsonPlaceholderClientMock);
+    }
+
     public function testGetCollectionUser(): void
     {
         // Arrange
+        $this->jsonPlaceholderClientMock->method('request')->willReturn(new MockResponse('[]'));
         $userCollection = new ArrayCollection(ProxyToObjectHelper::proxyToObject(UserFactory::createMany(2)));
 
         // Act

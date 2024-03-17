@@ -25,9 +25,9 @@ class GetOneTodoByIdController
      */
     #[OpenApiResponse(Todo::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(GenericCollectionMetadata::class)]
-    public function __invoke(TodoService $todoService): ApiResponse
+    public function __invoke(TodoService $todoService, int $id): ApiResponse
     {
-        $todo = $todoService->getOneById();
+        $todo = $todoService->getOneById($id);
 
         return new ApiResponse(data: $todo, groups: [TodoGroups::READ]);
     }

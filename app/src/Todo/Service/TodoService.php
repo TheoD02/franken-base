@@ -4,59 +4,29 @@ declare(strict_types=1);
 
 namespace App\Todo\Service;
 
+use App\Todo\Client\Endpoint\Todos\TodoFilterQuery;
+use App\Todo\Client\JsonPlaceholderClient;
 use App\Todo\ValueObject\Todo;
 use App\Todo\ValueObject\TodoCollection;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class TodoService
 {
     public function __construct(
-        #[Autowire(service: 'json_placeholder.client')]
-        private readonly HttpClientInterface $client,
-        private readonly DenormalizerInterface $normalizer
+        private readonly JsonPlaceholderClient $client,
     ) {
     }
 
-    public function getTodos(bool $lazy = false): TodoCollection
+    public function getTodos(?TodoFilterQuery $todoFilterQuery = null): TodoCollection
     {
-        if ($lazy) {
-            return new TodoCollection($this);
-        }
+        $todoFilterQuery ??= new TodoFilterQuery();
 
-        $collection = new TodoCollection($this);
-        $collection->doInitialize();
+        $todos = $this->client->getTodos($todoFilterQuery);
 
-        return $collection;
+        return new TodoCollection($todos);
     }
 
-    /**
-     * @return array<Todo>
-     */
-    public function fetchTodos(array $identifiers): array
+    public function getOneById(int $id): Todo
     {
-        $query = null;
-        if ($identifiers !== []) {
-            $query = http_build_query([
-                'id' => $identifiers,
-            ]);
-        }
-
-        $url = '/todos';
-        if ($query !== null && $query !== '' && $query !== '0') {
-            $url .= '?' . $query;
-        }
-
-        $todos = $this->client->request('GET', $url)->toArray();
-
-        return $this->normalizer->denormalize($todos, Todo::class . '[]');
-    }
-
-    public function getOneById(): Todo
-    {
-        $todo = $this->client->request('GET', '/todos/1')->toArray();
-
-        return $this->normalizer->denormalize($todo, Todo::class);
+        return $this->client->getOneById($id);
     }
 }

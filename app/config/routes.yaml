@@ -12,3 +12,4 @@ controllers:
         path: ../src/
         namespace: App\
     type: attribute
+    format: 'json'
