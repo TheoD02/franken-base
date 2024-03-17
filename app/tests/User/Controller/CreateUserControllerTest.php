@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\User\Controller;
 
+use App\Domain\User\Controller\CreateUserController\CreateUserController;
+use App\Domain\User\Controller\CreateUserController\CreateUserPayload;
+use App\Domain\User\Serialization\UserGroups;
 use App\Tests\ControllerTestCase;
-use App\User\Controller\CreateUserController\CreateUserController;
-use App\User\Controller\CreateUserController\CreateUserPayload;
-use App\User\Serialization\UserGroups;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;
 

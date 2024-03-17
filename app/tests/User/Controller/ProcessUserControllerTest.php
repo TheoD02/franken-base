@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\User\Controller;
 
+use App\Domain\User\Controller\ProcessUserController;
+use App\Domain\User\Exception\AbstractUserProcessingException;
 use App\Tests\ControllerTestCase;
-use App\User\Controller\ProcessUserController;
-use App\User\Exception\AbstractUserProcessingException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;
 

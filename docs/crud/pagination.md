@@ -53,7 +53,7 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\Repository\UserRepository;use App\Trait\EntityManagerTrait;use App\User\Api\UserCollectionMeta;use App\User\Api\UserFilterQueryInterface;use App\User\Entity\UserEntity;use App\User\Serialization\UserGroups;use App\User\ValueObject\UserCollection;use Module\Api\Attribut\ApiRoute;use Module\Api\Attribut\OpenApiMeta;use Module\Api\Attribut\OpenApiResponse;use Module\Api\Dto\ApiResponse;use Module\Api\Enum\HttpMethodEnum;use Module\Api\Enum\ResponseTypeEnum;use Module\Api\Service\PaginatorService;use Symfony\Component\HttpKernel\Attribute\AsController;use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use App\Domain\User\Entity\UserEntity;use App\Domain\User\Serialization\UserGroups;use App\Domain\User\ValueObject\UserCollection;use App\Repository\UserRepository;use App\Trait\EntityManagerTrait;use App\User\Api\UserCollectionMeta;use App\User\Api\UserFilterQueryInterface;use Module\Api\Attribut\ApiRoute;use Module\Api\Attribut\OpenApiMeta;use Module\Api\Attribut\OpenApiResponse;use Module\Api\Dto\ApiResponse;use Module\Api\Enum\HttpMethodEnum;use Module\Api\Enum\ResponseTypeEnum;use Module\Api\Service\PaginatorService;use Symfony\Component\HttpKernel\Attribute\AsController;use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 
 /**
  * @see \App\Tests\User\Controller\GetCollectionUserControllerTest

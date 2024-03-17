@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\User\Controller;
 
+use App\Domain\User\Controller\GetUserCollectionController\GetUserCollectionController;
+use App\Domain\User\Serialization\UserGroups;
 use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
 use App\Tests\Helper\ProxyToObjectHelper;
-use App\User\Controller\GetUserCollectionController\GetUserCollectionController;
-use App\User\Serialization\UserGroups;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Todo\ValueObject\Todo;
-use App\Todo\ValueObject\TodoCollection;
-use App\User\Entity\UserEntity;
-use App\User\Enum\UserRoleEnum;
-use App\User\Repository\UserRepository;
+use App\Domain\Todo\ValueObject\Todo;
+use App\Domain\Todo\ValueObject\TodoCollection;
+use App\Domain\User\Entity\UserEntity;
+use App\Domain\User\Enum\UserRoleEnum;
+use App\Domain\User\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;

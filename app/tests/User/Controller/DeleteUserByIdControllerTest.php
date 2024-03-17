@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\User\Controller;
 
+use App\Domain\User\Controller\DeleteUserByIdController;
 use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
-use App\User\Controller\DeleteUserByIdController;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
