@@ -11,8 +11,6 @@ use App\User\Serialization\UserGroups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Module\Api\Adapter\ApiDataInterface;
-use Module\Api\ValueObject\Identifier;
-use Module\Api\ValueObject\IdentifierCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -122,17 +120,17 @@ class User implements ApiDataInterface
     }
 
     /**
-     * @return IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo>
+     * @return TodoCollection<array-key, Todo>
      */
-    public function getTodos(): IdentifierCollection|TodoCollection
+    public function getTodos(): TodoCollection
     {
         return $this->todos;
     }
 
     /**
-     * @param IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo> $todos
+     * @param TodoCollection<array-key, Todo> $todos
      */
-    public function setTodos(IdentifierCollection|TodoCollection $todos): static
+    public function setTodos(TodoCollection $todos): static
     {
         $this->todos = $todos;
 

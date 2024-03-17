@@ -52,7 +52,7 @@ class UserService
 
     public function create(CreateUserPayload $createUserPayload): User
     {
-        $userEntity = $this->mapper->map($createUserPayload, new UserEntity());
+        $userEntity = $this->mapper->mapToObject($createUserPayload, new UserEntity());
 
         $userEntity->setRoles(new ArrayCollection([UserRoleEnum::USER]));
 
@@ -66,7 +66,7 @@ class UserService
     {
         $userEntity = $this->getOneByIdOrFail($id, true);
 
-        $userEntity = $this->mapper->map($updateUserPayload, $userEntity);
+        $userEntity = $this->mapper->mapToObject($updateUserPayload, $userEntity);
 
         $this->em->flush();
 
@@ -95,9 +95,12 @@ class UserService
         $this->em->flush();
     }
 
+    /**
+     * @param UserCollection<array-key, User> $items
+     */
     public function resolveTodosForUsers(UserCollection $items): void
     {
-        $todoIdentifiers = $items->map(static fn (User $user): int => $user->getId())->toArray();
+        $todoIdentifiers = $items->map(static fn (User $user): int => $user->getId() ?? 0)->toArray();
 
         $todoFilterQuery = new TodoFilterQuery();
         $todoFilterQuery->userIdentifiers = $todoIdentifiers;

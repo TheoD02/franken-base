@@ -19,23 +19,23 @@ class PaginatorService
     }
 
     /**
-     * @template T of ApiDataCollectionInterface
+     * @template C of ApiDataCollectionInterface
      *
+     * @param class-string<C>                     $collectionFqcn
+     * @param class-string                        $mappedClass
      * @param array<ORMFilterQueryInterface|null> $filterQueryList
-     * @param class-string<T>                     $collectionFqcn
-     * @param class-string|null                   $mappedClass
      *
-     * @return T
+     * @return C
      */
     public function paginate(
         QueryBuilder $queryBuilder,
         string $collectionFqcn,
-        ?string $mappedClass = null,
+        string $mappedClass,
         array $filterQueryList = [],
     ): ApiDataCollectionInterface {
         $filterQueryList = array_filter($filterQueryList);
         foreach ($filterQueryList as $filterQuery) {
-            $filterQuery?->applyFilter($queryBuilder);
+            $filterQuery->applyFilter($queryBuilder);
         }
 
         if (class_exists($collectionFqcn) === false) {
@@ -48,10 +48,8 @@ class PaginatorService
 
         $items = (new Paginator($queryBuilder))->getIterator();
 
-        if ($mappedClass !== null) {
-            $items = $this->mapper->mapMultiple($items, $mappedClass);
-        }
+        $mappedItems = $this->mapper->mapMultiple($items, $mappedClass);
 
-        return new $collectionFqcn($items);
+        return new $collectionFqcn($mappedItems);
     }
 }

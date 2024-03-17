@@ -8,6 +8,9 @@ final class MemoizeCache
 {
     private static self $instance;
 
+    /**
+     * @var array<class-string, \ArrayObject<string,mixed>>
+     */
     private array $cache = [];
 
     /**
@@ -34,7 +37,15 @@ final class MemoizeCache
      */
     public function get(object $object, string $key, callable $factory, bool $weak = false): mixed
     {
-        $array = $weak ? $this->weakMap[$object] ??= new \ArrayObject() : ($this->cache[$object::class] ??= new \ArrayObject());
+        if ($weak && isset($this->weakMap[$object]) === false) {
+            $this->weakMap[$object] = new \ArrayObject();
+        }
+        if ($weak === false && isset($this->cache[$object::class]) === false) {
+            $this->cache[$object::class] = new \ArrayObject();
+        }
+
+        /** @var \ArrayObject<string,mixed> $array */
+        $array = $weak ? $this->weakMap[$object] : $this->cache[$object::class];
 
         if ($array->offsetExists($key)) {
             return $array[$key];

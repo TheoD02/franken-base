@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\Selectable;
  * @template-extends Collection<TKey, T>
  * @template-extends Selectable<TKey, T>
  */
-interface ApiDataCollectionInterface extends ApiMetadataInterface, Collection, Selectable, \Stringable
+interface ApiDataCollectionInterface extends Collection, Selectable, \Stringable
 {
     /**
      * Get the metadata for the collection.

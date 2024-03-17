@@ -10,6 +10,9 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class AutoMapper
 {
+    /**
+     * @phpstan-ignore-next-line
+     */
     private readonly ObjectMapper $mapper;
 
     public function __construct()
@@ -20,27 +23,45 @@ class AutoMapper
     /**
      * @template T of object
      *
-     * @param class-string<T>|T $targetClass
+     * @param class-string<T> $targetClassFqcn
      *
      * @return T
      */
-    public function map(object $source, string|object $targetClass): object
+    public function map(object $source, string $targetClassFqcn): object
     {
+        /** @var T $object */
+        return $this->mapper->map($source, $targetClassFqcn);
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param T $targetClass
+     *
+     * @return T
+     */
+    public function mapToObject(object $source, object $targetClass): object
+    {
+        /** @var T $object */
         return $this->mapper->map($source, $targetClass);
     }
 
     /**
      * @template T
      *
-     * @param class-string<T> $targetClass
+     * @param iterable<object> $source
+     * @param class-string<T>  $targetClass
      *
      * @return array<T>
      */
     public function mapMultiple(iterable $source, string $targetClass): array
     {
+        /** @var array<T> $result */
         $result = [];
         foreach ($source as $item) {
-            $result[] = $this->map($item, $targetClass);
+            /** @var T $object */
+            $object = $this->mapper->map($item, $targetClass);
+            $result[] = $object;
         }
 
         return $result;

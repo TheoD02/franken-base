@@ -16,9 +16,12 @@ class TodoService
     ) {
     }
 
+    /**
+     * @return TodoCollection<array-key, Todo>
+     */
     public function getTodos(?TodoFilterQuery $todoFilterQuery = null): TodoCollection
     {
-        $todoFilterQuery ??= new TodoFilterQuery();
+        $todoFilterQuery = $todoFilterQuery ?? new TodoFilterQuery();
 
         $todos = $this->client->getTodos($todoFilterQuery);
 

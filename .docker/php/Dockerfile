@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:1-php8.3.3 as frankenphp
+FROM dunglas/frankenphp:1-php8.3.4 as frankenphp
 
 WORKDIR /app
 USER root

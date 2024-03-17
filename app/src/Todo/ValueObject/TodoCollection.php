@@ -6,7 +6,6 @@ namespace App\Todo\ValueObject;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Module\Api\Adapter\ApiDataCollectionInterface;
-use Module\Api\Adapter\ApiMetadataInterface;
 use Module\Api\ValueObject\GenericCollectionMetadata;
 
 /**
@@ -20,7 +19,7 @@ use Module\Api\ValueObject\GenericCollectionMetadata;
 class TodoCollection extends ArrayCollection implements ApiDataCollectionInterface
 {
     #[\Override]
-    public function getMeta(): ApiMetadataInterface
+    public function getMeta(): GenericCollectionMetadata
     {
         return new GenericCollectionMetadata(total: $this->count(), page: 1, limit: $this->count());
     }

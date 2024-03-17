@@ -22,6 +22,12 @@ class TodoFilterQuery
     #[Assert\Count(min: 1)]
     public array $userIdentifiers;
 
+    /**
+     * @return array{
+     *     userId?: array<int>,
+     *      id?: array<int>
+     * }
+     */
     private function toArray(): array
     {
         $query = [];
