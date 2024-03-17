@@ -38,9 +38,6 @@
             "migrations/.gitignore"
         ]
     },
-    "knplabs/knp-paginator-bundle": {
-        "version": "v6.3.0"
-    },
     "nelmio/api-doc-bundle": {
         "version": "4.20",
         "recipe": {

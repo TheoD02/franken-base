@@ -13,7 +13,6 @@
     "doctrine/doctrine-fixtures-bundle": "^3.5",
     "doctrine/doctrine-migrations-bundle": "^3.3",
     "doctrine/orm": "^2.18",
-    "knplabs/knp-paginator-bundle": "^6.3",
     "nelmio/api-doc-bundle": "4.21.0",
     "nyholm/psr7": "^1.8",
     "pentatrion/vite-bundle": "^6.4",

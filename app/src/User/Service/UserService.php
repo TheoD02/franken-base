@@ -75,7 +75,7 @@ class UserService
     {
         $queryBuilder = $this->em->getRepository(UserEntity::class)->createQueryBuilder('entity');
 
-        return $this->paginatorService->paginate($queryBuilder, UserCollection::class, User::class, [$userFilterQuery], $paginationFilterQuery);
+        return $this->paginatorService->paginate($queryBuilder, UserCollection::class, User::class, [$userFilterQuery, $paginationFilterQuery]);
     }
 
     public function delete(int $id): void
