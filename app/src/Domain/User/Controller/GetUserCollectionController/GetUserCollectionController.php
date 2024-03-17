@@ -9,7 +9,6 @@ use App\Domain\User\Service\UserService;
 use App\Domain\User\ValueObject\User;
 use App\Domain\User\ValueObject\UserCollection;
 use App\Domain\User\ValueObject\UserCollectionMeta;
-use App\Trait\EntityManagerTrait;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiMeta;
 use Module\Api\Attribut\OpenApiResponse;
@@ -27,8 +26,6 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 #[ApiRoute('/api/users', httpMethodEnum: HttpMethodEnum::GET)]
 class GetUserCollectionController
 {
-    use EntityManagerTrait;
-
     /**
      * @return ApiResponse<UserCollection, UserCollectionMeta>
      */

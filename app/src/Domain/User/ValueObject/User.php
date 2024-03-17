@@ -36,7 +36,7 @@ class User implements ApiDataInterface
     private Collection $roles;
 
     /**
-     * @var TodoCollection<array-key, Todo> $todos
+     * @var TodoCollection<int, Todo> $todos
      */
     #[Groups([UserGroups::READ])]
     private TodoCollection $todos;

@@ -17,7 +17,7 @@ class TodoService
     }
 
     /**
-     * @return TodoCollection<array-key, Todo>
+     * @return TodoCollection<int, Todo>
      */
     public function getTodos(?TodoFilterQuery $todoFilterQuery = null): TodoCollection
     {

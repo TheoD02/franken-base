@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 class GetTodoCollectionController
 {
     /**
-     * @return ApiResponse<TodoCollection<array-key, Todo>, GenericCollectionMetadata>
+     * @return ApiResponse<TodoCollection, GenericCollectionMetadata>
      */
     #[OpenApiResponse(Todo::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(GenericCollectionMetadata::class)]
