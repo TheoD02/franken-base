@@ -30,7 +30,7 @@ class GetUserCollectionController
     use EntityManagerTrait;
 
     /**
-     * @return ApiResponse<UserCollection<array-key, User>, UserCollectionMeta>
+     * @return ApiResponse<UserCollection, UserCollectionMeta>
      */
     #[OpenApiResponse(User::class, responseTypeEnum: ResponseTypeEnum::COLLECTION)]
     #[OpenApiMeta(UserCollectionMeta::class)]

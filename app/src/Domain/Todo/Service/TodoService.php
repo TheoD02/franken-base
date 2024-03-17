@@ -25,7 +25,7 @@ class TodoService
 
         $todos = $this->client->getTodos($todoFilterQuery);
 
-        return new TodoCollection($todos);
+        return TodoCollection::fromArray($todos);
     }
 
     public function getOneById(int $id): Todo

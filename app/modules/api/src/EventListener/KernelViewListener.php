@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Module\Api\EventListener;
 
 use JetBrains\PhpStorm\NoReturn;
+use Module\Api\Abstract\AbstractApiDataCollection;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Adapter\ApiDataInterface;
 use Module\Api\Adapter\ApiMetadataInterface;
@@ -34,7 +35,7 @@ readonly class KernelViewListener
     #[NoReturn]
     public function onKernelView(ViewEvent $viewEvent): void
     {
-        /** @var ApiResponse<ApiDataInterface|ApiDataCollectionInterface<array-key, T>|bool|null, ApiMetadataInterface|null>|Response|null $controllerResult */
+        /** @var ApiResponse<ApiDataInterface|AbstractApiDataCollection<int, T>|bool|null, ApiMetadataInterface|null>|Response|null $controllerResult */
         $controllerResult = $viewEvent->getControllerResult();
 
         $reflectionMethod = $this->getControllerMethodReflectionClass($viewEvent);
@@ -117,7 +118,7 @@ readonly class KernelViewListener
     }
 
     /**
-     * @param ApiResponse<ApiDataInterface|ApiDataCollectionInterface<array-key, T>|bool|null, ApiMetadataInterface|null>|null $apiResponse
+     * @param ApiResponse<ApiDataInterface|AbstractApiDataCollection<int, T>|bool|null, ApiMetadataInterface|null>|null $apiResponse
      *
      * @return array{json_encode_options: int, groups?: array<string>}
      */

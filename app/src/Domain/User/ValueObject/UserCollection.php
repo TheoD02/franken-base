@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domain\User\ValueObject;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Module\Api\Adapter\ApiDataCollectionInterface;
+use Module\Api\Abstract\AbstractApiDataCollection;
 
 /**
- * @template TKey of array-key
- * @template T of User
- *
- * @implements ApiDataCollectionInterface<TKey, T>
- *
- * @extends ArrayCollection<TKey, T>
+ * @extends AbstractApiDataCollection<int, User>
  */
-class UserCollection extends ArrayCollection implements ApiDataCollectionInterface
+class UserCollection extends AbstractApiDataCollection
 {
     #[\Override]
     public function getMeta(): UserCollectionMeta

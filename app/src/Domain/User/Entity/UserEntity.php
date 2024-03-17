@@ -38,13 +38,13 @@ class UserEntity implements ApiDataInterface
     private ?string $email = null;
 
     /**
-     * @var ArrayCollection<array-key, UserRoleEnum> $roles
+     * @var Collection<int, UserRoleEnum> $roles
      */
     #[ORM\Column(type: CollectionType::NAME)]
     private Collection $roles;
 
     /**
-     * @var TodoCollection<array-key, Todo> $todos
+     * @var TodoCollection<int, Todo> $todos
      */
     #[ORM\Column(type: CollectionType::NAME)]
     #[Map(to: 'todos')]
@@ -53,7 +53,7 @@ class UserEntity implements ApiDataInterface
     public function __construct()
     {
         $this->roles = new ArrayCollection([UserRoleEnum::USER]);
-        $this->todos = new TodoCollection();
+        $this->todos = TodoCollection::empty();
     }
 
     public function getId(): ?int
@@ -98,34 +98,28 @@ class UserEntity implements ApiDataInterface
     }
 
     /**
-     * @return ArrayCollection<array-key, UserRoleEnum>
+     * @return Collection<int, UserRoleEnum>
      */
-    public function getRoles(): ArrayCollection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
     /**
-     * @param ArrayCollection<array-key, UserRoleEnum> $collection
+     * @param Collection<int, UserRoleEnum> $collection
      */
-    public function setRoles(ArrayCollection $collection): static
+    public function setRoles(Collection $collection): static
     {
         $this->roles = $collection;
 
         return $this;
     }
 
-    /**
-     * @return TodoCollection<array-key, Todo>
-     */
     public function getTodos(): TodoCollection
     {
         return $this->todos;
     }
 
-    /**
-     * @param TodoCollection<array-key, Todo> $todos
-     */
     public function setTodos(TodoCollection $todos): static
     {
         $this->todos = $todos;

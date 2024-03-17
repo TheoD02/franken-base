@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Module\Api\Service;
 
 use App\Service\AutoMapper;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Module\Api\Adapter\ApiDataCollectionInterface;
+use Module\Api\Abstract\AbstractApiDataCollection;
 use Module\Api\Adapter\ORMFilterQueryInterface;
 
 class PaginatorService
@@ -19,7 +18,7 @@ class PaginatorService
     }
 
     /**
-     * @template C of ApiDataCollectionInterface
+     * @template C of AbstractApiDataCollection
      *
      * @param class-string<C>                     $collectionFqcn
      * @param class-string                        $mappedClass
@@ -32,7 +31,7 @@ class PaginatorService
         string $collectionFqcn,
         string $mappedClass,
         array $filterQueryList = [],
-    ): ApiDataCollectionInterface {
+    ): AbstractApiDataCollection {
         $filterQueryList = array_filter($filterQueryList);
         foreach ($filterQueryList as $filterQuery) {
             $filterQuery->applyFilter($queryBuilder);
@@ -40,10 +39,6 @@ class PaginatorService
 
         if (class_exists($collectionFqcn) === false) {
             throw new \InvalidArgumentException(sprintf('The collection class "%s" does not exist.', $collectionFqcn));
-        }
-
-        if (is_subclass_of($collectionFqcn, ArrayCollection::class) === false) {
-            throw new \InvalidArgumentException(sprintf('The collection class "%s" must be a subclass of "%s".', $collectionFqcn, ArrayCollection::class));
         }
 
         $items = (new Paginator($queryBuilder))->getIterator();

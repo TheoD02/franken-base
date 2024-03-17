@@ -38,12 +38,17 @@ final class UserFactory extends ModelFactory
     #[\Override]
     protected function getDefaults(): array
     {
+        $todos = TodoCollection::empty();
+        if (self::faker()->boolean(70)) {
+            $todos->add((new Todo())->setId(1));
+        }
+
         return [
             'email' => self::faker()->email(),
             'firstName' => self::faker()->firstName(),
             'lastName' => self::faker()->lastName(),
             'roles' => new ArrayCollection([UserRoleEnum::USER]),
-            'todos' => self::faker()->boolean(70) ? new TodoCollection([(new Todo())->setId(random_int(1, 200))]) : new TodoCollection(),
+            'todos' => $todos,
         ];
     }
 

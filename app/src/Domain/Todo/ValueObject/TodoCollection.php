@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domain\Todo\ValueObject;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Module\Api\Adapter\ApiDataCollectionInterface;
+use Module\Api\Abstract\AbstractApiDataCollection;
 use Module\Api\ValueObject\GenericCollectionMetadata;
 
 /**
- * @template TKey of array-key
- * @template T of Todo
- *
- * @implements ApiDataCollectionInterface<TKey, T>
- *
- * @extends ArrayCollection<TKey, T>
+ * @extends AbstractApiDataCollection<int, Todo>
  */
-class TodoCollection extends ArrayCollection implements ApiDataCollectionInterface
+class TodoCollection extends AbstractApiDataCollection
 {
     #[\Override]
     public function getMeta(): GenericCollectionMetadata

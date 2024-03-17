@@ -73,9 +73,6 @@ class UserService
         return $this->mapper->map($userEntity, User::class);
     }
 
-    /**
-     * @return UserCollection<array-key, User>
-     */
     public function paginate(?UserFilterQuery $userFilterQuery = null, ?PaginationFilterQuery $paginationFilterQuery = null): UserCollection
     {
         $queryBuilder = $this->em->getRepository(UserEntity::class)->createQueryBuilder('entity');
@@ -114,7 +111,7 @@ class UserService
 
             $todosForUser = $todos->matching($criteria);
 
-            $user->setTodos(new TodoCollection($todosForUser->getValues()));
+            $user->setTodos(TodoCollection::fromArray($todosForUser->getValues()));
         });
     }
 }

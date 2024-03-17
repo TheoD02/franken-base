@@ -30,7 +30,7 @@ class User implements ApiDataInterface
     private ?string $email = null;
 
     /**
-     * @var ArrayCollection<array-key, UserRoleEnum> $roles
+     * @var Collection<int, UserRoleEnum> $roles
      */
     #[Groups([UserGroups::READ, UserGroups::READ_ROLES])]
     private Collection $roles;
@@ -39,12 +39,12 @@ class User implements ApiDataInterface
      * @var TodoCollection<array-key, Todo> $todos
      */
     #[Groups([UserGroups::READ])]
-    private Collection $todos;
+    private TodoCollection $todos;
 
     public function __construct()
     {
         $this->roles = new ArrayCollection([UserRoleEnum::USER]);
-        $this->todos = new TodoCollection();
+        $this->todos = TodoCollection::empty();
     }
 
     public function getId(): ?int
@@ -102,34 +102,28 @@ class User implements ApiDataInterface
     }
 
     /**
-     * @return ArrayCollection<array-key, UserRoleEnum>
+     * @return Collection<int, UserRoleEnum>
      */
-    public function getRoles(): ArrayCollection
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
 
     /**
-     * @param ArrayCollection<array-key, UserRoleEnum> $collection
+     * @param Collection<int, UserRoleEnum> $collection
      */
-    public function setRoles(ArrayCollection $collection): static
+    public function setRoles(Collection $collection): static
     {
         $this->roles = $collection;
 
         return $this;
     }
 
-    /**
-     * @return TodoCollection<array-key, Todo>
-     */
     public function getTodos(): TodoCollection
     {
         return $this->todos;
     }
 
-    /**
-     * @param TodoCollection<array-key, Todo> $todos
-     */
     public function setTodos(TodoCollection $todos): static
     {
         $this->todos = $todos;
