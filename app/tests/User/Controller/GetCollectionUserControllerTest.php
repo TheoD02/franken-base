@@ -7,7 +7,7 @@ namespace App\Tests\User\Controller;
 use App\Factory\UserFactory;
 use App\Tests\ControllerTestCase;
 use App\Tests\Helper\ProxyToObjectHelper;
-use App\User\Controller\GetCollectionUserController;
+use App\User\Controller\GetUserCollectionController;
 use App\User\Serialization\UserGroups;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -16,7 +16,7 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 /**
  * @internal
  */
-#[CoversClass(GetCollectionUserController::class)]
+#[CoversClass(GetUserCollectionController::class)]
 class GetCollectionUserControllerTest extends ControllerTestCase
 {
     use ResetDatabase;
@@ -27,7 +27,7 @@ class GetCollectionUserControllerTest extends ControllerTestCase
         $userCollection = new ArrayCollection(ProxyToObjectHelper::proxyToObject(UserFactory::createMany(2)));
 
         // Act
-        $this->requestAction(GetCollectionUserController::class, '/api/users');
+        $this->requestAction(GetUserCollectionController::class, '/api/users');
 
         // Assert
         $this->assertResponseStatusCodeSame(200);

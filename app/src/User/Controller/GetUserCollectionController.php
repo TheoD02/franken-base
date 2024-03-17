@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
+use App\Todo\Service\TodoService;
+use App\Todo\ValueObject\Todo;
 use App\Trait\EntityManagerTrait;
 use App\User\Api\UserCollectionMeta;
 use App\User\Api\UserFilterQuery;
@@ -25,7 +27,7 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryString;
  */
 #[AsController]
 #[ApiRoute('/api/users', httpMethodEnum: HttpMethodEnum::GET)]
-class GetCollectionUserController
+class GetUserCollectionController
 {
     use EntityManagerTrait;
 

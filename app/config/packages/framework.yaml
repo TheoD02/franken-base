@@ -18,6 +18,15 @@ framework:
     php_errors:
         log: true
 
+    http_client:
+        scoped_clients:
+            json_placeholder.client:
+                base_uri: 'https://jsonplaceholder.typicode.com'
+                timeout: 5.0
+                headers:
+                    Accept: 'application/json'
+                    Content-Type: 'application/json'
+
 when@test:
     framework:
         test: true

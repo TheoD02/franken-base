@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace App\User\Entity;
 
+use App\Attribute\LazyFetchResource;
+use App\Todo\Service\TodoService;
+use App\Todo\ValueObject\Todo;
+use App\Todo\ValueObject\TodoCollection;
 use App\User\Enum\UserRoleEnum;
 use App\User\Repository\UserRepository;
 use App\User\ValueObject\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Module\Api\Adapter\ApiDataInterface;
 use Module\Api\Doctrine\CollectionType;
+use Module\Api\ValueObject\Identifier;
+use Module\Api\ValueObject\IdentifierCollection;
 use Symfony\Component\Mapper\Attributes\Map;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,11 +45,20 @@ class UserEntity implements ApiDataInterface
      * @var ArrayCollection<array-key, UserRoleEnum> $roles
      */
     #[ORM\Column(type: CollectionType::NAME)]
-    private ArrayCollection $roles;
+    private Collection $roles;
+
+    /**
+     * @var IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo> $todos
+     */
+    #[LazyFetchResource(TodoCollection::class)]
+    #[ORM\Column(type: CollectionType::NAME)]
+    #[Map(to: 'todos')]
+    private Collection $todos;
 
     public function __construct()
     {
         $this->roles = new ArrayCollection([UserRoleEnum::USER]);
+        $this->todos = new IdentifierCollection([new Identifier(1)]);
     }
 
     public function getId(): ?int
@@ -101,6 +117,23 @@ class UserEntity implements ApiDataInterface
     {
         $this->roles = $collection;
 
+        return $this;
+    }
+
+    /**
+     * @return IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo>
+     */
+    public function getTodos(): IdentifierCollection|TodoCollection
+    {
+        return $this->todos;
+    }
+
+    /**
+     * @param IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo> $todos
+     */
+    public function setTodos(IdentifierCollection|TodoCollection $todos): static
+    {
+        $this->todos = $todos;
         return $this;
     }
 }

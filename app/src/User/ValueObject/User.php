@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace App\User\ValueObject;
 
+use App\Todo\ValueObject\Todo;
+use App\Todo\ValueObject\TodoCollection;
 use App\User\Enum\UserRoleEnum;
 use App\User\Serialization\UserGroups;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Module\Api\Adapter\ApiDataInterface;
+use Module\Api\ValueObject\Identifier;
+use Module\Api\ValueObject\IdentifierCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -30,11 +35,18 @@ class User implements ApiDataInterface
      * @var ArrayCollection<array-key, UserRoleEnum> $roles
      */
     #[Groups([UserGroups::READ, UserGroups::READ_ROLES])]
-    private ArrayCollection $roles;
+    private Collection $roles;
+
+    /**
+     * @var TodoCollection<array-key, Todo> $todos
+     */
+    #[Groups([UserGroups::READ])]
+    private Collection $todos;
 
     public function __construct()
     {
         $this->roles = new ArrayCollection([UserRoleEnum::USER]);
+        $this->todos = new TodoCollection();
     }
 
     public function getId(): ?int
@@ -105,6 +117,24 @@ class User implements ApiDataInterface
     public function setRoles(ArrayCollection $collection): static
     {
         $this->roles = $collection;
+
+        return $this;
+    }
+
+    /**
+     * @return IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo>
+     */
+    public function getTodos(): IdentifierCollection|TodoCollection
+    {
+        return $this->todos;
+    }
+
+    /**
+     * @param IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo> $todos
+     */
+    public function setTodos(IdentifierCollection|TodoCollection $todos): static
+    {
+        $this->todos = $todos;
 
         return $this;
     }

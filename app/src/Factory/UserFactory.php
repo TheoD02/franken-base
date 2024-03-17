@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
+use App\Todo\ValueObject\Todo;
 use App\User\Entity\UserEntity;
 use App\User\Enum\UserRoleEnum;
 use App\User\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Module\Api\ValueObject\Identifier;
+use Module\Api\ValueObject\IdentifierCollection;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -41,6 +44,7 @@ final class UserFactory extends ModelFactory
             'firstName' => self::faker()->firstName(),
             'lastName' => self::faker()->lastName(),
             'roles' => new ArrayCollection([UserRoleEnum::USER]),
+            'todos' => self::faker()->boolean(70) ? new IdentifierCollection([new Identifier(random_int(1, 200))]) : new IdentifierCollection(),
         ];
     }
 

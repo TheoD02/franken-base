@@ -9,6 +9,6 @@ home:
 
 controllers:
     resource:
-        path: ../src/User/Controller/
-        namespace: App\User\Controller
+        path: ../src/
+        namespace: App\
     type: attribute

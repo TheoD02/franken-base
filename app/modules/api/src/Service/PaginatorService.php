@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Module\Api\Service;
 
 use App\Service\AutoMapper;
+use App\Service\FetcherService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
@@ -15,7 +16,8 @@ class PaginatorService
 {
     public function __construct(
         private readonly PaginatorInterface $paginator,
-        private readonly AutoMapper $mapper
+        private readonly AutoMapper $mapper,
+        private readonly FetcherService $fetcherService,
     ) {
     }
 
@@ -47,6 +49,10 @@ class PaginatorService
         }
 
         $items = $this->paginator->paginate($queryBuilder)->getItems();
+
+        foreach ($items as $item) {
+            $this->fetcherService->fetchRemoteResourceFor($item);
+        }
 
         if ($mappedClass !== null) {
             $items = $this->mapper->mapMultiple($items, $mappedClass);
