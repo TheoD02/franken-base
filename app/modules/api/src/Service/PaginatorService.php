@@ -11,6 +11,7 @@ use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 use Module\Api\Adapter\ORMFilterQueryInterface;
+use Module\Api\Dto\PaginationFilterQuery;
 
 class PaginatorService
 {
@@ -25,8 +26,8 @@ class PaginatorService
      * @template T of ApiDataCollectionInterface
      *
      * @param array<ORMFilterQueryInterface|null> $filterQueryList
-     * @param class-string<T>                     $collectionFqcn
-     * @param class-string|null                   $mappedClass
+     * @param class-string<T> $collectionFqcn
+     * @param class-string|null $mappedClass
      *
      * @return T
      */
@@ -34,7 +35,8 @@ class PaginatorService
         QueryBuilder $queryBuilder,
         string $collectionFqcn,
         ?string $mappedClass = null,
-        array $filterQueryList = []
+        array $filterQueryList = [],
+        ?PaginationFilterQuery $paginationFilterQuery = null
     ): ApiDataCollectionInterface {
         foreach ($filterQueryList as $filterQuery) {
             $filterQuery?->applyFilter($queryBuilder);
@@ -48,7 +50,8 @@ class PaginatorService
             throw new \InvalidArgumentException(sprintf('The collection class "%s" must be a subclass of "%s".', $collectionFqcn, ArrayCollection::class));
         }
 
-        $items = $this->paginator->paginate($queryBuilder)->getItems();
+        $paginationFilterQuery ??= new PaginationFilterQuery();
+        $items = $this->paginator->paginate($queryBuilder, $paginationFilterQuery->page, $paginationFilterQuery->limit)->getItems();
 
         foreach ($items as $item) {
             $this->fetcherService->fetchRemoteResourceFor($item);

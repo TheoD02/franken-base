@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\User\Service;
 
 use App\Service\AutoMapper;
-use App\User\Api\UserFilterQuery;
 use App\User\Controller\CreateUserController\CreateUserPayload;
+use App\User\Controller\GetUserCollectionController\UserFilterQuery;
 use App\User\Controller\UpdateUserController\UpdateUserPayload;
 use App\User\Entity\UserEntity;
 use App\User\Enum\UserRoleEnum;
@@ -15,6 +15,7 @@ use App\User\ValueObject\User;
 use App\User\ValueObject\UserCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Module\Api\Dto\PaginationFilterQuery;
 use Module\Api\Service\PaginatorService;
 
 class UserService
@@ -70,13 +71,11 @@ class UserService
     /**
      * @return UserCollection<array-key, User>
      */
-    public function paginate(?UserFilterQuery $userFilterQuery = null): UserCollection
+    public function paginate(?UserFilterQuery $userFilterQuery = null, ?PaginationFilterQuery $paginationFilterQuery = null): UserCollection
     {
         $queryBuilder = $this->em->getRepository(UserEntity::class)->createQueryBuilder('entity');
 
-        $userFilterQuery?->applyFilter($queryBuilder);
-
-        return $this->paginatorService->paginate($queryBuilder, UserCollection::class, User::class, [$userFilterQuery]);
+        return $this->paginatorService->paginate($queryBuilder, UserCollection::class, User::class, [$userFilterQuery], $paginationFilterQuery);
     }
 
     public function delete(int $id): void

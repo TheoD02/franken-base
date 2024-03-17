@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\User\ValueObject;
 
-use App\User\Api\UserCollectionMeta;
 use Doctrine\Common\Collections\ArrayCollection;
 use Module\Api\Adapter\ApiDataCollectionInterface;
 

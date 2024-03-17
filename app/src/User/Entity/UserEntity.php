@@ -48,7 +48,7 @@ class UserEntity implements ApiDataInterface
     private Collection $roles;
 
     /**
-     * @var IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo> $todos
+     * @var IdentifierCollection<array-key, Identifier>|TodoCollection<array-key, Todo> $todos Here should only accept IdentifierCollection, but please forbid fetching the collection from Entity
      */
     #[LazyFetchResource(TodoCollection::class)]
     #[ORM\Column(type: CollectionType::NAME)]
@@ -58,7 +58,7 @@ class UserEntity implements ApiDataInterface
     public function __construct()
     {
         $this->roles = new ArrayCollection([UserRoleEnum::USER]);
-        $this->todos = new IdentifierCollection([new Identifier(1)]);
+        $this->todos = new IdentifierCollection();
     }
 
     public function getId(): ?int

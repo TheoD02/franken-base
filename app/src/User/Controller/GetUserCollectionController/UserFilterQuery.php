@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\User\Api;
+namespace App\User\Controller\GetUserCollectionController;
 
 use Doctrine\ORM\QueryBuilder;
 use Module\Api\Adapter\ORMFilterQueryInterface;
