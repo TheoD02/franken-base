@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Attribute\LazyFetchResource;
@@ -18,19 +20,20 @@ class FetcherService
     {
         $reflection = new \ReflectionClass($object);
 
-        foreach ($reflection->getProperties() as $property) {
-            if ($property->isInitialized($object) === false) {
-                $class = $property->getType()?->getName();
+        foreach ($reflection->getProperties() as $reflectionProperty) {
+            if ($reflectionProperty->isInitialized($object) === false) {
+                $class = $reflectionProperty->getType()?->getName();
                 if ($class === null) {
                     continue;
                 }
-                $property->setValue($object, new $class());
+
+                $reflectionProperty->setValue($object, new $class());
                 continue;
             }
 
-            $attributes = $property->getAttributes(LazyFetchResource::class);
+            $attributes = $reflectionProperty->getAttributes(LazyFetchResource::class);
 
-            if (count($attributes) === 0) {
+            if (\count($attributes) === 0) {
                 continue;
             }
 
@@ -51,11 +54,11 @@ class FetcherService
                 continue;
             }
 
-            $ids = array_map(static fn(Identifier $identifier) => $identifier->identifier, $property->getValue($object)->toArray());
+            $ids = array_map(static fn (Identifier $identifier): int|string => $identifier->identifier, $reflectionProperty->getValue($object)->toArray());
             $existing = $collectionReflection->getStaticPropertyValue('globalIdentifiers', []);
             $collectionReflection->setStaticPropertyValue('globalIdentifiers', array_merge($existing, $ids));
             $collectionInstance->setIdentifiers(array_unique($ids));
-            $property->setValue($object, $collectionInstance);
+            $reflectionProperty->setValue($object, $collectionInstance);
         }
     }
 }

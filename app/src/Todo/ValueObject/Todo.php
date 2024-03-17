@@ -28,9 +28,10 @@ class Todo implements ApiDataInterface
         return $this->userId;
     }
 
-    public function setUserId(int $userId): Todo
+    public function setUserId(int $userId): self
     {
         $this->userId = $userId;
+
         return $this;
     }
 
@@ -39,9 +40,10 @@ class Todo implements ApiDataInterface
         return $this->id;
     }
 
-    public function setId(int $id): Todo
+    public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -50,9 +52,10 @@ class Todo implements ApiDataInterface
         return $this->title;
     }
 
-    public function setTitle(string $title): Todo
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -61,9 +64,10 @@ class Todo implements ApiDataInterface
         return $this->completed;
     }
 
-    public function setCompleted(bool $completed): Todo
+    public function setCompleted(bool $completed): self
     {
         $this->completed = $completed;
+
         return $this;
     }
 }

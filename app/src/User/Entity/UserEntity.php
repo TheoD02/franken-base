@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\User\Entity;
 
 use App\Attribute\LazyFetchResource;
-use App\Todo\Service\TodoService;
 use App\Todo\ValueObject\Todo;
 use App\Todo\ValueObject\TodoCollection;
 use App\User\Enum\UserRoleEnum;
@@ -134,6 +133,7 @@ class UserEntity implements ApiDataInterface
     public function setTodos(IdentifierCollection|TodoCollection $todos): static
     {
         $this->todos = $todos;
+
         return $this;
     }
 }

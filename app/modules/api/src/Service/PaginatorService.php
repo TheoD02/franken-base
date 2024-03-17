@@ -26,8 +26,8 @@ class PaginatorService
      * @template T of ApiDataCollectionInterface
      *
      * @param array<ORMFilterQueryInterface|null> $filterQueryList
-     * @param class-string<T> $collectionFqcn
-     * @param class-string|null $mappedClass
+     * @param class-string<T>                     $collectionFqcn
+     * @param class-string|null                   $mappedClass
      *
      * @return T
      */

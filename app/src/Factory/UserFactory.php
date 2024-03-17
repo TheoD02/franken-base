@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Todo\ValueObject\Todo;
 use App\User\Entity\UserEntity;
 use App\User\Enum\UserRoleEnum;
 use App\User\Repository\UserRepository;

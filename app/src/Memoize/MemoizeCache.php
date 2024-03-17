@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Memoize;
 
 final class MemoizeCache
 {
     private static self $instance;
 
-    private array $cache;
+    private array $cache = [];
 
-    /** @var \WeakMap<object,\ArrayObject<string,mixed>> */
+    /**
+     * @var \WeakMap<object,\ArrayObject<string,mixed>>
+     */
     private \WeakMap $weakMap;
 
     private function __construct()
     {
-        $this->cache = [];
         $this->weakMap = new \WeakMap();
     }
 
@@ -31,11 +34,7 @@ final class MemoizeCache
      */
     public function get(object $object, string $key, callable $factory, bool $weak = false): mixed
     {
-        if ($weak) {
-            $array = $this->weakMap[$object] ??= new \ArrayObject();
-        } else {
-            $array = $this->cache[$object::class] ??= new \ArrayObject();
-        }
+        $array = $weak ? $this->weakMap[$object] ??= new \ArrayObject() : ($this->cache[$object::class] ??= new \ArrayObject());
 
         if ($array->offsetExists($key)) {
             return $array[$key];
@@ -46,11 +45,11 @@ final class MemoizeCache
 
     public function clear(object $object, ?string $key = null): void
     {
-        if (!isset($this->cache[$object::class])) {
+        if (! isset($this->cache[$object::class])) {
             return;
         }
 
-        if ($key) {
+        if ($key !== null && $key !== '' && $key !== '0') {
             unset($this->cache[$object::class][$key]);
 
             return;

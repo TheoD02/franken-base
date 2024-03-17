@@ -42,6 +42,7 @@ class ConstraintNormalizer implements NormalizerInterface, SerializerAwareInterf
     /**
      * @return array<string, bool>
      */
+    #[\Override]
     public function getSupportedTypes(?string $format): array
     {
         return [

@@ -28,6 +28,7 @@ class AbstractHttpExceptionNormalizer implements NormalizerInterface, Serializer
     /**
      * @return array<string, bool>
      */
+    #[\Override]
     public function getSupportedTypes(?string $format): array
     {
         return [

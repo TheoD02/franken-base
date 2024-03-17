@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Module\Api\Dto;
 
-use Doctrine\ORM\QueryBuilder;
-use Module\Api\Adapter\ORMFilterQueryInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PaginationFilterQuery

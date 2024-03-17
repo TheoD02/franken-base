@@ -10,7 +10,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class AutoMapper
 {
-    private ObjectMapper $mapper;
+    private readonly ObjectMapper $mapper;
 
     public function __construct()
     {

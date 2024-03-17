@@ -1,8 +1,8 @@
 <?php
 
-namespace Module\Api\Adapter;
+declare(strict_types=1);
 
-use Doctrine\Common\Collections\ArrayCollection;
+namespace Module\Api\Adapter;
 
 interface FetcheableInterface
 {

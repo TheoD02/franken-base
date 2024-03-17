@@ -21,12 +21,13 @@ class TodoService
 
     public function getTodos(bool $lazy = false): TodoCollection
     {
-        if ($lazy === true) {
+        if ($lazy) {
             return new TodoCollection($this);
         }
 
         $collection = new TodoCollection($this);
         $collection->doInitialize();
+
         return $collection;
     }
 
@@ -36,12 +37,14 @@ class TodoService
     public function fetchTodos(array $identifiers): array
     {
         $query = null;
-        if ($identifiers) {
-            $query = http_build_query(['id' => $identifiers]);
+        if ($identifiers !== []) {
+            $query = http_build_query([
+                'id' => $identifiers,
+            ]);
         }
 
         $url = '/todos';
-        if ($query) {
+        if ($query !== null && $query !== '' && $query !== '0') {
             $url .= '?' . $query;
         }
 

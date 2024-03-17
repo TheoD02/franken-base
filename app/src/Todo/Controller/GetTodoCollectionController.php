@@ -28,8 +28,8 @@ class GetTodoCollectionController
     #[OpenApiMeta(GenericCollectionMetadata::class)]
     public function __invoke(TodoService $todoService): ApiResponse
     {
-        $todoCollection = $todoService->getTodos();
+        $todos = $todoService->getTodos();
 
-        return new ApiResponse(data: $todoCollection, apiMetadata: $todoCollection->getMeta(), groups: [TodoGroups::READ]);
+        return new ApiResponse(data: $todos, apiMetadata: $todos->getMeta(), groups: [TodoGroups::READ]);
     }
 }

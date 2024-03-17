@@ -29,9 +29,10 @@ class TodoCollection extends AbstractLazyCollection implements ApiDataCollection
 
     private array $identifiers = [];
 
-    public function __construct(private readonly ?TodoService $todoService = null)
-    {
-        if ($this->todoService === null) {
+    public function __construct(
+        private readonly ?TodoService $todoService = null
+    ) {
+        if (! $this->todoService instanceof TodoService) {
             $this->collection = new ArrayCollection();
             $this->initialized = true;
         }
@@ -50,17 +51,17 @@ class TodoCollection extends AbstractLazyCollection implements ApiDataCollection
     }
 
     #[\Override]
-    public function doInitialize(): void
+    protected function doInitialize(): void
     {
-        if ($this->todoService === null) {
+        if (! $this->todoService instanceof TodoService) {
             return;
         }
 
-        $identifiersHash = md5(json_encode(self::$globalIdentifiers, JSON_THROW_ON_ERROR));
-        $todos = $this->memoize(fn () => $this->todoService->fetchTodos(self::$globalIdentifiers), 'todos' . $identifiersHash);
+        $identifiersHash = md5(json_encode(self::$globalIdentifiers, \JSON_THROW_ON_ERROR));
+        $todos = $this->memoize(fn (): array => $this->todoService->fetchTodos(self::$globalIdentifiers), 'todos' . $identifiersHash);
 
-        if ($this->identifiers) {
-            $todos = array_filter($todos, fn (Todo $todo) => in_array($todo->getId(), $this->identifiers, true));
+        if ($this->identifiers !== []) {
+            $todos = array_filter($todos, fn (Todo $todo): bool => \in_array($todo->getId(), $this->identifiers, true));
         }
 
         $this->collection = new static();
