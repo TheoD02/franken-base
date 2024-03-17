@@ -40,6 +40,7 @@ final class MemoizeCache
         if ($weak && isset($this->weakMap[$object]) === false) {
             $this->weakMap[$object] = new \ArrayObject();
         }
+
         if ($weak === false && isset($this->cache[$object::class]) === false) {
             $this->cache[$object::class] = new \ArrayObject();
         }

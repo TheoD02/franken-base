@@ -29,7 +29,7 @@ class AutoMapper
      */
     public function map(object $source, string $targetClassFqcn): object
     {
-        /** @var T $object */
+        // @phpstan-ignore-next-line
         return $this->mapper->map($source, $targetClassFqcn);
     }
 
@@ -42,7 +42,7 @@ class AutoMapper
      */
     public function mapToObject(object $source, object $targetClass): object
     {
-        /** @var T $object */
+        // @phpstan-ignore-next-line
         return $this->mapper->map($source, $targetClass);
     }
 
