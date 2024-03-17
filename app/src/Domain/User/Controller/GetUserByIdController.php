@@ -7,7 +7,6 @@ namespace App\Domain\User\Controller;
 use App\Domain\User\Serialization\UserGroups;
 use App\Domain\User\Service\UserService;
 use App\Domain\User\ValueObject\User;
-use App\Trait\EntityManagerTrait;
 use Module\Api\Attribut\ApiRoute;
 use Module\Api\Attribut\OpenApiResponse;
 use Module\Api\Dto\ApiResponse;

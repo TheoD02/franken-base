@@ -21,10 +21,9 @@ doctrine:
       User:
         type: attribute
         is_bundle: false
-        dir: '%kernel.project_dir%/src/User/Entity'
-        prefix: 'App\User\Entity'
+        dir: '%kernel.project_dir%/src/Domain/User/Entity'
+        prefix: 'App\Domain\User\Entity'
         alias: UserEntity
-
 
 when@test:
   doctrine:
