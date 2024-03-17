@@ -69,7 +69,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/soyuka/mapper"
+      "url": "git@github.com:TheoD02/mapper.git"
     }
   ],
   "minimum-stability": "stable",

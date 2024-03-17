@@ -12,15 +12,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UpdateUserPayload
 {
     #[Assert\NotBlank]
-    #[Map(if: 'is_string')]
     public string $firstName;
 
     #[Assert\NotBlank]
-    #[Map(if: 'is_string')]
     public string $lastName;
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Map(if: 'is_string')]
     public string $email;
 }

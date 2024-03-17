@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b301150b6a9f61c28569dc67a2ea9902",
+    "content-hash": "9afe2bfbe0376f2d1dad13c325ad4b89",
     "packages": [
         {
             "name": "archtechx/enums",
@@ -5450,13 +5450,13 @@
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/soyuka/mapper.git",
-                "reference": "fb2448d9ca20cacc9723a23c3de375dc0906deb0"
+                "url": "https://github.com/TheoD02/mapper.git",
+                "reference": "8e6f378d74da809954bc1e2cbbbfd6465b388751"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/soyuka/mapper/zipball/fb2448d9ca20cacc9723a23c3de375dc0906deb0",
-                "reference": "fb2448d9ca20cacc9723a23c3de375dc0906deb0",
+                "url": "https://api.github.com/repos/TheoD02/mapper/zipball/8e6f378d74da809954bc1e2cbbbfd6465b388751",
+                "reference": "8e6f378d74da809954bc1e2cbbbfd6465b388751",
                 "shasum": ""
             },
             "require": {
@@ -5495,10 +5495,9 @@
             "description": "Object to object mapper",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/soyuka/mapper/tree/main",
-                "issues": "https://github.com/soyuka/mapper/issues"
+                "source": "https://github.com/TheoD02/mapper/tree/main"
             },
-            "time": "2024-03-06T08:49:58+00:00"
+            "time": "2024-03-17T00:02:41+00:00"
         },
         {
             "name": "symfony/messenger",
