@@ -21,7 +21,7 @@ class CollectionType extends JsonType
             throw new \InvalidArgumentException('The value must be an instance of Collection.');
         }
 
-        if ($value instanceof ArrayCollection === false) {
+        if (is_a($value, Collection::class, true) === false) {
             throw new \InvalidArgumentException('The value must be an instance of Collection.');
         }
 
@@ -73,6 +73,12 @@ class CollectionType extends JsonType
         $collectionFqcn = $data['fqcn'];
         //        $ofFqcn = $data['of'];
         /** @var Collection<array-key, mixed> $collection */
+        if (method_exists($collectionFqcn, 'empty')) {
+            $collection = $collectionFqcn::empty();
+        } else {
+            $collection = new $collectionFqcn();
+        }
+
         $collection = new $collectionFqcn();
 
         //        if (! empty($data['identifiers'])) {
