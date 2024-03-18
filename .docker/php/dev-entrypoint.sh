@@ -5,7 +5,7 @@ set -e
 if [ -f "/app/composer.json" ]; then
     echo "Installing project dependencies"
     cd /app
-    composer install # this is currently installed as root, see how to run this part as www-data
+    composer install || echo "Failed to install project dependencies" # this is currently installed as root, see how to run this part as www-data
 fi
 
 
@@ -19,7 +19,7 @@ do
     if [ -d "$tool_directory" ] && [ -f "$tool_directory/composer.json" ]; then
         echo "Installing $tool"
         cd "$tool_directory"
-        composer install
+        composer install || echo "Failed to install $tool"
     fi
 done
 
