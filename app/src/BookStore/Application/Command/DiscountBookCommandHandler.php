@@ -11,14 +11,15 @@ use App\Shared\Application\Command\AsCommandHandler;
 #[AsCommandHandler]
 final readonly class DiscountBookCommandHandler
 {
-    public function __construct(private BookRepositoryInterface $bookRepository)
-    {
+    public function __construct(
+        private BookRepositoryInterface $bookRepository
+    ) {
     }
 
     public function __invoke(DiscountBookCommand $command): void
     {
         $book = $this->bookRepository->ofId($command->id);
-        if (null === $book) {
+        if ($book === null) {
             throw new MissingBookException($command->id);
         }
 

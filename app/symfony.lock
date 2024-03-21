@@ -62,6 +62,18 @@
             "config/routes/dev/pentatrion_vite.php"
         ]
     },
+    "php-http/discovery": {
+        "version": "1.19",
+        "recipe": {
+            "repo": "github.com/schranz-php-recipes/symfony-recipes-php",
+            "branch": "main",
+            "version": "1.18",
+            "ref": "d694296d3fa26625dfe153f66599f80e902b821a"
+        },
+        "files": [
+            "config/packages/http_discovery.php"
+        ]
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {
@@ -84,6 +96,18 @@
             "version": "0.19",
             "ref": "3c3daab46226c37fc14e10faf81df737a3039d96"
         }
+    },
+    "sentry/sentry-symfony": {
+        "version": "4.14",
+        "recipe": {
+            "repo": "github.com/schranz-php-recipes/symfony-recipes-php-contrib",
+            "branch": "main",
+            "version": "4.6",
+            "ref": "2cd8fff86fb0a70d3a1e0cf1cfe097a5ba6981c6"
+        },
+        "files": [
+            "config/packages/sentry.php"
+        ]
     },
     "symfony/console": {
         "version": "6.2",

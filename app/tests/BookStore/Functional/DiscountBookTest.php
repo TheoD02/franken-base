@@ -12,28 +12,31 @@ use App\Shared\Application\Command\CommandBusInterface;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * @internal
+ */
 final class DiscountBookTest extends KernelTestCase
 {
     /**
-     * @dataProvider applyADiscountOnBookDataProvider
+     * @dataProvider provideApplyADiscountOnBookCases
      */
     public function testApplyADiscountOnBook(int $initialAmount, int $discount, int $expectedAmount): void
     {
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         /** @var CommandBusInterface $commandBus */
-        $commandBus = static::getContainer()->get(CommandBusInterface::class);
+        $commandBus = self::getContainer()->get(CommandBusInterface::class);
 
         $book = DummyBookFactory::createBook(price: $initialAmount);
         $bookRepository->add($book);
 
         $commandBus->dispatch(new DiscountBookCommand($book->id(), new Discount($discount)));
 
-        static::assertEquals(new Price($expectedAmount), $bookRepository->ofId($book->id())->price());
+        self::assertEquals(new Price($expectedAmount), $bookRepository->ofId($book->id())->price());
     }
 
-    public static function applyADiscountOnBookDataProvider(): iterable
+    public static function provideApplyADiscountOnBookCases(): iterable
     {
         yield [100, 0, 100];
         yield [100, 20, 80];

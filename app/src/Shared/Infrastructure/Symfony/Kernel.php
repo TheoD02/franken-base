@@ -35,11 +35,15 @@ final class Kernel extends BaseKernel
     protected function build(ContainerBuilder $container): void
     {
         $container->registerAttributeForAutoconfiguration(AsQueryHandler::class, static function (ChildDefinition $definition): void {
-            $definition->addTag('messenger.message_handler', ['bus' => 'query.bus']);
+            $definition->addTag('messenger.message_handler', [
+                'bus' => 'query.bus',
+            ]);
         });
 
         $container->registerAttributeForAutoconfiguration(AsCommandHandler::class, static function (ChildDefinition $definition): void {
-            $definition->addTag('messenger.message_handler', ['bus' => 'command.bus']);
+            $definition->addTag('messenger.message_handler', [
+                'bus' => 'command.bus',
+            ]);
         });
     }
 }

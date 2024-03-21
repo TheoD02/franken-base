@@ -10,14 +10,17 @@ use App\BookStore\Domain\ValueObject\Price;
 use App\BookStore\Infrastructure\ApiPlatform\Resource\BookResource;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 
+/**
+ * @internal
+ */
 final class DiscountBookTest extends ApiTestCase
 {
     public function testApplyADiscountOnBook(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         $book = DummyBookFactory::createBook(price: 1000);
         $bookRepository->add($book);
@@ -28,19 +31,21 @@ final class DiscountBookTest extends ApiTestCase
             ],
         ]);
 
-        static::assertResponseIsSuccessful();
-        static::assertMatchesResourceItemJsonSchema(BookResource::class);
-        static::assertJsonContains(['price' => 800]);
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceItemJsonSchema(BookResource::class);
+        self::assertJsonContains([
+            'price' => 800,
+        ]);
 
-        static::assertEquals(new Price(800), $bookRepository->ofId($book->id())->price());
+        self::assertEquals(new Price(800), $bookRepository->ofId($book->id())->price());
     }
 
     public function testValidateDiscountAmount(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         $book = DummyBookFactory::createBook(price: 1000);
         $bookRepository->add($book);
@@ -51,13 +56,16 @@ final class DiscountBookTest extends ApiTestCase
             ],
         ]);
 
-        static::assertResponseIsUnprocessable();
-        static::assertJsonContains([
+        self::assertResponseIsUnprocessable();
+        self::assertJsonContains([
             'violations' => [
-                ['propertyPath' => 'discountPercentage', 'message' => 'This value should be between 0 and 100.'],
+                [
+                    'propertyPath' => 'discountPercentage',
+                    'message' => 'This value should be between 0 and 100.',
+                ],
             ],
         ]);
 
-        static::assertEquals(new Price(1000), $bookRepository->ofId($book->id())->price());
+        self::assertEquals(new Price(1000), $bookRepository->ofId($book->id())->price());
     }
 }

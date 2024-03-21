@@ -12,7 +12,8 @@ use App\Shared\Application\Query\QueryInterface;
  */
 final readonly class FindCheapestBooksQuery implements QueryInterface
 {
-    public function __construct(public int $size = 10)
-    {
+    public function __construct(
+        public int $size = 10
+    ) {
     }
 }

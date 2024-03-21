@@ -15,17 +15,20 @@ use App\BookStore\Domain\ValueObject\Price;
 use App\Shared\Application\Command\CommandBusInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * @internal
+ */
 final class CreateBookTest extends KernelTestCase
 {
     public function testCreateBook(): void
     {
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         /** @var CommandBusInterface $commandBus */
-        $commandBus = static::getContainer()->get(CommandBusInterface::class);
+        $commandBus = self::getContainer()->get(CommandBusInterface::class);
 
-        static::assertEmpty($bookRepository);
+        self::assertEmpty($bookRepository);
 
         $commandBus->dispatch(new CreateBookCommand(
             new BookName('name'),
@@ -35,15 +38,15 @@ final class CreateBookTest extends KernelTestCase
             new Price(1000),
         ));
 
-        static::assertCount(1, $bookRepository);
+        self::assertCount(1, $bookRepository);
 
         /** @var Book $book */
         $book = array_values(iterator_to_array($bookRepository))[0];
 
-        static::assertEquals(new BookName('name'), $book->name());
-        static::assertEquals(new BookDescription('description'), $book->description());
-        static::assertEquals(new Author('author'), $book->author());
-        static::assertEquals(new BookContent('content'), $book->content());
-        static::assertEquals(new Price(1000), $book->price());
+        self::assertEquals(new BookName('name'), $book->name());
+        self::assertEquals(new BookDescription('description'), $book->description());
+        self::assertEquals(new Author('author'), $book->author());
+        self::assertEquals(new BookContent('content'), $book->content());
+        self::assertEquals(new Price(1000), $book->price());
     }
 }

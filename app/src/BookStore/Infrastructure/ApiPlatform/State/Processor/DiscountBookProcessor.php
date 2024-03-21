@@ -34,10 +34,7 @@ final readonly class DiscountBookProcessor implements ProcessorInterface
         $bookResource = $context['previous_data'] ?? null;
         Assert::isInstanceOf($bookResource, BookResource::class);
 
-        $command = new DiscountBookCommand(
-            new BookId($bookResource->id),
-            new Discount($data->discountPercentage),
-        );
+        $command = new DiscountBookCommand(new BookId($bookResource->id), new Discount($data->discountPercentage));
 
         $this->commandBus->dispatch($command);
 

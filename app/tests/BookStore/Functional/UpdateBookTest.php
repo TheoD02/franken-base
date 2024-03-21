@@ -15,23 +15,20 @@ use App\Shared\Application\Command\CommandBusInterface;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * @internal
+ */
 final class UpdateBookTest extends KernelTestCase
 {
     public function testUpdateBook(): void
     {
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         /** @var CommandBusInterface $commandBus */
-        $commandBus = static::getContainer()->get(CommandBusInterface::class);
+        $commandBus = self::getContainer()->get(CommandBusInterface::class);
 
-        $initialBook = DummyBookFactory::createBook(
-            name: 'name',
-            description: 'description',
-            author: 'author',
-            content: 'content',
-            price: 1000,
-        );
+        $initialBook = DummyBookFactory::createBook(name: 'name', description: 'description', author: 'author', content: 'content', price: 1000);
 
         $bookRepository->add($initialBook);
 
@@ -44,10 +41,10 @@ final class UpdateBookTest extends KernelTestCase
 
         $book = $bookRepository->ofId($initialBook->id());
 
-        static::assertEquals(new BookName('newName'), $book->name());
-        static::assertEquals(new BookDescription('description'), $book->description());
-        static::assertEquals(new Author('author'), $book->author());
-        static::assertEquals(new BookContent('newContent'), $book->content());
-        static::assertEquals(new Price(2000), $book->price());
+        self::assertEquals(new BookName('newName'), $book->name());
+        self::assertEquals(new BookDescription('description'), $book->description());
+        self::assertEquals(new Author('author'), $book->author());
+        self::assertEquals(new BookContent('newContent'), $book->content());
+        self::assertEquals(new Price(2000), $book->price());
     }
 }

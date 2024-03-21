@@ -38,7 +38,7 @@ final readonly class BookCollectionProvider implements ProviderInterface
             $limit = $this->pagination->getLimit($operation, $context);
         }
 
-        $models = $this->queryBus->ask(new FindBooksQuery(null !== $author ? new Author($author) : null, $offset, $limit));
+        $models = $this->queryBus->ask(new FindBooksQuery($author !== null ? new Author($author) : null, $offset, $limit));
 
         $resources = [];
         foreach ($models as $model) {

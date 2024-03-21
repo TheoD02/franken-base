@@ -9,14 +9,17 @@ use App\BookStore\Domain\Repository\BookRepositoryInterface;
 use App\BookStore\Domain\ValueObject\Author;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 
+/**
+ * @internal
+ */
 final class AnonymizeBooksTest extends ApiTestCase
 {
     public function testAnonymizeAuthorOfBooks(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         for ($i = 0; $i < 10; ++$i) {
             $bookRepository->add(DummyBookFactory::createBook(author: sprintf('author_%d', $i)));
@@ -28,8 +31,8 @@ final class AnonymizeBooksTest extends ApiTestCase
             ],
         ]);
 
-        static::assertResponseStatusCodeSame(202);
-        static::assertEmpty($response->getContent());
+        self::assertResponseStatusCodeSame(202);
+        self::assertEmpty($response->getContent());
 
         foreach ($bookRepository as $book) {
             self::assertEquals(new Author('anon.'), $book->author());

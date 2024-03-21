@@ -11,19 +11,14 @@ use App\Shared\Application\Command\AsCommandHandler;
 #[AsCommandHandler]
 final readonly class CreateBookCommandHandler
 {
-    public function __construct(private BookRepositoryInterface $bookRepository)
-    {
+    public function __construct(
+        private BookRepositoryInterface $bookRepository
+    ) {
     }
 
     public function __invoke(CreateBookCommand $command): Book
     {
-        $book = new Book(
-            $command->name,
-            $command->description,
-            $command->author,
-            $command->content,
-            $command->price,
-        );
+        $book = new Book($command->name, $command->description, $command->author, $command->content, $command->price);
 
         $this->bookRepository->add($book);
 

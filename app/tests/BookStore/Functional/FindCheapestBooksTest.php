@@ -11,15 +11,18 @@ use App\Shared\Application\Query\QueryBusInterface;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * @internal
+ */
 final class FindCheapestBooksTest extends KernelTestCase
 {
     public function testReturnOnlyTheCheapestBooks(): void
     {
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         /** @var QueryBusInterface $queryBus */
-        $queryBus = static::getContainer()->get(QueryBusInterface::class);
+        $queryBus = self::getContainer()->get(QueryBusInterface::class);
 
         for ($i = 0; $i < 5; ++$i) {
             $bookRepository->add(DummyBookFactory::createBook());
@@ -27,16 +30,16 @@ final class FindCheapestBooksTest extends KernelTestCase
 
         $cheapestBooks = $queryBus->ask(new FindCheapestBooksQuery(3));
 
-        static::assertCount(3, $cheapestBooks);
+        self::assertCount(3, $cheapestBooks);
     }
 
     public function testReturnBooksSortedByPrice(): void
     {
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         /** @var QueryBusInterface $queryBus */
-        $queryBus = static::getContainer()->get(QueryBusInterface::class);
+        $queryBus = self::getContainer()->get(QueryBusInterface::class);
 
         $prices = [2000, 1000, 3000];
         foreach ($prices as $price) {
@@ -49,7 +52,7 @@ final class FindCheapestBooksTest extends KernelTestCase
 
         $i = 0;
         foreach ($cheapestBooks as $book) {
-            static::assertEquals(new Price($sortedPrices[$i]), $book->price());
+            self::assertEquals(new Price($sortedPrices[$i]), $book->price());
             ++$i;
         }
     }

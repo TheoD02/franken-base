@@ -57,25 +57,20 @@ abstract class InMemoryRepository implements RepositoryInterface
 
     public function paginator(): ?PaginatorInterface
     {
-        if (null === $this->page || null === $this->itemsPerPage) {
+        if ($this->page === null || $this->itemsPerPage === null) {
             return null;
         }
 
-        return new InMemoryPaginator(
-            new \ArrayIterator($this->entities),
-            count($this->entities),
-            $this->page,
-            $this->itemsPerPage,
-        );
+        return new InMemoryPaginator(new \ArrayIterator($this->entities), \count($this->entities), $this->page, $this->itemsPerPage);
     }
 
     public function count(): int
     {
         if (null !== $paginator = $this->paginator()) {
-            return count($paginator);
+            return \count($paginator);
         }
 
-        return count($this->entities);
+        return \count($this->entities);
     }
 
     /**

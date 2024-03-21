@@ -11,8 +11,9 @@ use App\Shared\Application\Command\AsCommandHandler;
 #[AsCommandHandler]
 final readonly class AnonymizeBooksCommandHandler
 {
-    public function __construct(private BookRepositoryInterface $bookRepository)
-    {
+    public function __construct(
+        private BookRepositoryInterface $bookRepository
+    ) {
     }
 
     public function __invoke(AnonymizeBooksCommand $command): void
@@ -20,9 +21,7 @@ final readonly class AnonymizeBooksCommandHandler
         $books = $this->bookRepository->withoutPagination();
 
         foreach ($books as $book) {
-            $book->update(
-                author: new Author($command->anonymizedName),
-            );
+            $book->update(author: new Author($command->anonymizedName));
         }
     }
 }

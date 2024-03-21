@@ -37,6 +37,7 @@ return ECSConfig::configure()
         FinalInternalClassFixer::class,
         PhpUnitTestCaseStaticMethodCallsFixer::class,
         AssignNullCoalescingToCoalesceEqualFixer::class,
+        \PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer::class,
     ])
     ->withConfiguredRule(
         LineLengthFixer::class,

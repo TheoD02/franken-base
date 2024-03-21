@@ -26,7 +26,7 @@ final readonly class DoctrinePaginator implements PaginatorInterface
         $firstResult = $paginator->getQuery()->getFirstResult();
         $maxResults = $paginator->getQuery()->getMaxResults();
 
-        if (null === $maxResults) {
+        if ($maxResults === null) {
             throw new \InvalidArgumentException('Missing maxResults from the query.');
         }
 
@@ -41,7 +41,7 @@ final readonly class DoctrinePaginator implements PaginatorInterface
 
     public function getCurrentPage(): int
     {
-        if (0 >= $this->maxResults) {
+        if ($this->maxResults <= 0) {
             return 1;
         }
 
@@ -50,7 +50,7 @@ final readonly class DoctrinePaginator implements PaginatorInterface
 
     public function getLastPage(): int
     {
-        if (0 >= $this->maxResults) {
+        if ($this->maxResults <= 0) {
             return 1;
         }
 
@@ -59,7 +59,7 @@ final readonly class DoctrinePaginator implements PaginatorInterface
 
     public function getTotalItems(): int
     {
-        return count($this->paginator);
+        return \count($this->paginator);
     }
 
     public function count(): int

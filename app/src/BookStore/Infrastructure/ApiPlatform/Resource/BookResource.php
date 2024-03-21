@@ -33,7 +33,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         // queries
         new GetCollection(
             '/books/cheapest.{_format}',
-            openapiContext: ['summary' => 'Find cheapest Book resources.'],
+            openapiContext: [
+                'summary' => 'Find cheapest Book resources.',
+            ],
             paginationEnabled: false,
             provider: CheapestBooksProvider::class,
         ),
@@ -42,44 +44,41 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(
             '/books/anonymize.{_format}',
             status: 202,
-            openapiContext: ['summary' => 'Anonymize author of every Book resources.'],
+            openapiContext: [
+                'summary' => 'Anonymize author of every Book resources.',
+            ],
             input: AnonymizeBooksCommand::class,
             output: false,
             processor: AnonymizeBooksProcessor::class,
         ),
         new Post(
             '/books/{id}/discount.{_format}',
-            openapiContext: ['summary' => 'Apply a discount percentage on a Book resource.'],
+            openapiContext: [
+                'summary' => 'Apply a discount percentage on a Book resource.',
+            ],
             input: DiscountBookPayload::class,
             provider: BookItemProvider::class,
             processor: DiscountBookProcessor::class,
         ),
 
         // basic crud
-        new GetCollection(
-            filters: [AuthorFilter::class],
-            provider: BookCollectionProvider::class,
-        ),
-        new Get(
-            provider: BookItemProvider::class,
-        ),
+        new GetCollection(filters: [AuthorFilter::class], provider: BookCollectionProvider::class),
+        new Get(provider: BookItemProvider::class),
         new Post(
-            validationContext: ['groups' => ['create']],
+            validationContext: [
+                'groups' => ['create'],
+            ],
             processor: CreateBookProcessor::class,
         ),
         new Put(
             provider: BookItemProvider::class,
             processor: UpdateBookProcessor::class,
-            extraProperties: ['standard_put' => true],
+            extraProperties: [
+                'standard_put' => true,
+            ],
         ),
-        new Patch(
-            provider: BookItemProvider::class,
-            processor: UpdateBookProcessor::class,
-        ),
-        new Delete(
-            provider: BookItemProvider::class,
-            processor: DeleteBookProcessor::class,
-        ),
+        new Patch(provider: BookItemProvider::class, processor: UpdateBookProcessor::class),
+        new Delete(provider: BookItemProvider::class, processor: DeleteBookProcessor::class),
     ],
 )]
 final class BookResource

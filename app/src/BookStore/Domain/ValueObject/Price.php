@@ -10,11 +10,14 @@ use Webmozart\Assert\Assert;
 #[ORM\Embeddable]
 final class Price
 {
-    #[ORM\Column(name: 'price', type: 'integer', options: ['unsigned' => true])]
+    #[ORM\Column(name: 'price', type: 'integer', options: [
+        'unsigned' => true,
+    ])]
     public readonly int $amount;
 
-    public function __construct(int $amount)
-    {
+    public function __construct(
+        int $amount
+    ) {
         Assert::greaterThanEq($amount, 0);
 
         $this->amount = $amount;
@@ -24,6 +27,6 @@ final class Price
     {
         $amount = (int) ($this->amount - ($this->amount * $discount->percentage / 100));
 
-        return new static($amount);
+        return new self($amount);
     }
 }

@@ -36,11 +36,11 @@ final readonly class UpdateBookProcessor implements ProcessorInterface
 
         $command = new UpdateBookCommand(
             new BookId($bookResource->id),
-            null !== $data->name ? new BookName($data->name) : null,
-            null !== $data->description ? new BookDescription($data->description) : null,
-            null !== $data->author ? new Author($data->author) : null,
-            null !== $data->content ? new BookContent($data->content) : null,
-            null !== $data->price ? new Price($data->price) : null,
+            $data->name !== null ? new BookName($data->name) : null,
+            $data->description !== null ? new BookDescription($data->description) : null,
+            $data->author !== null ? new Author($data->author) : null,
+            $data->content !== null ? new BookContent($data->content) : null,
+            $data->price !== null ? new Price($data->price) : null,
         );
 
         $model = $this->commandBus->dispatch($command);

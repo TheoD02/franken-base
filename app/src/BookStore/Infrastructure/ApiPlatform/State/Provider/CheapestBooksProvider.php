@@ -15,8 +15,9 @@ use App\Shared\Application\Query\QueryBusInterface;
  */
 final readonly class CheapestBooksProvider implements ProviderInterface
 {
-    public function __construct(private QueryBusInterface $queryBus)
-    {
+    public function __construct(
+        private QueryBusInterface $queryBus
+    ) {
     }
 
     /**

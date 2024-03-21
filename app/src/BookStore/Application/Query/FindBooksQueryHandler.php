@@ -10,19 +10,20 @@ use App\Shared\Application\Query\AsQueryHandler;
 #[AsQueryHandler]
 final readonly class FindBooksQueryHandler
 {
-    public function __construct(private BookRepositoryInterface $bookRepository)
-    {
+    public function __construct(
+        private BookRepositoryInterface $bookRepository
+    ) {
     }
 
     public function __invoke(FindBooksQuery $query): BookRepositoryInterface
     {
         $bookRepository = $this->bookRepository;
 
-        if (null !== $query->author) {
+        if ($query->author !== null) {
             $bookRepository = $bookRepository->withAuthor($query->author);
         }
 
-        if (null !== $query->page && null !== $query->itemsPerPage) {
+        if ($query->page !== null && $query->itemsPerPage !== null) {
             $bookRepository = $bookRepository->withPagination($query->page, $query->itemsPerPage);
         }
 

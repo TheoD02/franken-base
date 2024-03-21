@@ -13,8 +13,9 @@ final class BookDescription
     #[ORM\Column(name: 'description', length: 1023)]
     public readonly string $value;
 
-    public function __construct(string $value)
-    {
+    public function __construct(
+        string $value
+    ) {
         Assert::lengthBetween($value, 1, 1023);
 
         $this->value = $value;

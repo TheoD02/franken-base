@@ -30,7 +30,8 @@ abstract class DoctrineRepository implements RepositoryInterface
     ) {
         $this->queryBuilder = $this->em->createQueryBuilder()
             ->select($alias)
-            ->from($entityClass, $alias);
+            ->from($entityClass, $alias)
+        ;
     }
 
     public function getIterator(): \Iterator
@@ -48,12 +49,12 @@ abstract class DoctrineRepository implements RepositoryInterface
     {
         $paginator = $this->paginator() ?? new Paginator(clone $this->queryBuilder);
 
-        return count($paginator);
+        return \count($paginator);
     }
 
     public function paginator(): ?PaginatorInterface
     {
-        if (null === $this->page || null === $this->itemsPerPage) {
+        if ($this->page === null || $this->itemsPerPage === null) {
             return null;
         }
 

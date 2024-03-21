@@ -12,14 +12,15 @@ use App\Shared\Application\Query\AsQueryHandler;
 #[AsQueryHandler]
 final readonly class FindBookQueryHandler
 {
-    public function __construct(private BookRepositoryInterface $repository)
-    {
+    public function __construct(
+        private BookRepositoryInterface $repository
+    ) {
     }
 
     public function __invoke(FindBookQuery $query): Book
     {
         $book = $this->repository->ofId($query->id);
-        if (null === $book) {
+        if ($book === null) {
             throw new MissingBookException($query->id);
         }
 

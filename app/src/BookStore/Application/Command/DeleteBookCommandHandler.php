@@ -10,8 +10,9 @@ use App\Shared\Application\Command\AsCommandHandler;
 #[AsCommandHandler]
 final readonly class DeleteBookCommandHandler
 {
-    public function __construct(private BookRepositoryInterface $bookRepository)
-    {
+    public function __construct(
+        private BookRepositoryInterface $bookRepository
+    ) {
     }
 
     public function __invoke(DeleteBookCommand $command): void

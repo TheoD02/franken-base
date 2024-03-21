@@ -24,12 +24,6 @@ final class DummyBookFactory
         string $content = 'content',
         int $price = 1000,
     ): Book {
-        return new Book(
-            new BookName($name),
-            new BookDescription($description),
-            new Author($author),
-            new BookContent($content),
-            new Price($price),
-        );
+        return new Book(new BookName($name), new BookDescription($description), new Author($author), new BookContent($content), new Price($price));
     }
 }

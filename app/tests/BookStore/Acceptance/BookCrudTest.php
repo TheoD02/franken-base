@@ -16,14 +16,17 @@ use App\BookStore\Infrastructure\ApiPlatform\Resource\BookResource;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @internal
+ */
 final class BookCrudTest extends ApiTestCase
 {
     public function testReturnPaginatedBooks(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         for ($i = 0; $i < 100; ++$i) {
             $bookRepository->add(DummyBookFactory::createBook());
@@ -31,10 +34,10 @@ final class BookCrudTest extends ApiTestCase
 
         $client->request('GET', '/api/books');
 
-        static::assertResponseIsSuccessful();
-        static::assertMatchesResourceCollectionJsonSchema(BookResource::class);
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceCollectionJsonSchema(BookResource::class);
 
-        static::assertJsonContains([
+        self::assertJsonContains([
             'hydra:totalItems' => 100,
             'hydra:view' => [
                 'hydra:first' => '/api/books?page=1',
@@ -46,10 +49,10 @@ final class BookCrudTest extends ApiTestCase
 
     public function testFilterBooksByAuthor(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         $bookRepository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $bookRepository->add(DummyBookFactory::createBook(author: 'authorOne'));
@@ -57,13 +60,17 @@ final class BookCrudTest extends ApiTestCase
 
         $client->request('GET', '/api/books?author=authorOne');
 
-        static::assertResponseIsSuccessful();
-        static::assertMatchesResourceCollectionJsonSchema(BookResource::class);
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceCollectionJsonSchema(BookResource::class);
 
-        static::assertJsonContains([
+        self::assertJsonContains([
             'hydra:member' => [
-                ['author' => 'authorOne'],
-                ['author' => 'authorOne'],
+                [
+                    'author' => 'authorOne',
+                ],
+                [
+                    'author' => 'authorOne',
+                ],
             ],
             'hydra:totalItems' => 2,
         ]);
@@ -71,26 +78,20 @@ final class BookCrudTest extends ApiTestCase
 
     public function testReturnBook(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
-        $book = DummyBookFactory::createBook(
-            name: 'name',
-            description: 'description',
-            author: 'author',
-            content: 'content',
-            price: 1000,
-        );
+        $book = DummyBookFactory::createBook(name: 'name', description: 'description', author: 'author', content: 'content', price: 1000);
         $bookRepository->add($book);
 
         $client->request('GET', sprintf('/api/books/%s', (string) $book->id()));
 
-        static::assertResponseIsSuccessful();
-        static::assertMatchesResourceItemJsonSchema(BookResource::class);
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceItemJsonSchema(BookResource::class);
 
-        static::assertJsonContains([
+        self::assertJsonContains([
             'name' => 'name',
             'description' => 'description',
             'author' => 'author',
@@ -101,7 +102,7 @@ final class BookCrudTest extends ApiTestCase
 
     public function testCreateBook(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         $response = $client->request('POST', '/api/books', [
             'json' => [
@@ -113,10 +114,10 @@ final class BookCrudTest extends ApiTestCase
             ],
         ]);
 
-        static::assertResponseIsSuccessful();
-        static::assertMatchesResourceItemJsonSchema(BookResource::class);
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceItemJsonSchema(BookResource::class);
 
-        static::assertJsonContains([
+        self::assertJsonContains([
             'name' => 'name',
             'description' => 'description',
             'author' => 'author',
@@ -126,20 +127,20 @@ final class BookCrudTest extends ApiTestCase
 
         $id = new BookId(Uuid::fromString(str_replace('/api/books/', '', $response->toArray()['@id'])));
 
-        $book = static::getContainer()->get(BookRepositoryInterface::class)->ofId($id);
+        $book = self::getContainer()->get(BookRepositoryInterface::class)->ofId($id);
 
-        static::assertNotNull($book);
-        static::assertEquals($id, $book->id());
-        static::assertEquals(new BookName('name'), $book->name());
-        static::assertEquals(new BookDescription('description'), $book->description());
-        static::assertEquals(new Author('author'), $book->author());
-        static::assertEquals(new BookContent('content'), $book->content());
-        static::assertEquals(new Price(1000), $book->price());
+        self::assertNotNull($book);
+        self::assertEquals($id, $book->id());
+        self::assertEquals(new BookName('name'), $book->name());
+        self::assertEquals(new BookDescription('description'), $book->description());
+        self::assertEquals(new Author('author'), $book->author());
+        self::assertEquals(new BookContent('content'), $book->content());
+        self::assertEquals(new Price(1000), $book->price());
     }
 
     public function testCannotCreateBookWithoutValidPayload(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         $client->request('POST', '/api/books', [
             'json' => [
@@ -151,14 +152,29 @@ final class BookCrudTest extends ApiTestCase
             ],
         ]);
 
-        static::assertResponseIsUnprocessable();
-        static::assertJsonContains([
+        self::assertResponseIsUnprocessable();
+        self::assertJsonContains([
             'violations' => [
-                ['propertyPath' => 'name', 'message' => 'This value is too short. It should have 1 character or more.'],
-                ['propertyPath' => 'description', 'message' => 'This value is too short. It should have 1 character or more.'],
-                ['propertyPath' => 'author', 'message' => 'This value is too short. It should have 1 character or more.'],
-                ['propertyPath' => 'content', 'message' => 'This value is too short. It should have 1 character or more.'],
-                ['propertyPath' => 'price', 'message' => 'This value should be either positive or zero.'],
+                [
+                    'propertyPath' => 'name',
+                    'message' => 'This value is too short. It should have 1 character or more.',
+                ],
+                [
+                    'propertyPath' => 'description',
+                    'message' => 'This value is too short. It should have 1 character or more.',
+                ],
+                [
+                    'propertyPath' => 'author',
+                    'message' => 'This value is too short. It should have 1 character or more.',
+                ],
+                [
+                    'propertyPath' => 'content',
+                    'message' => 'This value is too short. It should have 1 character or more.',
+                ],
+                [
+                    'propertyPath' => 'price',
+                    'message' => 'This value should be either positive or zero.',
+                ],
             ],
         ]);
 
@@ -166,24 +182,39 @@ final class BookCrudTest extends ApiTestCase
             'json' => [],
         ]);
 
-        static::assertResponseIsUnprocessable();
-        static::assertJsonContains([
+        self::assertResponseIsUnprocessable();
+        self::assertJsonContains([
             'violations' => [
-                ['propertyPath' => 'name', 'message' => 'This value should not be null.'],
-                ['propertyPath' => 'description', 'message' => 'This value should not be null.'],
-                ['propertyPath' => 'author', 'message' => 'This value should not be null.'],
-                ['propertyPath' => 'content', 'message' => 'This value should not be null.'],
-                ['propertyPath' => 'price', 'message' => 'This value should not be null.'],
+                [
+                    'propertyPath' => 'name',
+                    'message' => 'This value should not be null.',
+                ],
+                [
+                    'propertyPath' => 'description',
+                    'message' => 'This value should not be null.',
+                ],
+                [
+                    'propertyPath' => 'author',
+                    'message' => 'This value should not be null.',
+                ],
+                [
+                    'propertyPath' => 'content',
+                    'message' => 'This value should not be null.',
+                ],
+                [
+                    'propertyPath' => 'price',
+                    'message' => 'This value should not be null.',
+                ],
             ],
         ]);
     }
 
     public function testUpdateBook(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         $book = DummyBookFactory::createBook();
         $bookRepository->add($book);
@@ -198,10 +229,10 @@ final class BookCrudTest extends ApiTestCase
             ],
         ]);
 
-        static::assertResponseIsSuccessful();
-        static::assertMatchesResourceItemJsonSchema(BookResource::class);
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceItemJsonSchema(BookResource::class);
 
-        static::assertJsonContains([
+        self::assertJsonContains([
             'name' => 'newName',
             'description' => 'newDescription',
             'author' => 'newAuthor',
@@ -211,20 +242,20 @@ final class BookCrudTest extends ApiTestCase
 
         $updatedBook = $bookRepository->ofId($book->id());
 
-        static::assertNotNull($book);
-        static::assertEquals(new BookName('newName'), $updatedBook->name());
-        static::assertEquals(new BookDescription('newDescription'), $updatedBook->description());
-        static::assertEquals(new Author('newAuthor'), $updatedBook->author());
-        static::assertEquals(new BookContent('newContent'), $updatedBook->content());
-        static::assertEquals(new Price(2000), $updatedBook->price());
+        self::assertNotNull($book);
+        self::assertEquals(new BookName('newName'), $updatedBook->name());
+        self::assertEquals(new BookDescription('newDescription'), $updatedBook->description());
+        self::assertEquals(new Author('newAuthor'), $updatedBook->author());
+        self::assertEquals(new BookContent('newContent'), $updatedBook->content());
+        self::assertEquals(new Price(2000), $updatedBook->price());
     }
 
     public function testPartiallyUpdateBook(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         $book = DummyBookFactory::createBook(name: 'name', description: 'description');
         $bookRepository->add($book);
@@ -238,35 +269,35 @@ final class BookCrudTest extends ApiTestCase
             ],
         ]);
 
-        static::assertResponseIsSuccessful();
-        static::assertMatchesResourceItemJsonSchema(BookResource::class);
+        self::assertResponseIsSuccessful();
+        self::assertMatchesResourceItemJsonSchema(BookResource::class);
 
-        static::assertJsonContains([
+        self::assertJsonContains([
             'name' => 'newName',
         ]);
 
         $updatedBook = $bookRepository->ofId($book->id());
 
-        static::assertNotNull($book);
-        static::assertEquals(new BookName('newName'), $updatedBook->name());
-        static::assertEquals(new BookDescription('description'), $updatedBook->description());
+        self::assertNotNull($book);
+        self::assertEquals(new BookName('newName'), $updatedBook->name());
+        self::assertEquals(new BookDescription('description'), $updatedBook->description());
     }
 
     public function testDeleteBook(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         $book = DummyBookFactory::createBook();
         $bookRepository->add($book);
 
         $response = $client->request('DELETE', sprintf('/api/books/%s', $book->id()));
 
-        static::assertResponseIsSuccessful();
-        static::assertEmpty($response->getContent());
+        self::assertResponseIsSuccessful();
+        self::assertEmpty($response->getContent());
 
-        static::assertNull($bookRepository->ofId($book->id()));
+        self::assertNull($bookRepository->ofId($book->id()));
     }
 }

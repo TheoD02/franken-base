@@ -20,8 +20,9 @@ final class DoctrineBookRepository extends DoctrineRepository implements BookRep
     private const ENTITY_CLASS = Book::class;
     private const ALIAS = 'book';
 
-    public function __construct(EntityManagerInterface $em)
-    {
+    public function __construct(
+        EntityManagerInterface $em
+    ) {
         parent::__construct($em, self::ENTITY_CLASS, self::ALIAS);
     }
 

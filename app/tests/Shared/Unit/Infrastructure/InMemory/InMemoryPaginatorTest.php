@@ -7,26 +7,24 @@ namespace App\Tests\Shared\Unit\Infrastructure\InMemory;
 use App\Shared\Infrastructure\InMemory\InMemoryPaginator;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 final class InMemoryPaginatorTest extends TestCase
 {
     /**
-     * @dataProvider getLastPageDataProvider
+     * @dataProvider provideGetLastPageCases
      */
     public function testGetLastPage(int $lastPage, int $itemsPerPage): void
     {
         $items = [1, 2, 3];
 
-        $paginator = new InMemoryPaginator(
-            items: new \ArrayIterator($items),
-            totalItems: count($items),
-            currentPage: 1,
-            itemsPerPage: $itemsPerPage,
-        );
+        $paginator = new InMemoryPaginator(items: new \ArrayIterator($items), totalItems: \count($items), currentPage: 1, itemsPerPage: $itemsPerPage);
 
-        static::assertSame($lastPage, $paginator->getLastPage());
+        self::assertSame($lastPage, $paginator->getLastPage());
     }
 
-    public static function getLastPageDataProvider(): iterable
+    public static function provideGetLastPageCases(): iterable
     {
         yield [3, 1];
         yield [2, 2];
@@ -34,7 +32,7 @@ final class InMemoryPaginatorTest extends TestCase
     }
 
     /**
-     * @dataProvider iteratorDataProvider
+     * @dataProvider provideIteratorCases
      */
     public function testIterator(int $currentPage, int $itemsPerPage, array $page): void
     {
@@ -42,21 +40,21 @@ final class InMemoryPaginatorTest extends TestCase
 
         $paginator = new InMemoryPaginator(
             items: new \ArrayIterator($items),
-            totalItems: count($items),
+            totalItems: \count($items),
             currentPage: $currentPage,
             itemsPerPage: $itemsPerPage,
         );
 
-        static::assertSame(count($page), count($paginator));
+        self::assertSame(\count($page), \count($paginator));
 
         $i = 0;
         foreach ($paginator as $item) {
-            static::assertSame($page[$i], $item);
+            self::assertSame($page[$i], $item);
             ++$i;
         }
     }
 
-    public static function iteratorDataProvider(): iterable
+    public static function provideIteratorCases(): iterable
     {
         yield [1, 3, [1, 2, 3]];
         yield [2, 3, []];

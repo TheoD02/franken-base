@@ -12,18 +12,21 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 final class DoctrinePaginatorTest extends TestCase
 {
     /**
-     * @dataProvider getCurrentPageDataProvider
+     * @dataProvider provideGetCurrentPageCases
      */
     public function testGetCurrentPage(int $currentPage, int $firstResult, int $maxResults, int $totalItems): void
     {
         $paginator = new DoctrinePaginator($this->createPaginatorStub($firstResult, $maxResults, $totalItems));
-        static::assertSame($currentPage, $paginator->getCurrentPage());
+        self::assertSame($currentPage, $paginator->getCurrentPage());
     }
 
-    public static function getCurrentPageDataProvider(): iterable
+    public static function provideGetCurrentPageCases(): iterable
     {
         yield [1, 0, 1, 3];
         yield [2, 1, 1, 3];
@@ -33,15 +36,15 @@ final class DoctrinePaginatorTest extends TestCase
     }
 
     /**
-     * @dataProvider getLastPageDataProvider
+     * @dataProvider provideGetLastPageCases
      */
     public function testGetLastPage(int $lastPage, int $maxResults, $totalItems): void
     {
         $paginator = new DoctrinePaginator($this->createPaginatorStub(1, $maxResults, $totalItems));
-        static::assertSame($lastPage, $paginator->getLastPage());
+        self::assertSame($lastPage, $paginator->getLastPage());
     }
 
-    public static function getLastPageDataProvider(): iterable
+    public static function provideGetLastPageCases(): iterable
     {
         yield [3, 1, 3];
         yield [2, 2, 3];

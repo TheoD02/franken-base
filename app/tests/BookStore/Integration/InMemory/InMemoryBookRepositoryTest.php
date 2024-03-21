@@ -10,65 +10,68 @@ use App\Shared\Infrastructure\InMemory\InMemoryPaginator;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * @internal
+ */
 final class InMemoryBookRepositoryTest extends KernelTestCase
 {
     public function testAdd(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
 
-        static::assertEmpty($repository);
+        self::assertEmpty($repository);
 
         $book = DummyBookFactory::createBook();
         $repository->add($book);
 
-        static::assertCount(1, $repository);
+        self::assertCount(1, $repository);
     }
 
     public function testRemove(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
 
         $book = DummyBookFactory::createBook();
         $repository->add($book);
 
-        static::assertCount(1, $repository);
+        self::assertCount(1, $repository);
 
         $repository->remove($book);
-        static::assertEmpty($repository);
+        self::assertEmpty($repository);
     }
 
     public function testOfId(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
 
-        static::assertEmpty($repository);
+        self::assertEmpty($repository);
 
         $book = DummyBookFactory::createBook();
         $repository->add($book);
 
-        static::assertSame($book, $repository->ofId($book->id()));
+        self::assertSame($book, $repository->ofId($book->id()));
     }
 
     public function testWithAuthor(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
 
         $repository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $repository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $repository->add(DummyBookFactory::createBook(author: 'authorTwo'));
 
-        static::assertCount(2, $repository->withAuthor(new Author('authorOne')));
-        static::assertCount(1, $repository->withAuthor(new Author('authorTwo')));
+        self::assertCount(2, $repository->withAuthor(new Author('authorOne')));
+        self::assertCount(1, $repository->withAuthor(new Author('authorTwo')));
     }
 
     public function testWithCheapestsFirst(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
 
         $repository->add(DummyBookFactory::createBook(price: 1));
         $repository->add(DummyBookFactory::createBook(price: 3));
@@ -78,49 +81,45 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
         foreach ($repository->withCheapestsFirst() as $book) {
             $prices[] = $book->price()->amount;
         }
-        static::assertSame([1, 2, 3], $prices);
+        self::assertSame([1, 2, 3], $prices);
     }
 
     public function testWithPagination(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
-        static::assertNull($repository->paginator());
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        self::assertNull($repository->paginator());
 
         $repository = $repository->withPagination(1, 2);
 
-        static::assertInstanceOf(InMemoryPaginator::class, $repository->paginator());
+        self::assertInstanceOf(InMemoryPaginator::class, $repository->paginator());
     }
 
     public function testWithoutPagination(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
         $repository = $repository->withPagination(1, 2);
-        static::assertNotNull($repository->paginator());
+        self::assertNotNull($repository->paginator());
 
         $repository = $repository->withoutPagination();
-        static::assertNull($repository->paginator());
+        self::assertNull($repository->paginator());
     }
 
     public function testIteratorWithoutPagination(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
-        static::assertNull($repository->paginator());
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        self::assertNull($repository->paginator());
 
-        $books = [
-            DummyBookFactory::createBook(),
-            DummyBookFactory::createBook(),
-            DummyBookFactory::createBook(),
-        ];
+        $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
         foreach ($books as $book) {
             $repository->add($book);
         }
 
         $i = 0;
         foreach ($repository as $book) {
-            static::assertSame($books[$i], $book);
+            self::assertSame($books[$i], $book);
             ++$i;
         }
     }
@@ -128,14 +127,10 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
     public function testIteratorWithPagination(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
-        static::assertNull($repository->paginator());
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        self::assertNull($repository->paginator());
 
-        $books = [
-            DummyBookFactory::createBook(),
-            DummyBookFactory::createBook(),
-            DummyBookFactory::createBook(),
-        ];
+        $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
         foreach ($books as $book) {
             $repository->add($book);
         }
@@ -144,38 +139,34 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
         $i = 0;
         foreach ($repository as $book) {
-            static::assertSame($books[$i], $book);
+            self::assertSame($books[$i], $book);
             ++$i;
         }
 
-        static::assertSame(2, $i);
+        self::assertSame(2, $i);
 
         $repository = $repository->withPagination(2, 2);
 
         $i = 0;
         foreach ($repository as $book) {
-            static::assertSame($books[$i + 2], $book);
+            self::assertSame($books[$i + 2], $book);
             ++$i;
         }
 
-        static::assertSame(1, $i);
+        self::assertSame(1, $i);
     }
 
     public function testCount(): void
     {
         /** @var InMemoryBookRepository $repository */
-        $repository = static::getContainer()->get(InMemoryBookRepository::class);
+        $repository = self::getContainer()->get(InMemoryBookRepository::class);
 
-        $books = [
-            DummyBookFactory::createBook(),
-            DummyBookFactory::createBook(),
-            DummyBookFactory::createBook(),
-        ];
+        $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
         foreach ($books as $book) {
             $repository->add($book);
         }
 
-        static::assertCount(count($books), $repository);
-        static::assertCount(2, $repository->withPagination(1, 2));
+        self::assertCount(\count($books), $repository);
+        self::assertCount(2, $repository->withPagination(1, 2));
     }
 }

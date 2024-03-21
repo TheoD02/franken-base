@@ -14,8 +14,9 @@ trait AggregateRootId
     #[ORM\Column(name: 'id', type: 'uuid')]
     public readonly AbstractUid $value;
 
-    final public function __construct(?AbstractUid $value = null)
-    {
+    final public function __construct(
+        ?AbstractUid $value = null
+    ) {
         $this->value = $value ?? Uuid::v4();
     }
 

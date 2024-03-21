@@ -10,19 +10,22 @@ use App\Shared\Application\Query\QueryBusInterface;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * @internal
+ */
 final class FindBookTest extends KernelTestCase
 {
     public function testFindBook(): void
     {
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         /** @var QueryBusInterface $queryBus */
-        $queryBus = static::getContainer()->get(QueryBusInterface::class);
+        $queryBus = self::getContainer()->get(QueryBusInterface::class);
 
         $book = DummyBookFactory::createBook();
         $bookRepository->add($book);
 
-        static::assertSame($book, $queryBus->ask(new FindBookQuery($book->id())));
+        self::assertSame($book, $queryBus->ask(new FindBookQuery($book->id())));
     }
 }

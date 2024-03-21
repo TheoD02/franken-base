@@ -11,15 +11,18 @@ use App\Shared\Application\Query\QueryBusInterface;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * @internal
+ */
 final class FindBooksTest extends KernelTestCase
 {
     public function testFindBooks(): void
     {
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         /** @var QueryBusInterface $queryBus */
-        $queryBus = static::getContainer()->get(QueryBusInterface::class);
+        $queryBus = self::getContainer()->get(QueryBusInterface::class);
 
         $initialBooks = [
             DummyBookFactory::createBook(),
@@ -35,41 +38,41 @@ final class FindBooksTest extends KernelTestCase
 
         $books = $queryBus->ask(new FindBooksQuery());
 
-        static::assertCount(count($initialBooks), $books);
+        self::assertCount(\count($initialBooks), $books);
         foreach ($books as $book) {
-            static::assertContains($book, $initialBooks);
+            self::assertContains($book, $initialBooks);
         }
     }
 
     public function testFilterBooksByAuthor(): void
     {
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         /** @var QueryBusInterface $queryBus */
-        $queryBus = static::getContainer()->get(QueryBusInterface::class);
+        $queryBus = self::getContainer()->get(QueryBusInterface::class);
 
         $bookRepository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $bookRepository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $bookRepository->add(DummyBookFactory::createBook(author: 'authorTwo'));
 
-        static::assertCount(3, $bookRepository);
+        self::assertCount(3, $bookRepository);
 
         $books = $queryBus->ask(new FindBooksQuery(author: new Author('authorOne')));
 
-        static::assertCount(2, $books);
+        self::assertCount(2, $books);
         foreach ($books as $book) {
-            static::assertEquals(new Author('authorOne'), $book->author());
+            self::assertEquals(new Author('authorOne'), $book->author());
         }
     }
 
     public function testReturnPaginatedBooks(): void
     {
         /** @var BookRepositoryInterface $bookRepository */
-        $bookRepository = static::getContainer()->get(BookRepositoryInterface::class);
+        $bookRepository = self::getContainer()->get(BookRepositoryInterface::class);
 
         /** @var QueryBusInterface $queryBus */
-        $queryBus = static::getContainer()->get(QueryBusInterface::class);
+        $queryBus = self::getContainer()->get(QueryBusInterface::class);
 
         $initialBooks = [
             DummyBookFactory::createBook(),
@@ -85,10 +88,10 @@ final class FindBooksTest extends KernelTestCase
 
         $books = $queryBus->ask(new FindBooksQuery(page: 2, itemsPerPage: 2));
 
-        static::assertCount(2, $books);
+        self::assertCount(2, $books);
         $i = 0;
         foreach ($books as $book) {
-            static::assertSame($initialBooks[$i + 2], $book);
+            self::assertSame($initialBooks[$i + 2], $book);
             ++$i;
         }
     }
