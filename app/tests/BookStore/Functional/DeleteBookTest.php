@@ -26,10 +26,10 @@ final class DeleteBookTest extends KernelTestCase
         $book = DummyBookFactory::createBook();
         $bookRepository->add($book);
 
-        self::assertCount(1, $bookRepository);
+        $this->assertCount(1, $bookRepository);
 
         $commandBus->dispatch(new DeleteBookCommand($book->id()));
 
-        self::assertEmpty($bookRepository);
+        $this->assertEmpty($bookRepository);
     }
 }

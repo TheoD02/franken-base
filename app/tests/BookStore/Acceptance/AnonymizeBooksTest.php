@@ -31,11 +31,11 @@ final class AnonymizeBooksTest extends ApiTestCase
             ],
         ]);
 
-        self::assertResponseStatusCodeSame(202);
-        self::assertEmpty($response->getContent());
+        $this->assertResponseStatusCodeSame(202);
+        $this->assertEmpty($response->getContent());
 
         foreach ($bookRepository as $book) {
-            self::assertEquals(new Author('anon.'), $book->author());
+            $this->assertEquals(new Author('anon.'), $book->author());
         }
     }
 }

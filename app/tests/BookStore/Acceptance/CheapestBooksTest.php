@@ -27,10 +27,10 @@ final class CheapestBooksTest extends ApiTestCase
 
         $response = $client->request('GET', '/api/books/cheapest');
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceCollectionJsonSchema(BookResource::class);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceCollectionJsonSchema(BookResource::class);
 
-        self::assertSame(10, $response->toArray()['hydra:totalItems']);
+        $this->assertSame(10, $response->toArray()['hydra:totalItems']);
 
         $prices = [];
         for ($i = 0; $i < 10; ++$i) {
@@ -39,7 +39,7 @@ final class CheapestBooksTest extends ApiTestCase
             ];
         }
 
-        self::assertJsonContains([
+        $this->assertJsonContains([
             'hydra:member' => $prices,
         ]);
     }
@@ -58,10 +58,10 @@ final class CheapestBooksTest extends ApiTestCase
 
         $response = $client->request('GET', '/api/books/cheapest');
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceCollectionJsonSchema(BookResource::class);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceCollectionJsonSchema(BookResource::class);
 
         $responsePrices = array_map(static fn (array $bookData): int => $bookData['price'], $response->toArray()['hydra:member']);
-        self::assertSame([1000, 2000, 3000], $responsePrices);
+        $this->assertSame([1000, 2000, 3000], $responsePrices);
     }
 }

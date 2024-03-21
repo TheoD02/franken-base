@@ -20,12 +20,12 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
         /** @var InMemoryBookRepository $repository */
         $repository = self::getContainer()->get(InMemoryBookRepository::class);
 
-        self::assertEmpty($repository);
+        $this->assertEmpty($repository);
 
         $book = DummyBookFactory::createBook();
         $repository->add($book);
 
-        self::assertCount(1, $repository);
+        $this->assertCount(1, $repository);
     }
 
     public function testRemove(): void
@@ -36,10 +36,10 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
         $book = DummyBookFactory::createBook();
         $repository->add($book);
 
-        self::assertCount(1, $repository);
+        $this->assertCount(1, $repository);
 
         $repository->remove($book);
-        self::assertEmpty($repository);
+        $this->assertEmpty($repository);
     }
 
     public function testOfId(): void
@@ -47,12 +47,12 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
         /** @var InMemoryBookRepository $repository */
         $repository = self::getContainer()->get(InMemoryBookRepository::class);
 
-        self::assertEmpty($repository);
+        $this->assertEmpty($repository);
 
         $book = DummyBookFactory::createBook();
         $repository->add($book);
 
-        self::assertSame($book, $repository->ofId($book->id()));
+        $this->assertSame($book, $repository->ofId($book->id()));
     }
 
     public function testWithAuthor(): void
@@ -64,8 +64,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
         $repository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $repository->add(DummyBookFactory::createBook(author: 'authorTwo'));
 
-        self::assertCount(2, $repository->withAuthor(new Author('authorOne')));
-        self::assertCount(1, $repository->withAuthor(new Author('authorTwo')));
+        $this->assertCount(2, $repository->withAuthor(new Author('authorOne')));
+        $this->assertCount(1, $repository->withAuthor(new Author('authorTwo')));
     }
 
     public function testWithCheapestsFirst(): void
@@ -78,21 +78,22 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
         $repository->add(DummyBookFactory::createBook(price: 2));
 
         $prices = [];
-        foreach ($repository->withCheapestsFirst() as $book) {
-            $prices[] = $book->price()->amount;
+        foreach ($repository->withCheapestsFirst() as $inMemoryBookRepository) {
+            $prices[] = $inMemoryBookRepository->price()->amount;
         }
-        self::assertSame([1, 2, 3], $prices);
+
+        $this->assertSame([1, 2, 3], $prices);
     }
 
     public function testWithPagination(): void
     {
         /** @var InMemoryBookRepository $repository */
         $repository = self::getContainer()->get(InMemoryBookRepository::class);
-        self::assertNull($repository->paginator());
+        $this->assertNull($repository->paginator());
 
         $repository = $repository->withPagination(1, 2);
 
-        self::assertInstanceOf(InMemoryPaginator::class, $repository->paginator());
+        $this->assertInstanceOf(InMemoryPaginator::class, $repository->paginator());
     }
 
     public function testWithoutPagination(): void
@@ -100,17 +101,17 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
         /** @var InMemoryBookRepository $repository */
         $repository = self::getContainer()->get(InMemoryBookRepository::class);
         $repository = $repository->withPagination(1, 2);
-        self::assertNotNull($repository->paginator());
+        $this->assertNotNull($repository->paginator());
 
         $repository = $repository->withoutPagination();
-        self::assertNull($repository->paginator());
+        $this->assertNull($repository->paginator());
     }
 
     public function testIteratorWithoutPagination(): void
     {
         /** @var InMemoryBookRepository $repository */
         $repository = self::getContainer()->get(InMemoryBookRepository::class);
-        self::assertNull($repository->paginator());
+        $this->assertNull($repository->paginator());
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
         foreach ($books as $book) {
@@ -119,7 +120,7 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
         $i = 0;
         foreach ($repository as $book) {
-            self::assertSame($books[$i], $book);
+            $this->assertSame($books[$i], $book);
             ++$i;
         }
     }
@@ -128,7 +129,7 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
     {
         /** @var InMemoryBookRepository $repository */
         $repository = self::getContainer()->get(InMemoryBookRepository::class);
-        self::assertNull($repository->paginator());
+        $this->assertNull($repository->paginator());
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
         foreach ($books as $book) {
@@ -139,21 +140,21 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
         $i = 0;
         foreach ($repository as $book) {
-            self::assertSame($books[$i], $book);
+            $this->assertSame($books[$i], $book);
             ++$i;
         }
 
-        self::assertSame(2, $i);
+        $this->assertSame(2, $i);
 
         $repository = $repository->withPagination(2, 2);
 
         $i = 0;
         foreach ($repository as $book) {
-            self::assertSame($books[$i + 2], $book);
+            $this->assertSame($books[$i + 2], $book);
             ++$i;
         }
 
-        self::assertSame(1, $i);
+        $this->assertSame(1, $i);
     }
 
     public function testCount(): void
@@ -166,7 +167,7 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
             $repository->add($book);
         }
 
-        self::assertCount(\count($books), $repository);
-        self::assertCount(2, $repository->withPagination(1, 2));
+        $this->assertCount(\count($books), $repository);
+        $this->assertCount(2, $repository->withPagination(1, 2));
     }
 }

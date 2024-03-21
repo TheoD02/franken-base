@@ -41,10 +41,10 @@ final class UpdateBookTest extends KernelTestCase
 
         $book = $bookRepository->ofId($initialBook->id());
 
-        self::assertEquals(new BookName('newName'), $book->name());
-        self::assertEquals(new BookDescription('description'), $book->description());
-        self::assertEquals(new Author('author'), $book->author());
-        self::assertEquals(new BookContent('newContent'), $book->content());
-        self::assertEquals(new Price(2000), $book->price());
+        $this->assertEquals(new BookName('newName'), $book->name());
+        $this->assertEquals(new BookDescription('description'), $book->description());
+        $this->assertEquals(new Author('author'), $book->author());
+        $this->assertEquals(new BookContent('newContent'), $book->content());
+        $this->assertEquals(new Price(2000), $book->price());
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
 
 use PhpCsFixer\Fixer\ClassNotation\FinalInternalClassFixer;
 use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
@@ -37,7 +38,7 @@ return ECSConfig::configure()
         FinalInternalClassFixer::class,
         PhpUnitTestCaseStaticMethodCallsFixer::class,
         AssignNullCoalescingToCoalesceEqualFixer::class,
-        \PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer::class,
+        PhpUnitStrictFixer::class,
     ])
     ->withConfiguredRule(
         LineLengthFixer::class,

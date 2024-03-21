@@ -34,7 +34,7 @@ final readonly class UpdateBookProcessor implements ProcessorInterface
         $bookResource = $context['previous_data'] ?? null;
         Assert::isInstanceOf($bookResource, BookResource::class);
 
-        $command = new UpdateBookCommand(
+        $updateBookCommand = new UpdateBookCommand(
             new BookId($bookResource->id),
             $data->name !== null ? new BookName($data->name) : null,
             $data->description !== null ? new BookDescription($data->description) : null,
@@ -43,7 +43,7 @@ final readonly class UpdateBookProcessor implements ProcessorInterface
             $data->price !== null ? new Price($data->price) : null,
         );
 
-        $model = $this->commandBus->dispatch($command);
+        $model = $this->commandBus->dispatch($updateBookCommand);
 
         return BookResource::fromModel($model);
     }

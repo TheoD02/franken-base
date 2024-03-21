@@ -31,13 +31,13 @@ final class DiscountBookTest extends ApiTestCase
             ],
         ]);
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceItemJsonSchema(BookResource::class);
-        self::assertJsonContains([
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceItemJsonSchema(BookResource::class);
+        $this->assertJsonContains([
             'price' => 800,
         ]);
 
-        self::assertEquals(new Price(800), $bookRepository->ofId($book->id())->price());
+        $this->assertEquals(new Price(800), $bookRepository->ofId($book->id())->price());
     }
 
     public function testValidateDiscountAmount(): void
@@ -56,8 +56,8 @@ final class DiscountBookTest extends ApiTestCase
             ],
         ]);
 
-        self::assertResponseIsUnprocessable();
-        self::assertJsonContains([
+        $this->assertResponseIsUnprocessable();
+        $this->assertJsonContains([
             'violations' => [
                 [
                     'propertyPath' => 'discountPercentage',
@@ -66,6 +66,6 @@ final class DiscountBookTest extends ApiTestCase
             ],
         ]);
 
-        self::assertEquals(new Price(1000), $bookRepository->ofId($book->id())->price());
+        $this->assertEquals(new Price(1000), $bookRepository->ofId($book->id())->price());
     }
 }

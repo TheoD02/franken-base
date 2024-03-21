@@ -31,7 +31,8 @@ final readonly class BookCollectionProvider implements ProviderInterface
     {
         /** @var string|null $author */
         $author = $context['filters']['author'] ?? null;
-        $offset = $limit = null;
+        $offset = null;
+        $limit = null;
 
         if ($this->pagination->isEnabled($operation, $context)) {
             $offset = $this->pagination->getPage($context);
@@ -46,7 +47,7 @@ final readonly class BookCollectionProvider implements ProviderInterface
         }
 
         if (null !== $paginator = $models->paginator()) {
-            $resources = new Paginator(
+            return new Paginator(
                 new \ArrayIterator($resources),
                 (float) $paginator->getCurrentPage(),
                 (float) $paginator->getItemsPerPage(),

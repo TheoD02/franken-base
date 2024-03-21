@@ -51,13 +51,13 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
         /** @var DoctrineBookRepository $repository */
         $repository = self::getContainer()->get(DoctrineBookRepository::class);
 
-        self::assertEmpty($repository);
+        $this->assertEmpty($repository);
 
         $book = DummyBookFactory::createBook();
         $repository->add($book);
         self::$em->flush();
 
-        self::assertCount(1, $repository);
+        $this->assertCount(1, $repository);
     }
 
     public function testRemove(): void
@@ -69,12 +69,12 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
         $repository->add($book);
         self::$em->flush();
 
-        self::assertCount(1, $repository);
+        $this->assertCount(1, $repository);
 
         $repository->remove($book);
         self::$em->flush();
 
-        self::assertEmpty($repository);
+        $this->assertEmpty($repository);
     }
 
     public function testOfId(): void
@@ -82,14 +82,14 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
         /** @var DoctrineBookRepository $repository */
         $repository = self::getContainer()->get(DoctrineBookRepository::class);
 
-        self::assertEmpty($repository);
+        $this->assertEmpty($repository);
 
         $book = DummyBookFactory::createBook();
         $repository->add($book);
         self::$em->flush();
         self::$em->clear();
 
-        self::assertEquals($book, $repository->ofId($book->id()));
+        $this->assertEquals($book, $repository->ofId($book->id()));
     }
 
     public function testWithAuthor(): void
@@ -100,10 +100,11 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
         $repository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $repository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $repository->add(DummyBookFactory::createBook(author: 'authorTwo'));
+
         self::$em->flush();
 
-        self::assertCount(2, $repository->withAuthor(new Author('authorOne')));
-        self::assertCount(1, $repository->withAuthor(new Author('authorTwo')));
+        $this->assertCount(2, $repository->withAuthor(new Author('authorOne')));
+        $this->assertCount(1, $repository->withAuthor(new Author('authorTwo')));
     }
 
     public function testWithCheapestsFirst(): void
@@ -114,24 +115,26 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
         $repository->add(DummyBookFactory::createBook(price: 1));
         $repository->add(DummyBookFactory::createBook(price: 3));
         $repository->add(DummyBookFactory::createBook(price: 2));
+
         self::$em->flush();
 
         $prices = [];
-        foreach ($repository->withCheapestsFirst() as $book) {
-            $prices[] = $book->price()->amount;
+        foreach ($repository->withCheapestsFirst() as $doctrineBookRepository) {
+            $prices[] = $doctrineBookRepository->price()->amount;
         }
-        self::assertSame([1, 2, 3], $prices);
+
+        $this->assertSame([1, 2, 3], $prices);
     }
 
     public function testWithPagination(): void
     {
         /** @var DoctrineBookRepository $repository */
         $repository = self::getContainer()->get(DoctrineBookRepository::class);
-        self::assertNull($repository->paginator());
+        $this->assertNull($repository->paginator());
 
         $repository = $repository->withPagination(1, 2);
 
-        self::assertInstanceOf(DoctrinePaginator::class, $repository->paginator());
+        $this->assertInstanceOf(DoctrinePaginator::class, $repository->paginator());
     }
 
     public function testWithoutPagination(): void
@@ -139,10 +142,10 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
         /** @var DoctrineBookRepository $repository */
         $repository = self::getContainer()->get(DoctrineBookRepository::class);
         $repository = $repository->withPagination(1, 2);
-        self::assertNotNull($repository->paginator());
+        $this->assertNotNull($repository->paginator());
 
         $repository = $repository->withoutPagination();
-        self::assertNull($repository->paginator());
+        $this->assertNull($repository->paginator());
     }
 
     public function testIteratorWithoutPagination(): void
@@ -150,17 +153,18 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
         $this->markTestSkipped('This test is not working as expected for now, with failing sometimes');
         /** @var DoctrineBookRepository $repository */
         $repository = self::getContainer()->get(DoctrineBookRepository::class);
-        self::assertNull($repository->paginator());
+        $this->assertNull($repository->paginator());
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
         foreach ($books as $book) {
             $repository->add($book);
         }
+
         self::$em->flush();
 
         $i = 0;
         foreach ($repository as $book) {
-            self::assertSame($books[$i], $book);
+            $this->assertSame($books[$i], $book);
             ++$i;
         }
     }
@@ -169,34 +173,35 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
     {
         /** @var DoctrineBookRepository $repository */
         $repository = self::getContainer()->get(DoctrineBookRepository::class);
-        self::assertNull($repository->paginator());
+        $this->assertNull($repository->paginator());
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
 
         foreach ($books as $book) {
             $repository->add($book);
         }
+
         self::$em->flush();
 
         $repository = $repository->withPagination(1, 2);
 
         $i = 0;
         foreach ($repository as $book) {
-            self::assertContains($book, $books);
+            $this->assertContains($book, $books);
             ++$i;
         }
 
-        self::assertSame(2, $i);
+        $this->assertSame(2, $i);
 
         $repository = $repository->withPagination(2, 2);
 
         $i = 0;
         foreach ($repository as $book) {
-            self::assertContains($book, $books);
+            $this->assertContains($book, $books);
             ++$i;
         }
 
-        self::assertSame(1, $i);
+        $this->assertSame(1, $i);
     }
 
     public function testCount(): void
@@ -208,9 +213,10 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
         foreach ($books as $book) {
             $repository->add($book);
         }
+
         self::$em->flush();
 
-        self::assertCount(\count($books), $repository);
-        self::assertCount(2, $repository->withPagination(1, 2));
+        $this->assertCount(\count($books), $repository);
+        $this->assertCount(2, $repository->withPagination(1, 2));
     }
 }

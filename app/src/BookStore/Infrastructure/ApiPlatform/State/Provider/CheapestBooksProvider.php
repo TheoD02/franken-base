@@ -25,10 +25,10 @@ final readonly class CheapestBooksProvider implements ProviderInterface
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array
     {
-        $models = $this->queryBus->ask(new FindCheapestBooksQuery());
+        $bookRepository = $this->queryBus->ask(new FindCheapestBooksQuery());
 
         $resources = [];
-        foreach ($models as $model) {
+        foreach ($bookRepository as $model) {
             $resources[] = BookResource::fromModel($model);
         }
 

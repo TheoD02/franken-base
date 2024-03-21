@@ -31,7 +31,7 @@ final class AnonymizeBooksTest extends KernelTestCase
         $commandBus->dispatch(new AnonymizeBooksCommand('anon.'));
 
         foreach ($bookRepository as $book) {
-            self::assertEquals(new Author('anon.'), $book->author());
+            $this->assertEquals(new Author('anon.'), $book->author());
         }
     }
 }

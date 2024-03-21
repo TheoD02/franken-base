@@ -53,9 +53,9 @@ final class SubscriptionCrudTest extends ApiTestCase
 
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get(EntityManagerInterface::class);
-        $repository = $em->getRepository(Subscription::class);
+        $entityRepository = $em->getRepository(Subscription::class);
 
-        self::assertSame(0, $repository->count([]));
+        $this->assertSame(0, $entityRepository->count([]));
 
         $response = $client->request('POST', '/api/subscriptions', [
             'json' => [
@@ -63,19 +63,19 @@ final class SubscriptionCrudTest extends ApiTestCase
             ],
         ]);
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceItemJsonSchema(Subscription::class);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceItemJsonSchema(Subscription::class);
 
-        self::assertJsonContains([
+        $this->assertJsonContains([
             'email' => 'foo@bar.com',
         ]);
 
-        $id = Uuid::fromString(str_replace('/api/subscriptions/', '', $response->toArray()['@id']));
+        $uuid = Uuid::fromString(str_replace('/api/subscriptions/', '', (string) $response->toArray()['@id']));
 
-        $subscription = $repository->find($id);
+        $subscription = $entityRepository->find($uuid);
 
-        self::assertNotNull($subscription);
-        self::assertSame('foo@bar.com', $subscription->email);
+        $this->assertNotNull($subscription);
+        $this->assertSame('foo@bar.com', $subscription->email);
     }
 
     public function testDeleteSubscription(): void
@@ -84,20 +84,20 @@ final class SubscriptionCrudTest extends ApiTestCase
 
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get(EntityManagerInterface::class);
-        $repository = $em->getRepository(Subscription::class);
+        $entityRepository = $em->getRepository(Subscription::class);
 
         $subscription = DummySubscriptionFactory::createSubscription();
 
         $em->persist($subscription);
         $em->flush();
 
-        self::assertSame(1, $repository->count([]));
+        $this->assertSame(1, $entityRepository->count([]));
 
         $response = $client->request('DELETE', sprintf('/api/subscriptions/%s', (string) $subscription->id));
 
-        self::assertResponseIsSuccessful();
-        self::assertEmpty($response->getContent());
+        $this->assertResponseIsSuccessful();
+        $this->assertEmpty($response->getContent());
 
-        self::assertSame(0, $repository->count([]));
+        $this->assertSame(0, $entityRepository->count([]));
     }
 }

@@ -18,6 +18,7 @@ use Doctrine\ORM\QueryBuilder;
 final class DoctrineBookRepository extends DoctrineRepository implements BookRepositoryInterface
 {
     private const ENTITY_CLASS = Book::class;
+
     private const ALIAS = 'book';
 
     public function __construct(

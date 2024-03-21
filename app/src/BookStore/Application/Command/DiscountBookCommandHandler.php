@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\BookStore\Application\Command;
 
 use App\BookStore\Domain\Exception\MissingBookException;
+use App\BookStore\Domain\Model\Book;
 use App\BookStore\Domain\Repository\BookRepositoryInterface;
 use App\Shared\Application\Command\AsCommandHandler;
 
@@ -19,7 +20,7 @@ final readonly class DiscountBookCommandHandler
     public function __invoke(DiscountBookCommand $command): void
     {
         $book = $this->bookRepository->ofId($command->id);
-        if ($book === null) {
+        if (! $book instanceof Book) {
             throw new MissingBookException($command->id);
         }
 

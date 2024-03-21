@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Shared\Unit\Infrastructure\InMemory;
 
 use App\Shared\Infrastructure\InMemory\InMemoryPaginator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,16 +13,14 @@ use PHPUnit\Framework\TestCase;
  */
 final class InMemoryPaginatorTest extends TestCase
 {
-    /**
-     * @dataProvider provideGetLastPageCases
-     */
+    #[DataProvider('provideGetLastPageCases')]
     public function testGetLastPage(int $lastPage, int $itemsPerPage): void
     {
         $items = [1, 2, 3];
 
-        $paginator = new InMemoryPaginator(items: new \ArrayIterator($items), totalItems: \count($items), currentPage: 1, itemsPerPage: $itemsPerPage);
+        $inMemoryPaginator = new InMemoryPaginator(items: new \ArrayIterator($items), totalItems: \count($items), currentPage: 1, itemsPerPage: $itemsPerPage);
 
-        self::assertSame($lastPage, $paginator->getLastPage());
+        $this->assertSame($lastPage, $inMemoryPaginator->getLastPage());
     }
 
     public static function provideGetLastPageCases(): iterable
@@ -31,25 +30,23 @@ final class InMemoryPaginatorTest extends TestCase
         yield [1, 3];
     }
 
-    /**
-     * @dataProvider provideIteratorCases
-     */
+    #[DataProvider('provideIteratorCases')]
     public function testIterator(int $currentPage, int $itemsPerPage, array $page): void
     {
         $items = [1, 2, 3];
 
-        $paginator = new InMemoryPaginator(
+        $inMemoryPaginator = new InMemoryPaginator(
             items: new \ArrayIterator($items),
             totalItems: \count($items),
             currentPage: $currentPage,
             itemsPerPage: $itemsPerPage,
         );
 
-        self::assertSame(\count($page), \count($paginator));
+        $this->assertCount(\count($page), $inMemoryPaginator);
 
         $i = 0;
-        foreach ($paginator as $item) {
-            self::assertSame($page[$i], $item);
+        foreach ($inMemoryPaginator as $item) {
+            $this->assertSame($page[$i], $item);
             ++$i;
         }
     }

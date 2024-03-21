@@ -30,7 +30,7 @@ final class FindCheapestBooksTest extends KernelTestCase
 
         $cheapestBooks = $queryBus->ask(new FindCheapestBooksQuery(3));
 
-        self::assertCount(3, $cheapestBooks);
+        $this->assertCount(3, $cheapestBooks);
     }
 
     public function testReturnBooksSortedByPrice(): void
@@ -51,8 +51,8 @@ final class FindCheapestBooksTest extends KernelTestCase
         $sortedPrices = [1000, 2000, 3000];
 
         $i = 0;
-        foreach ($cheapestBooks as $book) {
-            self::assertEquals(new Price($sortedPrices[$i]), $book->price());
+        foreach ($cheapestBooks as $cheapestBook) {
+            $this->assertEquals(new Price($sortedPrices[$i]), $cheapestBook->price());
             ++$i;
         }
     }

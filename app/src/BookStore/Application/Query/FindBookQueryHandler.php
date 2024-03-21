@@ -20,7 +20,7 @@ final readonly class FindBookQueryHandler
     public function __invoke(FindBookQuery $query): Book
     {
         $book = $this->repository->ofId($query->id);
-        if ($book === null) {
+        if (! $book instanceof Book) {
             throw new MissingBookException($query->id);
         }
 

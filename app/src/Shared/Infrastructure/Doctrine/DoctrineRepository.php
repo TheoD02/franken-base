@@ -19,6 +19,7 @@ use Webmozart\Assert\Assert;
 abstract class DoctrineRepository implements RepositoryInterface
 {
     private ?int $page = null;
+
     private ?int $itemsPerPage = null;
 
     private QueryBuilder $queryBuilder;
@@ -36,7 +37,7 @@ abstract class DoctrineRepository implements RepositoryInterface
 
     public function getIterator(): \Iterator
     {
-        if (null !== $paginator = $this->paginator()) {
+        if (($paginator = $this->paginator()) instanceof PaginatorInterface) {
             yield from $paginator;
 
             return;
@@ -61,7 +62,7 @@ abstract class DoctrineRepository implements RepositoryInterface
         $firstResult = ($this->page - 1) * $this->itemsPerPage;
         $maxResults = $this->itemsPerPage;
 
-        $repository = $this->filter(static function (QueryBuilder $qb) use ($firstResult, $maxResults) {
+        $repository = $this->filter(static function (QueryBuilder $qb) use ($firstResult, $maxResults): void {
             $qb->setFirstResult($firstResult)->setMaxResults($maxResults);
         });
 

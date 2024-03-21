@@ -34,10 +34,10 @@ final class BookCrudTest extends ApiTestCase
 
         $client->request('GET', '/api/books');
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceCollectionJsonSchema(BookResource::class);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceCollectionJsonSchema(BookResource::class);
 
-        self::assertJsonContains([
+        $this->assertJsonContains([
             'hydra:totalItems' => 100,
             'hydra:view' => [
                 'hydra:first' => '/api/books?page=1',
@@ -60,10 +60,10 @@ final class BookCrudTest extends ApiTestCase
 
         $client->request('GET', '/api/books?author=authorOne');
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceCollectionJsonSchema(BookResource::class);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceCollectionJsonSchema(BookResource::class);
 
-        self::assertJsonContains([
+        $this->assertJsonContains([
             'hydra:member' => [
                 [
                     'author' => 'authorOne',
@@ -88,10 +88,10 @@ final class BookCrudTest extends ApiTestCase
 
         $client->request('GET', sprintf('/api/books/%s', (string) $book->id()));
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceItemJsonSchema(BookResource::class);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceItemJsonSchema(BookResource::class);
 
-        self::assertJsonContains([
+        $this->assertJsonContains([
             'name' => 'name',
             'description' => 'description',
             'author' => 'author',
@@ -114,10 +114,10 @@ final class BookCrudTest extends ApiTestCase
             ],
         ]);
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceItemJsonSchema(BookResource::class);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceItemJsonSchema(BookResource::class);
 
-        self::assertJsonContains([
+        $this->assertJsonContains([
             'name' => 'name',
             'description' => 'description',
             'author' => 'author',
@@ -125,17 +125,17 @@ final class BookCrudTest extends ApiTestCase
             'price' => 1000,
         ]);
 
-        $id = new BookId(Uuid::fromString(str_replace('/api/books/', '', $response->toArray()['@id'])));
+        $bookId = new BookId(Uuid::fromString(str_replace('/api/books/', '', (string) $response->toArray()['@id'])));
 
-        $book = self::getContainer()->get(BookRepositoryInterface::class)->ofId($id);
+        $book = self::getContainer()->get(BookRepositoryInterface::class)->ofId($bookId);
 
-        self::assertNotNull($book);
-        self::assertEquals($id, $book->id());
-        self::assertEquals(new BookName('name'), $book->name());
-        self::assertEquals(new BookDescription('description'), $book->description());
-        self::assertEquals(new Author('author'), $book->author());
-        self::assertEquals(new BookContent('content'), $book->content());
-        self::assertEquals(new Price(1000), $book->price());
+        $this->assertNotNull($book);
+        $this->assertEquals($bookId, $book->id());
+        $this->assertEquals(new BookName('name'), $book->name());
+        $this->assertEquals(new BookDescription('description'), $book->description());
+        $this->assertEquals(new Author('author'), $book->author());
+        $this->assertEquals(new BookContent('content'), $book->content());
+        $this->assertEquals(new Price(1000), $book->price());
     }
 
     public function testCannotCreateBookWithoutValidPayload(): void
@@ -152,8 +152,8 @@ final class BookCrudTest extends ApiTestCase
             ],
         ]);
 
-        self::assertResponseIsUnprocessable();
-        self::assertJsonContains([
+        $this->assertResponseIsUnprocessable();
+        $this->assertJsonContains([
             'violations' => [
                 [
                     'propertyPath' => 'name',
@@ -182,8 +182,8 @@ final class BookCrudTest extends ApiTestCase
             'json' => [],
         ]);
 
-        self::assertResponseIsUnprocessable();
-        self::assertJsonContains([
+        $this->assertResponseIsUnprocessable();
+        $this->assertJsonContains([
             'violations' => [
                 [
                     'propertyPath' => 'name',
@@ -229,10 +229,10 @@ final class BookCrudTest extends ApiTestCase
             ],
         ]);
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceItemJsonSchema(BookResource::class);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceItemJsonSchema(BookResource::class);
 
-        self::assertJsonContains([
+        $this->assertJsonContains([
             'name' => 'newName',
             'description' => 'newDescription',
             'author' => 'newAuthor',
@@ -242,12 +242,12 @@ final class BookCrudTest extends ApiTestCase
 
         $updatedBook = $bookRepository->ofId($book->id());
 
-        self::assertNotNull($book);
-        self::assertEquals(new BookName('newName'), $updatedBook->name());
-        self::assertEquals(new BookDescription('newDescription'), $updatedBook->description());
-        self::assertEquals(new Author('newAuthor'), $updatedBook->author());
-        self::assertEquals(new BookContent('newContent'), $updatedBook->content());
-        self::assertEquals(new Price(2000), $updatedBook->price());
+        $this->assertNotNull($book);
+        $this->assertEquals(new BookName('newName'), $updatedBook->name());
+        $this->assertEquals(new BookDescription('newDescription'), $updatedBook->description());
+        $this->assertEquals(new Author('newAuthor'), $updatedBook->author());
+        $this->assertEquals(new BookContent('newContent'), $updatedBook->content());
+        $this->assertEquals(new Price(2000), $updatedBook->price());
     }
 
     public function testPartiallyUpdateBook(): void
@@ -269,18 +269,18 @@ final class BookCrudTest extends ApiTestCase
             ],
         ]);
 
-        self::assertResponseIsSuccessful();
-        self::assertMatchesResourceItemJsonSchema(BookResource::class);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesResourceItemJsonSchema(BookResource::class);
 
-        self::assertJsonContains([
+        $this->assertJsonContains([
             'name' => 'newName',
         ]);
 
         $updatedBook = $bookRepository->ofId($book->id());
 
-        self::assertNotNull($book);
-        self::assertEquals(new BookName('newName'), $updatedBook->name());
-        self::assertEquals(new BookDescription('description'), $updatedBook->description());
+        $this->assertNotNull($book);
+        $this->assertEquals(new BookName('newName'), $updatedBook->name());
+        $this->assertEquals(new BookDescription('description'), $updatedBook->description());
     }
 
     public function testDeleteBook(): void
@@ -295,9 +295,9 @@ final class BookCrudTest extends ApiTestCase
 
         $response = $client->request('DELETE', sprintf('/api/books/%s', $book->id()));
 
-        self::assertResponseIsSuccessful();
-        self::assertEmpty($response->getContent());
+        $this->assertResponseIsSuccessful();
+        $this->assertEmpty($response->getContent());
 
-        self::assertNull($bookRepository->ofId($book->id()));
+        $this->assertNull($bookRepository->ofId($book->id()));
     }
 }

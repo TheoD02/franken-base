@@ -15,6 +15,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 final readonly class DoctrinePaginator implements PaginatorInterface
 {
     private int $firstResult;
+
     private int $maxResults;
 
     /**

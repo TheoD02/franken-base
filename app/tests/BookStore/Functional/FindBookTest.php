@@ -26,6 +26,6 @@ final class FindBookTest extends KernelTestCase
         $book = DummyBookFactory::createBook();
         $bookRepository->add($book);
 
-        self::assertSame($book, $queryBus->ask(new FindBookQuery($book->id())));
+        $this->assertSame($book, $queryBus->ask(new FindBookQuery($book->id())));
     }
 }

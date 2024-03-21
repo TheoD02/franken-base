@@ -48,7 +48,7 @@ final readonly class Paginator implements PaginatorInterface, \IteratorAggregate
 
     public function count(): int
     {
-        return iterator_count($this->getIterator());
+        return iterator_count($this->items);
     }
 
     /**

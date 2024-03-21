@@ -21,11 +21,12 @@ abstract class InMemoryRepository implements RepositoryInterface
     protected array $entities = [];
 
     protected ?int $page = null;
+
     protected ?int $itemsPerPage = null;
 
     public function getIterator(): \Iterator
     {
-        if (null !== $paginator = $this->paginator()) {
+        if (($paginator = $this->paginator()) instanceof PaginatorInterface) {
             yield from $paginator;
 
             return;
@@ -66,7 +67,7 @@ abstract class InMemoryRepository implements RepositoryInterface
 
     public function count(): int
     {
-        if (null !== $paginator = $this->paginator()) {
+        if (($paginator = $this->paginator()) instanceof PaginatorInterface) {
             return \count($paginator);
         }
 

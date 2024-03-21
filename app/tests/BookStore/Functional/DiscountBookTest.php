@@ -10,6 +10,7 @@ use App\BookStore\Domain\ValueObject\Discount;
 use App\BookStore\Domain\ValueObject\Price;
 use App\Shared\Application\Command\CommandBusInterface;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -17,9 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 final class DiscountBookTest extends KernelTestCase
 {
-    /**
-     * @dataProvider provideApplyADiscountOnBookCases
-     */
+    #[DataProvider('provideApplyADiscountOnBookCases')]
     public function testApplyADiscountOnBook(int $initialAmount, int $discount, int $expectedAmount): void
     {
         /** @var BookRepositoryInterface $bookRepository */
@@ -33,7 +32,7 @@ final class DiscountBookTest extends KernelTestCase
 
         $commandBus->dispatch(new DiscountBookCommand($book->id(), new Discount($discount)));
 
-        self::assertEquals(new Price($expectedAmount), $bookRepository->ofId($book->id())->price());
+        $this->assertEquals(new Price($expectedAmount), $bookRepository->ofId($book->id())->price());
     }
 
     public static function provideApplyADiscountOnBookCases(): iterable

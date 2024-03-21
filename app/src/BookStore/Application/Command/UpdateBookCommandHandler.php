@@ -20,7 +20,7 @@ final readonly class UpdateBookCommandHandler
     public function __invoke(UpdateBookCommand $command): Book
     {
         $book = $this->bookRepository->ofId($command->id);
-        if ($book === null) {
+        if (! $book instanceof Book) {
             throw new MissingBookException($command->id);
         }
 

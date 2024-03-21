@@ -28,7 +28,7 @@ final class CreateBookTest extends KernelTestCase
         /** @var CommandBusInterface $commandBus */
         $commandBus = self::getContainer()->get(CommandBusInterface::class);
 
-        self::assertEmpty($bookRepository);
+        $this->assertEmpty($bookRepository);
 
         $commandBus->dispatch(new CreateBookCommand(
             new BookName('name'),
@@ -38,15 +38,15 @@ final class CreateBookTest extends KernelTestCase
             new Price(1000),
         ));
 
-        self::assertCount(1, $bookRepository);
+        $this->assertCount(1, $bookRepository);
 
         /** @var Book $book */
         $book = array_values(iterator_to_array($bookRepository))[0];
 
-        self::assertEquals(new BookName('name'), $book->name());
-        self::assertEquals(new BookDescription('description'), $book->description());
-        self::assertEquals(new Author('author'), $book->author());
-        self::assertEquals(new BookContent('content'), $book->content());
-        self::assertEquals(new Price(1000), $book->price());
+        $this->assertEquals(new BookName('name'), $book->name());
+        $this->assertEquals(new BookDescription('description'), $book->description());
+        $this->assertEquals(new Author('author'), $book->author());
+        $this->assertEquals(new BookContent('content'), $book->content());
+        $this->assertEquals(new Price(1000), $book->price());
     }
 }

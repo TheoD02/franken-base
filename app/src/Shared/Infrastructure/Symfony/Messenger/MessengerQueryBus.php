@@ -32,12 +32,12 @@ final class MessengerQueryBus implements QueryBusInterface
         try {
             /** @var T */
             return $this->handle($query);
-        } catch (HandlerFailedException $e) {
-            if ($exception = current($e->getWrappedExceptions())) {
+        } catch (HandlerFailedException $handlerFailedException) {
+            if ($exception = current($handlerFailedException->getWrappedExceptions())) {
                 throw $exception;
             }
 
-            throw $e;
+            throw $handlerFailedException;
         }
     }
 }

@@ -36,7 +36,7 @@ final readonly class CreateBookProcessor implements ProcessorInterface
         Assert::notNull($data->content);
         Assert::notNull($data->price);
 
-        $command = new CreateBookCommand(
+        $createBookCommand = new CreateBookCommand(
             new BookName($data->name),
             new BookDescription($data->description),
             new Author($data->author),
@@ -44,7 +44,7 @@ final readonly class CreateBookProcessor implements ProcessorInterface
             new Price($data->price),
         );
 
-        $model = $this->commandBus->dispatch($command);
+        $model = $this->commandBus->dispatch($createBookCommand);
 
         return BookResource::fromModel($model);
     }

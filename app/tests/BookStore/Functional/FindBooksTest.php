@@ -38,9 +38,9 @@ final class FindBooksTest extends KernelTestCase
 
         $books = $queryBus->ask(new FindBooksQuery());
 
-        self::assertCount(\count($initialBooks), $books);
+        $this->assertCount(\count($initialBooks), $books);
         foreach ($books as $book) {
-            self::assertContains($book, $initialBooks);
+            $this->assertContains($book, $initialBooks);
         }
     }
 
@@ -56,13 +56,13 @@ final class FindBooksTest extends KernelTestCase
         $bookRepository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $bookRepository->add(DummyBookFactory::createBook(author: 'authorTwo'));
 
-        self::assertCount(3, $bookRepository);
+        $this->assertCount(3, $bookRepository);
 
         $books = $queryBus->ask(new FindBooksQuery(author: new Author('authorOne')));
 
-        self::assertCount(2, $books);
+        $this->assertCount(2, $books);
         foreach ($books as $book) {
-            self::assertEquals(new Author('authorOne'), $book->author());
+            $this->assertEquals(new Author('authorOne'), $book->author());
         }
     }
 
@@ -88,10 +88,10 @@ final class FindBooksTest extends KernelTestCase
 
         $books = $queryBus->ask(new FindBooksQuery(page: 2, itemsPerPage: 2));
 
-        self::assertCount(2, $books);
+        $this->assertCount(2, $books);
         $i = 0;
         foreach ($books as $book) {
-            self::assertSame($initialBooks[$i + 2], $book);
+            $this->assertSame($initialBooks[$i + 2], $book);
             ++$i;
         }
     }

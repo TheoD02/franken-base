@@ -18,9 +18,9 @@ final readonly class AnonymizeBooksCommandHandler
 
     public function __invoke(AnonymizeBooksCommand $command): void
     {
-        $books = $this->bookRepository->withoutPagination();
+        $bookRepository = $this->bookRepository->withoutPagination();
 
-        foreach ($books as $book) {
+        foreach ($bookRepository as $book) {
             $book->update(author: new Author($command->anonymizedName));
         }
     }
