@@ -13,7 +13,7 @@ use Webmozart\Assert\Assert;
  *
  * @implements RepositoryInterface<T>
  */
-abstract class InMemoryRepository implements RepositoryInterface
+abstract class AbstractInMemoryRepository implements RepositoryInterface
 {
     /**
      * @var array<string, T>
@@ -76,8 +76,6 @@ abstract class InMemoryRepository implements RepositoryInterface
 
     /**
      * @param callable(mixed, mixed=): bool $filter
-     *
-     * @return static<T>
      */
     protected function filter(callable $filter): static
     {

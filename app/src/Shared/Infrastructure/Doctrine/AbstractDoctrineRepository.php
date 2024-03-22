@@ -16,7 +16,7 @@ use Webmozart\Assert\Assert;
  *
  * @implements RepositoryInterface<T>
  */
-abstract class DoctrineRepository implements RepositoryInterface
+abstract class AbstractDoctrineRepository implements RepositoryInterface
 {
     private ?int $page = null;
 
@@ -94,7 +94,7 @@ abstract class DoctrineRepository implements RepositoryInterface
     }
 
     /**
-     * @return static<T>
+     * @param callable(QueryBuilder): void $filter
      */
     protected function filter(callable $filter): static
     {

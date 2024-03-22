@@ -32,7 +32,7 @@ final class MessengerQueryBus implements QueryBusInterface
         try {
             /** @var T */
             return $this->handle($query);
-        } catch (HandlerFailedException $handlerFailedException) {
+        } catch (HandlerFailedException $handlerFailedException) { // @phpstan-ignore-line
             if ($exception = current($handlerFailedException->getWrappedExceptions())) {
                 throw $exception;
             }

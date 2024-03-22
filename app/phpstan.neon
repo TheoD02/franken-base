@@ -14,9 +14,6 @@ parameters:
 #        - tests
     excludePaths:
         - modules/api/src/Resolver/ApiResponseAstResolver.php
-    ignoreErrors:
-        - '#^Attribute class JetBrains\\PhpStorm.*$#'
-        - '#^Class .*[Payload] has an uninitialized property.*$#'
 #    symfony:
 #        containerXmlPath: %currentWorkingDirectory%/var/cache/dev/App_KernelDevDebugContainer.xml
     checkTooWideReturnTypesInProtectedAndPublicMethods: true

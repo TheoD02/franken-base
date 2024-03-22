@@ -18,7 +18,7 @@ use App\Shared\Application\Command\CommandBusInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @implements ProcessorInterface<BookResource>
+ * @implements ProcessorInterface<BookResource, BookResource>
  */
 final readonly class UpdateBookProcessor implements ProcessorInterface
 {

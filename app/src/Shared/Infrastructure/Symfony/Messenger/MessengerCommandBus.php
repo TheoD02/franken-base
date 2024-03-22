@@ -32,7 +32,7 @@ final class MessengerCommandBus implements CommandBusInterface
         try {
             /** @var T */
             return $this->handle($command);
-        } catch (HandlerFailedException $handlerFailedException) {
+        } catch (HandlerFailedException $handlerFailedException) { // @phpstan-ignore-line
             if ($exception = current($handlerFailedException->getWrappedExceptions())) {
                 throw $exception;
             }

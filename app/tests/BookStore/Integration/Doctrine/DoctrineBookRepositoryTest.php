@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\BookStore\Integration\Doctrine;
 
 use App\BookStore\Domain\ValueObject\Author;
-use App\BookStore\Infrastructure\Doctrine\DoctrineBookRepository;
+use App\BookStore\Infrastructure\Doctrine\AbstractDoctrineBookRepository;
 use App\Shared\Infrastructure\Doctrine\DoctrinePaginator;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,8 +48,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
     public function testSave(): void
     {
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
 
         $this->assertEmpty($repository);
 
@@ -62,8 +62,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
     public function testRemove(): void
     {
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
 
         $book = DummyBookFactory::createBook();
         $repository->add($book);
@@ -79,8 +79,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
     public function testOfId(): void
     {
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
 
         $this->assertEmpty($repository);
 
@@ -94,8 +94,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
     public function testWithAuthor(): void
     {
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
 
         $repository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $repository->add(DummyBookFactory::createBook(author: 'authorOne'));
@@ -109,8 +109,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
     public function testWithCheapestsFirst(): void
     {
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
 
         $repository->add(DummyBookFactory::createBook(price: 1));
         $repository->add(DummyBookFactory::createBook(price: 3));
@@ -128,8 +128,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
     public function testWithPagination(): void
     {
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
         $this->assertNull($repository->paginator());
 
         $repository = $repository->withPagination(1, 2);
@@ -139,8 +139,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
     public function testWithoutPagination(): void
     {
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
         $repository = $repository->withPagination(1, 2);
         $this->assertNotNull($repository->paginator());
 
@@ -151,8 +151,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
     public function testIteratorWithoutPagination(): void
     {
         $this->markTestSkipped('This test is not working as expected for now, with failing sometimes');
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
         $this->assertNull($repository->paginator());
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
@@ -171,8 +171,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
     public function testIteratorWithPagination(): void
     {
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
         $this->assertNull($repository->paginator());
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
@@ -206,8 +206,8 @@ final class DoctrineBookRepositoryTest extends KernelTestCase
 
     public function testCount(): void
     {
-        /** @var DoctrineBookRepository $repository */
-        $repository = self::getContainer()->get(DoctrineBookRepository::class);
+        /** @var AbstractDoctrineBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractDoctrineBookRepository::class);
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
         foreach ($books as $book) {

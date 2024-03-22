@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\BookStore\Integration\InMemory;
 
 use App\BookStore\Domain\ValueObject\Author;
-use App\BookStore\Infrastructure\InMemory\InMemoryBookRepository;
+use App\BookStore\Infrastructure\InMemory\AbstractInMemoryBookRepository;
 use App\Shared\Infrastructure\InMemory\InMemoryPaginator;
 use App\Tests\BookStore\DummyFactory\DummyBookFactory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -17,8 +17,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 {
     public function testAdd(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
 
         $this->assertEmpty($repository);
 
@@ -30,8 +30,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
     public function testRemove(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
 
         $book = DummyBookFactory::createBook();
         $repository->add($book);
@@ -44,8 +44,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
     public function testOfId(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
 
         $this->assertEmpty($repository);
 
@@ -57,8 +57,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
     public function testWithAuthor(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
 
         $repository->add(DummyBookFactory::createBook(author: 'authorOne'));
         $repository->add(DummyBookFactory::createBook(author: 'authorOne'));
@@ -70,8 +70,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
     public function testWithCheapestsFirst(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
 
         $repository->add(DummyBookFactory::createBook(price: 1));
         $repository->add(DummyBookFactory::createBook(price: 3));
@@ -87,8 +87,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
     public function testWithPagination(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
         $this->assertNull($repository->paginator());
 
         $repository = $repository->withPagination(1, 2);
@@ -98,8 +98,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
     public function testWithoutPagination(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
         $repository = $repository->withPagination(1, 2);
         $this->assertNotNull($repository->paginator());
 
@@ -109,8 +109,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
     public function testIteratorWithoutPagination(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
         $this->assertNull($repository->paginator());
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
@@ -127,8 +127,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
     public function testIteratorWithPagination(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
         $this->assertNull($repository->paginator());
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
@@ -159,8 +159,8 @@ final class InMemoryBookRepositoryTest extends KernelTestCase
 
     public function testCount(): void
     {
-        /** @var InMemoryBookRepository $repository */
-        $repository = self::getContainer()->get(InMemoryBookRepository::class);
+        /** @var AbstractInMemoryBookRepository $repository */
+        $repository = self::getContainer()->get(AbstractInMemoryBookRepository::class);
 
         $books = [DummyBookFactory::createBook(), DummyBookFactory::createBook(), DummyBookFactory::createBook()];
         foreach ($books as $book) {

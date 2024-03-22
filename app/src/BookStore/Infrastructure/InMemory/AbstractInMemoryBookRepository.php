@@ -8,12 +8,12 @@ use App\BookStore\Domain\Model\Book;
 use App\BookStore\Domain\Repository\BookRepositoryInterface;
 use App\BookStore\Domain\ValueObject\Author;
 use App\BookStore\Domain\ValueObject\BookId;
-use App\Shared\Infrastructure\InMemory\InMemoryRepository;
+use App\Shared\Infrastructure\InMemory\AbstractInMemoryRepository;
 
 /**
- * @extends InMemoryRepository<Book>
+ * @extends AbstractInMemoryRepository<Book>
  */
-final class InMemoryBookRepository extends InMemoryRepository implements BookRepositoryInterface
+final class AbstractInMemoryBookRepository extends AbstractInMemoryRepository implements BookRepositoryInterface
 {
     public function add(Book $book): void
     {
@@ -38,7 +38,7 @@ final class InMemoryBookRepository extends InMemoryRepository implements BookRep
     public function withCheapestsFirst(): static
     {
         $cloned = clone $this;
-        uasort($cloned->entities, static fn (Book $a, Book $b): int => $a->price() <=> $b->price());
+        uasort($cloned->entities, static fn (Book $a, Book $b): int => $a->price()->amount <=> $b->price()->amount);
 
         return $cloned;
     }

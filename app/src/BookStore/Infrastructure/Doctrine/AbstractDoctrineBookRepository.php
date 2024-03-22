@@ -8,14 +8,14 @@ use App\BookStore\Domain\Model\Book;
 use App\BookStore\Domain\Repository\BookRepositoryInterface;
 use App\BookStore\Domain\ValueObject\Author;
 use App\BookStore\Domain\ValueObject\BookId;
-use App\Shared\Infrastructure\Doctrine\DoctrineRepository;
+use App\Shared\Infrastructure\Doctrine\AbstractDoctrineRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * @extends DoctrineRepository<Book>
+ * @extends AbstractDoctrineRepository<Book>
  */
-final class DoctrineBookRepository extends DoctrineRepository implements BookRepositoryInterface
+final class AbstractDoctrineBookRepository extends AbstractDoctrineRepository implements BookRepositoryInterface
 {
     private const ENTITY_CLASS = Book::class;
 

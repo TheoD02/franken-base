@@ -9,7 +9,10 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class AuthorFilter implements FilterInterface
 {
-    public function getDescription(string $resourceClass): array
+    /**
+     * @param class-string $resourceClass
+     */
+    public function getDescription(string $resourceClass): array // @phpstan-ignore-line
     {
         return [
             'author' => [

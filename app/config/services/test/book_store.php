@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\BookStore\Domain\Repository\BookRepositoryInterface;
-use App\BookStore\Infrastructure\Doctrine\DoctrineBookRepository;
-use App\BookStore\Infrastructure\InMemory\InMemoryBookRepository;
+use App\BookStore\Infrastructure\Doctrine\AbstractDoctrineBookRepository;
+use App\BookStore\Infrastructure\InMemory\AbstractInMemoryBookRepository;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -16,11 +16,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     // repositories
     $services->set(BookRepositoryInterface::class)
-        ->class(InMemoryBookRepository::class);
+        ->class(AbstractInMemoryBookRepository::class);
 
-    $services->set(InMemoryBookRepository::class)
+    $services->set(AbstractInMemoryBookRepository::class)
         ->public();
 
-    $services->set(DoctrineBookRepository::class)
+    $services->set(AbstractDoctrineBookRepository::class)
         ->public();
 };

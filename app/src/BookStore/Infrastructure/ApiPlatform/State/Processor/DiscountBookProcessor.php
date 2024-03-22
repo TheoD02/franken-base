@@ -17,7 +17,7 @@ use App\Shared\Application\Query\QueryBusInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @implements ProcessorInterface<BookResource>
+ * @implements ProcessorInterface<DiscountBookPayload, BookResource>
  */
 final readonly class DiscountBookProcessor implements ProcessorInterface
 {

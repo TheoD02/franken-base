@@ -22,7 +22,7 @@ final readonly class BookItemProvider implements ProviderInterface
     ) {
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?BookResource
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): BookResource
     {
         /** @var string $id */
         $id = $uriVariables['id'];

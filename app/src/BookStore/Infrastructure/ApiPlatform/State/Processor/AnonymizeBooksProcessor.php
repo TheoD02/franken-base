@@ -11,7 +11,7 @@ use App\Shared\Application\Command\CommandBusInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @implements ProcessorInterface<null>
+ * @implements ProcessorInterface<AnonymizeBooksCommand, null>
  */
 final readonly class AnonymizeBooksProcessor implements ProcessorInterface
 {

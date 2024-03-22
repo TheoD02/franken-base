@@ -13,7 +13,7 @@ use App\Shared\Application\Command\CommandBusInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * @implements ProcessorInterface<null>
+ * @implements ProcessorInterface<BookResource, null>
  */
 final readonly class DeleteBookProcessor implements ProcessorInterface
 {

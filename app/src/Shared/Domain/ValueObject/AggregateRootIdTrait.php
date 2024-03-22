@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\Uuid;
 
-trait AggregateRootId
+trait AggregateRootIdTrait
 {
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'uuid')]
