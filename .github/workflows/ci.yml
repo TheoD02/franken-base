@@ -194,15 +194,21 @@ jobs:
       - name: Install App
         run: cd $GITHUB_WORKSPACE/app && composer install
 
-      - uses: ankane/setup-mariadb@v1
+      - uses: getong/mariadb-action@v1.1
         with:
-          database: testdb
-          mariadb-version: "10.5"
+          host port: 3306
+          container port: 3306
+          character set server: 'utf8'
+          collation server: 'utf8_general_ci'
+          mariadb version: '10.5.24'
+          mysql database: 'symfony'
+          mysql root password: 'root'
+          mysql user: 'root'
+          mysql password: 'root'
 
       - name: Run Tests
         env:
           APP_ENV: test
-          DATABASE_URL: "mysql://root@localhost/testdb?charset=utf8mb4&serverVersion=10.5-MariaDB"
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/app/vendor/bin/phpunit --coverage-cobertura=coverage.xml
 
       - name: Code Coverage Report
