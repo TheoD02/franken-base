@@ -9,6 +9,6 @@ return static function (RoutingConfigurator $routingConfigurator): void {
     $routingConfigurator
         ->add('home', '/{path?}')
         ->controller(TemplateController::class)
-        ->defaults(['template' => 'home.html.twig'])
+        ->defaults(['template' => 'base.html.twig'])
         ->requirements(['path' => '.*']);
 };
