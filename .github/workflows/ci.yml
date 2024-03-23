@@ -194,10 +194,15 @@ jobs:
       - name: Install App
         run: cd $GITHUB_WORKSPACE/app && composer install
 
+      - uses: ankane/setup-mariadb@v1
+        with:
+          database: testdb
+          mariadb-version: "10.5"
+
       - name: Run Tests
         env:
           APP_ENV: test
-          DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
+          DATABASE_URL: "mysql://root@localhost/testdb?charset=utf8mb4&serverVersion=10.5-MariaDB"
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/app/vendor/bin/phpunit --coverage-cobertura=coverage.xml
 
       - name: Code Coverage Report
