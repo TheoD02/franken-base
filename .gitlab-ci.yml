@@ -25,7 +25,8 @@ symfony:
 
 composer_check:
   stage: test
-  needs: ["symfony"]
+  dependencies:
+    - symfony
   script:
     - cd app
     - composer validate
@@ -35,7 +36,8 @@ composer_check:
 
 phpunit:
   stage: test
-  needs: ["symfony"]
+  dependencies:
+    - symfony
   script:
     - cd app
     - php bin/console doctrine:database:create --env=test
@@ -48,7 +50,8 @@ phpunit:
 
 ecs:
   stage: test
-  needs: ["symfony"]
+  dependencies:
+    - symfony
   script:
     - cd app
     - $CI_PROJECT_DIR/tools/ecs/vendor/bin/ecs check --config $CI_PROJECT_DIR/app/ecs.php
@@ -57,7 +60,8 @@ ecs:
 
 rector:
   stage: test
-  needs: ["symfony"]
+  dependencies:
+    - symfony
   script:
     - cd app
     - $CI_PROJECT_DIR/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=$CI_PROJECT_DIR/rector.php
@@ -66,7 +70,8 @@ rector:
 
 phpstan:
   stage: test
-  needs: ["symfony"]
+  dependencies:
+    - symfony
   script:
     - cd app
     - $CI_PROJECT_DIR/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $CI_PROJECT_DIR/app/phpstan.neon --memory-limit=1G
