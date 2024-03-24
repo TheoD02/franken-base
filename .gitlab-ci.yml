@@ -8,6 +8,7 @@ services:
 
 stages:
   - test
+  - deploy-docs
 
 symfony:
   stage: test
@@ -83,7 +84,7 @@ phpstan:
     - master
 
 deploy:
-  stage: deploy
+  stage: deploy-docs
   script:
     - echo "Deploying to production server"
   only:
@@ -91,7 +92,7 @@ deploy:
 
 
 pages:
-  stage: deploy
+  stage: deploy-docs
   image: python:latest
   before_script: ''
   script:
