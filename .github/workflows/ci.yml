@@ -43,7 +43,7 @@ jobs:
           for dir in $tools_dirs; do
               cd $dir && composer install -q --no-ansi --no-interaction --no-scripts --no-progress
           done
-          
+
 
       - name: ECS
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/ecs/vendor/bin/ecs check --config $GITHUB_WORKSPACE/app/ecs.php
@@ -54,6 +54,11 @@ jobs:
       - name: Run PHPStan
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $GITHUB_WORKSPACE/app/phpstan.neon --memory-limit=1G
 
+      - name: Check composer.json
+        run: cd $GITHUB_WORKSPACE/app && composer validate
+
+      - name: Check composer normalization
+        run: cd $GITHUB_WORKSPACE/app && composer normalize --dry-run
 
 #name: Symfony
 #
