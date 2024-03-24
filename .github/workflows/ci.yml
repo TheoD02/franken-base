@@ -38,7 +38,8 @@ jobs:
         uses: overtrue/phplint@9.1.2
 
       - name: Install vendors
-        run: cd $GITHUB_WORKSPACE/app && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        working-directory: $GITHUB_WORKSPACE/app
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Install tools vendors
         run: |
@@ -48,25 +49,31 @@ jobs:
           done
 
       - name: Check composer.json
-        run: cd $GITHUB_WORKSPACE/app && composer validate
+        working-directory: $GITHUB_WORKSPACE/app
+        run: composer validate
 
       - name: Check composer normalization
-        run: cd $GITHUB_WORKSPACE/app && composer normalize --dry-run
+        working-directory: $GITHUB_WORKSPACE/app
+        run: composer normalize --dry-run
 
       - name: ECS
-        run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/ecs/vendor/bin/ecs check --config $GITHUB_WORKSPACE/app/ecs.php
+        working-directory: $GITHUB_WORKSPACE/app
+        run: $GITHUB_WORKSPACE/tools/ecs/vendor/bin/ecs check --config $GITHUB_WORKSPACE/app/ecs.php
 
       - name: Rector
-        run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=rector.php
+        working-directory: $GITHUB_WORKSPACE/app
+        run: $GITHUB_WORKSPACE/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=rector.php
 
       - name: PHPStan
-        run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $GITHUB_WORKSPACE/app/phpstan.neon --memory-limit=1G
+        working-directory: $GITHUB_WORKSPACE/app
+        run: $GITHUB_WORKSPACE/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $GITHUB_WORKSPACE/app/phpstan.neon --memory-limit=1G
 
       - name: Run Tests
         env:
           APP_ENV: test
+          DATABASE_URL: mysql://root:root@mariadb:3306/symfony?serverVersion=10.5.24-MariaDB
+        working-directory: $GITHUB_WORKSPACE/app
         run: | 
-          cd $GITHUB_WORKSPACE/app
           php bin/console doctrine:database:create --env=test
           $GITHUB_WORKSPACE/app/vendor/bin/phpunit --coverage-cobertura=coverage.xml
 
