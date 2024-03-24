@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Infrastructure\ApiPlatform\State\Processor;
 
 use ApiPlatform\Metadata\Operation;
@@ -16,8 +18,9 @@ use Webmozart\Assert\Assert;
  */
 final readonly class CreateUserProcessor implements ProcessorInterface
 {
-    public function __construct(private CommandBusInterface $commandBus)
-    {
+    public function __construct(
+        private CommandBusInterface $commandBus
+    ) {
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): UserResource
@@ -27,10 +30,7 @@ final readonly class CreateUserProcessor implements ProcessorInterface
         Assert::notNull($data->email);
         Assert::notNull($data->password);
 
-        $command = new CreateUserCommand(
-            email: new UserEmail($data->email),
-            password: new UserPassword($data->password),
-        );
+        $command = new CreateUserCommand(email: new UserEmail($data->email), password: new UserPassword($data->password));
 
         $model = $this->commandBus->dispatch($command);
 

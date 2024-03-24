@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Application\Command;
 
 use App\Shared\Application\Command\AsCommandHandler;
@@ -17,11 +19,7 @@ final readonly class CreateUserCommandHandler
 
     public function __invoke(CreateUserCommand $command): User
     {
-        $user = new User(
-            email: $command->email,
-            password: $command->password,
-            roles: $command->roles ?? new UserRoles([UserRoles::ROLE_USER])
-        );
+        $user = new User(email: $command->email, password: $command->password, roles: $command->roles ?? new UserRoles([UserRoles::ROLE_USER]));
 
         $this->repository->add($user);
 

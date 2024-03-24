@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\User\Unit;
 
 use App\User\Domain\ValueObject\UserRoles;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class UserRolesTest extends TestCase
 {
     public function testUserRoles(): void

@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Domain\ValueObject;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Webmozart\Assert\Assert;
-
-use function array_values;
 
 #[ORM\Embeddable]
 final class UserRoles
@@ -39,10 +39,10 @@ final class UserRoles
 
     public function has(string $role): bool
     {
-        return in_array($role, $this->value, true);
+        return \in_array($role, $this->value, true);
     }
 
-    public function equals(UserRoles $roles): bool
+    public function equals(self $roles): bool
     {
         return array_values($this->value) === array_values($roles->value);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Application\Query;
 
 use App\Shared\Application\Query\AsQueryHandler;
@@ -10,8 +12,9 @@ use App\User\Domain\Repository\UserRepositoryInterface;
 #[AsQueryHandler]
 final readonly class FindUserQueryHandler
 {
-    public function __construct(private UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        private UserRepositoryInterface $userRepository
+    ) {
     }
 
     public function __invoke(FindUserQuery $query): User

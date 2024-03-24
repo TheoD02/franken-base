@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Infrastructure\ApiPlatform\State\Provider;
 
 use ApiPlatform\Metadata\Operation;
@@ -15,8 +17,9 @@ use Symfony\Component\Uid\Uuid;
  */
 final readonly class UserItemProvider implements ProviderInterface
 {
-    public function __construct(private QueryBusInterface $queryBus)
-    {
+    public function __construct(
+        private QueryBusInterface $queryBus
+    ) {
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): UserResource

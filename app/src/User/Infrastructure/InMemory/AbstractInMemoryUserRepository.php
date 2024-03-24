@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Infrastructure\InMemory;
 
 use App\Shared\Infrastructure\InMemory\AbstractInMemoryRepository;
@@ -14,16 +16,16 @@ class AbstractInMemoryUserRepository extends AbstractInMemoryRepository implemen
 {
     public function add(User $user): void
     {
-        $this->entities[(string)$user->id()] = $user;
+        $this->entities[(string) $user->id()] = $user;
     }
 
     public function remove(User $user): void
     {
-        unset($this->entities[(string)$user->id()]);
+        unset($this->entities[(string) $user->id()]);
     }
 
     public function ofId(UserId $id): ?User
     {
-        return $this->entities[(string)$id] ?? null;
+        return $this->entities[(string) $id] ?? null;
     }
 }

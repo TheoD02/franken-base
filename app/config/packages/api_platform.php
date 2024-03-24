@@ -14,6 +14,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ],
         'formats' => [
+            'json' => ['application/json'],
             'jsonld' => ['application/ld+json'],
         ],
         'patch_formats' => [

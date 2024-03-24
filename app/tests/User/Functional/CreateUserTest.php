@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\User\Functional;
 
 use App\Shared\Application\Command\CommandBusInterface;
@@ -26,10 +28,7 @@ class CreateUserTest extends KernelTestCase
 
         $this->assertEmpty($userRepository);
 
-        $command = new CreateUserCommand(
-            email: new UserEmail('test@email.com'),
-            password: new UserPassword('password'),
-        );
+        $command = new CreateUserCommand(email: new UserEmail('test@email.com'), password: new UserPassword('password'));
         $commandBus->dispatch($command);
 
         $this->assertCount(1, $userRepository);

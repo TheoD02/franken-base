@@ -140,7 +140,11 @@ final class DoctrineUserRepositoryTest extends KernelTestCase
         $repository = self::getContainer()->get(AbstractDoctrineUserRepository::class);
         $this->assertNull($repository->paginator());
 
-        $users = [DummyUserFactory::createUser(), DummyUserFactory::createUser(email: 'test2@email.com'), DummyUserFactory::createUser(email: 'test3@email.com')];
+        $users = [
+            DummyUserFactory::createUser(),
+            DummyUserFactory::createUser(email: 'test2@email.com'),
+            DummyUserFactory::createUser(email: 'test3@email.com'),
+        ];
 
         foreach ($users as $user) {
             $repository->add($user);
@@ -174,7 +178,11 @@ final class DoctrineUserRepositoryTest extends KernelTestCase
         /** @var AbstractDoctrineUserRepository $repository */
         $repository = self::getContainer()->get(AbstractDoctrineUserRepository::class);
 
-        $users = [DummyUserFactory::createUser(), DummyUserFactory::createUser(email: 'test2@email.com'), DummyUserFactory::createUser(email: 'test3@email.com')];
+        $users = [
+            DummyUserFactory::createUser(),
+            DummyUserFactory::createUser(email: 'test2@email.com'),
+            DummyUserFactory::createUser(email: 'test3@email.com'),
+        ];
         foreach ($users as $user) {
             $repository->add($user);
         }

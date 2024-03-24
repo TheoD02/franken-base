@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\User\Infrastructure\ApiPlatform\Resource;
 
 use ApiPlatform\Metadata\ApiProperty;
@@ -21,7 +23,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         // queries
         new GetCollection(provider: UserCollectionProvider::class),
         new Get(provider: UserItemProvider::class),
-        new Post(denormalizationContext: ['groups' => [self::POST_CREATE]], processor: CreateUserProcessor::class),
+        new Post(denormalizationContext: [
+            'groups' => [self::POST_CREATE],
+        ], processor: CreateUserProcessor::class),
     ]
 )]
 class UserResource
@@ -50,11 +54,6 @@ class UserResource
 
     public static function fromModel(User $model): self
     {
-        return new self(
-            $model->id()->value,
-            $model->email()->value,
-            $model->password()->value,
-            $model->roles()->value,
-        );
+        return new self($model->id()->value, $model->email()->value, $model->password()->value, $model->roles()->value);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\User\Acceptance;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
@@ -11,9 +13,6 @@ use App\User\Domain\ValueObject\UserId;
 use App\User\Domain\ValueObject\UserRoles;
 use App\User\Infrastructure\ApiPlatform\Resource\UserResource;
 use Symfony\Component\Uid\Uuid;
-
-use function sprintf;
-use function str_replace;
 
 /**
  * @internal
@@ -28,9 +27,6 @@ class UserCrudTest extends ApiTestCase
             'json' => [
                 'email' => 'test@email.com',
                 'password' => 'password',
-            ],
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
             ],
         ]);
 
@@ -64,15 +60,15 @@ class UserCrudTest extends ApiTestCase
                 'email' => 'invalid-email',
                 'password' => 'password',
             ],
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
         ]);
 
         $this->assertResponseIsUnprocessable();
         $this->assertJsonContains([
             'violations' => [
-                ['propertyPath' => 'email', 'message' => 'This value is not a valid email address.'],
+                [
+                    'propertyPath' => 'email',
+                    'message' => 'This value is not a valid email address.',
+                ],
             ],
         ]);
 
@@ -80,31 +76,37 @@ class UserCrudTest extends ApiTestCase
             'json' => [
                 'email' => 'invalid-email',
             ],
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
         ]);
 
         $this->assertResponseIsUnprocessable();
         $this->assertJsonContains([
             'violations' => [
-                ['propertyPath' => 'email', 'message' => 'This value is not a valid email address.'],
-                ['propertyPath' => 'password', 'message' => 'This value should not be null.'],
+                [
+                    'propertyPath' => 'email',
+                    'message' => 'This value is not a valid email address.',
+                ],
+                [
+                    'propertyPath' => 'password',
+                    'message' => 'This value should not be null.',
+                ],
             ],
         ]);
 
         $client->request('POST', '/api/users', [
             'json' => [],
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
         ]);
 
         $this->assertResponseIsUnprocessable();
         $this->assertJsonContains([
             'violations' => [
-                ['propertyPath' => 'email', 'message' => 'This value should not be null.'],
-                ['propertyPath' => 'password', 'message' => 'This value should not be null.'],
+                [
+                    'propertyPath' => 'email',
+                    'message' => 'This value should not be null.',
+                ],
+                [
+                    'propertyPath' => 'password',
+                    'message' => 'This value should not be null.',
+                ],
             ],
         ]);
     }
@@ -119,7 +121,7 @@ class UserCrudTest extends ApiTestCase
         $user = DummyUserFactory::createUser();
         $userRepository->add($user);
 
-        $client->request('GET', sprintf('/api/users/%s', (string)$user->id()));
+        $client->request('GET', sprintf('/api/users/%s', (string) $user->id()));
 
         $this->assertResponseIsSuccessful();
         $this->assertMatchesResourceItemJsonSchema(UserResource::class);
@@ -138,15 +140,11 @@ class UserCrudTest extends ApiTestCase
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 100; ++$i) {
             $userRepository->add(DummyUserFactory::createUser());
         }
 
-        $client->request('GET', '/api/users', [
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
-        ]);
+        $client->request('GET', '/api/users');
 
         $this->assertResponseIsSuccessful();
         $this->assertMatchesResourceCollectionJsonSchema(UserResource::class);

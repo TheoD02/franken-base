@@ -11,15 +11,8 @@ use App\User\Domain\ValueObject\UserRoles;
 
 final class DummyUserFactory
 {
-    public static function createUser(
-        string $email = 'test@email.com',
-        string $password = 'password',
-        array $roles = [UserRoles::ROLE_USER],
-    ): User {
-        return new User(
-            email: new UserEmail($email),
-            password: new UserPassword($password),
-            roles: new UserRoles($roles),
-        );
+    public static function createUser(string $email = 'test@email.com', string $password = 'password', array $roles = [UserRoles::ROLE_USER]): User
+    {
+        return new User(email: new UserEmail($email), password: new UserPassword($password), roles: new UserRoles($roles));
     }
 }
