@@ -17,7 +17,7 @@ stages:
 symfony:
   stage: test
   before_script:
-    - composer config --global cache-dir .composer-cache/
+    - composer config --global cache-dir "$(pwd)/.composer-cache"
   cache:
     paths:
       - .composer-cache/
