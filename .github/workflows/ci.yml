@@ -38,7 +38,7 @@ jobs:
         uses: overtrue/phplint@9.1.2
 
       - name: Install vendors
-        working-directory: $GITHUB_WORKSPACE/app
+        working-directory: app
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Install tools vendors
@@ -49,30 +49,30 @@ jobs:
           done
 
       - name: Check composer.json
-        working-directory: $GITHUB_WORKSPACE/app
+        working-directory: app
         run: composer validate
 
       - name: Check composer normalization
-        working-directory: $GITHUB_WORKSPACE/app
+        working-directory: app
         run: composer normalize --dry-run
 
       - name: ECS
-        working-directory: $GITHUB_WORKSPACE/app
+        working-directory: app
         run: $GITHUB_WORKSPACE/tools/ecs/vendor/bin/ecs check --config $GITHUB_WORKSPACE/app/ecs.php
 
       - name: Rector
-        working-directory: $GITHUB_WORKSPACE/app
+        working-directory: app
         run: $GITHUB_WORKSPACE/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=rector.php
 
       - name: PHPStan
-        working-directory: $GITHUB_WORKSPACE/app
+        working-directory: app
         run: $GITHUB_WORKSPACE/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $GITHUB_WORKSPACE/app/phpstan.neon --memory-limit=1G
 
       - name: Run Tests
         env:
           APP_ENV: test
           DATABASE_URL: "mysql://root:root@mariadb:3306/symfony?serverVersion=10.5.24-MariaDB"
-        working-directory: $GITHUB_WORKSPACE/app
+        working-directory: app
         run: | 
           php bin/console doctrine:database:create --env=test
           $GITHUB_WORKSPACE/app/vendor/bin/phpunit --coverage-cobertura=coverage.xml
