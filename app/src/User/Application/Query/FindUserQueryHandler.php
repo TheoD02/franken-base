@@ -21,7 +21,7 @@ final readonly class FindUserQueryHandler
     {
         $user = $this->userRepository->ofId($query->id);
 
-        if ($user === null) {
+        if (! $user instanceof User) {
             throw new MissingUserException($query->id);
         }
 

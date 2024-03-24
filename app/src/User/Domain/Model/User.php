@@ -63,6 +63,6 @@ final readonly class User implements UserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->id->value;
+        return (string) $this->id->value;
     }
 }

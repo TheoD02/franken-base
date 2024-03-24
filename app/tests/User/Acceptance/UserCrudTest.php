@@ -39,7 +39,7 @@ class UserCrudTest extends ApiTestCase
             'roles' => ['ROLE_USER'],
         ]);
 
-        $userId = new UserId(Uuid::fromString(str_replace('/api/users/', '', $response->toArray()['@id'])));
+        $userId = new UserId(Uuid::fromString(str_replace('/api/users/', '', (string) $response->toArray()['@id'])));
 
         /** @var User $user */
         $user = self::getContainer()->get(UserRepositoryInterface::class)->ofId($userId);

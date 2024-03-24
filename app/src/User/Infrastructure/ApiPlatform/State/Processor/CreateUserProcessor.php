@@ -30,9 +30,9 @@ final readonly class CreateUserProcessor implements ProcessorInterface
         Assert::notNull($data->email);
         Assert::notNull($data->password);
 
-        $command = new CreateUserCommand(email: new UserEmail($data->email), password: new UserPassword($data->password));
+        $createUserCommand = new CreateUserCommand(email: new UserEmail($data->email), password: new UserPassword($data->password));
 
-        $model = $this->commandBus->dispatch($command);
+        $model = $this->commandBus->dispatch($createUserCommand);
 
         return UserResource::fromModel($model);
     }

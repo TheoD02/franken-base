@@ -28,8 +28,8 @@ class CreateUserTest extends KernelTestCase
 
         $this->assertEmpty($userRepository);
 
-        $command = new CreateUserCommand(email: new UserEmail('test@email.com'), password: new UserPassword('password'));
-        $commandBus->dispatch($command);
+        $createUserCommand = new CreateUserCommand(email: new UserEmail('test@email.com'), password: new UserPassword('password'));
+        $commandBus->dispatch($createUserCommand);
 
         $this->assertCount(1, $userRepository);
 
