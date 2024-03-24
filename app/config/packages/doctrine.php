@@ -25,6 +25,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                         'dir' => '%kernel.project_dir%/src/BookStore/Domain',
                         'prefix' => 'App\BookStore\Domain',
                     ],
+                    'User' => [
+                        'is_bundle' => false,
+                        'type' => 'attribute',
+                        'dir' => '%kernel.project_dir%/src/User/Domain',
+                        'prefix' => 'App\User\Domain',
+                    ],
                     'Shared' => [
                         'is_bundle' => false,
                         'type' => 'attribute',

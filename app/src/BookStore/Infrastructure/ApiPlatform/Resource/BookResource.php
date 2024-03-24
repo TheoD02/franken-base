@@ -84,7 +84,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class BookResource
 {
     public function __construct(
-        #[ApiProperty(identifier: true, readable: false, writable: false)]
+        #[ApiProperty(readable: false, writable: false, identifier: true)]
         public ?AbstractUid $id = null,
 
         #[Assert\NotNull(groups: ['create'])]

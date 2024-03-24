@@ -10,5 +10,5 @@ return static function (RoutingConfigurator $routingConfigurator): void {
         ->add('home', '/{path?}')
         ->controller(TemplateController::class)
         ->defaults(['template' => 'base.html.twig'])
-        ->requirements(['path' => '.*']);
+        ->requirements(['path' => '(!api/.*)']);
 };
