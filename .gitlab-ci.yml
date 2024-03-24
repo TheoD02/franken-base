@@ -6,17 +6,15 @@ variables:
 services:
   - mariadb:10.5.24
 
-before_script:
-  - apt-get update -yqq
-  - apt-get install -yqq unzip git libicu-dev
-  - phpaddmod pcov
-
 stages:
   - test
 
 symfony:
   stage: test
   before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq unzip git libicu-dev
+    - phpaddmod pcov
     - composer config --global cache-dir "$(pwd)/.composer-cache"
   cache:
     paths:
