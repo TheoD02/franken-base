@@ -34,6 +34,9 @@ jobs:
         env:
           update: true
 
+      - name: PHP Lint
+        uses: overtrue/phplint@9.1.2
+
       - name: Install vendors
         run: cd $GITHUB_WORKSPACE/app && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
@@ -49,9 +52,6 @@ jobs:
 
       - name: Check composer normalization
         run: cd $GITHUB_WORKSPACE/app && composer normalize --dry-run
-
-      - name: PHP Lint
-        uses: overtrue/phplint@9.1.2
 
       - name: ECS
         run: cd $GITHUB_WORKSPACE/app && $GITHUB_WORKSPACE/tools/ecs/vendor/bin/ecs check --config $GITHUB_WORKSPACE/app/ecs.php
