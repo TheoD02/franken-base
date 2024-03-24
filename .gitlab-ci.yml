@@ -84,18 +84,10 @@ phpstan:
   only:
     - master
 
-deploy:
-  stage: deploy-docs
-  script:
-    - echo "Deploying to production server"
-  only:
-    - master
-
-
 pages:
   stage: deploy-docs
   image: python:latest
-  before_script: ''
+  needs: []
   script:
     - pip install mkdocs-material
     - pip install markdown-callouts
