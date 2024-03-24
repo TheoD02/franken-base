@@ -71,7 +71,7 @@ jobs:
       - name: Run Tests
         env:
           APP_ENV: test
-          DATABASE_URL: mysql://root:root@mariadb:3306/symfony?serverVersion=10.5.24-MariaDB
+          DATABASE_URL: "mysql://root:root@mariadb:3306/symfony?serverVersion=10.5.24-MariaDB"
         working-directory: $GITHUB_WORKSPACE/app
         run: | 
           php bin/console doctrine:database:create --env=test
