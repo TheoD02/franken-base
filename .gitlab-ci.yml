@@ -20,6 +20,10 @@ symfony:
     - composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - tools_dirs=$(find $CI_PROJECT_DIR/tools -maxdepth 1 -type d -exec test -e "{}/composer.json" \; -print)
     - for dir in $tools_dirs; do cd $dir && composer install -q --no-ansi --no-interaction --no-scripts --no-progress; done
+  artifacts:
+    paths:
+      - app/vendor/
+      - tools/**/vendor/
   only:
     - master
 
