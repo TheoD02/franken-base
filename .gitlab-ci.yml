@@ -15,7 +15,6 @@ symfony:
   before_script:
     - apt-get update -yqq
     - apt-get install -yqq unzip git libicu-dev
-    - phpaddmod pcov
     - composer config --global cache-dir "$(pwd)/.composer-cache"
   cache:
     paths:
@@ -46,6 +45,8 @@ composer_check:
 phpunit:
   stage: test
   needs: ["symfony"]
+  before_script:
+    - phpaddmod pcov
   script:
     - cd app
     - php bin/console doctrine:database:create --env=test
