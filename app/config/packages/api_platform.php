@@ -10,10 +10,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         'mapping' => [
             'paths' => [
                 '%kernel.project_dir%/src/BookStore/Infrastructure/ApiPlatform/Resource/',
+                '%kernel.project_dir%/src/User/Infrastructure/ApiPlatform/Resource/',
             ],
         ],
         'formats' => [
-            'json' => ['application/json'],
             'jsonld' => ['application/ld+json'],
         ],
         'patch_formats' => [
