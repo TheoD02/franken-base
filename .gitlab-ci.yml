@@ -65,7 +65,7 @@ rector:
   needs: ["symfony"]
   script:
     - cd app
-    - $CI_PROJECT_DIR/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=$CI_PROJECT_DIR/rector.php
+    - $CI_PROJECT_DIR/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=$CI_PROJECT_DIR/app/rector.php
   only:
     - master
 
