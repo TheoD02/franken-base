@@ -81,3 +81,25 @@ phpstan:
     - $CI_PROJECT_DIR/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $CI_PROJECT_DIR/app/phpstan.neon --memory-limit=1G
   only:
     - master
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to production server"
+  only:
+    - master
+
+
+pages:
+  stage: deploy
+  image: python:latest
+  before_script: ''
+  script:
+    - pip install mkdocs-material
+    - pip install markdown-callouts
+    - mkdocs build --site-dir public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
