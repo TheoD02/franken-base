@@ -29,6 +29,7 @@ symfony:
     paths:
       - app/vendor/
       - tools/**/vendor/
+      - /usr/local/lib/php/extensions/
   only:
     - master
 
