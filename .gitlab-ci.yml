@@ -1,4 +1,4 @@
-image: shinsenter/php:8.3-frankenphp
+image: alpine:3.19
 
 variables:
   MYSQL_ROOT_PASSWORD: "root"
@@ -12,6 +12,7 @@ stages:
 
 symfony:
   stage: test
+  image: shinsenter/php:8.3-frankenphp
   before_script:
     - apt-get update -yqq
     - apt-get install -yqq unzip git libicu-dev
