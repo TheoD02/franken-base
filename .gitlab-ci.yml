@@ -1,26 +1,14 @@
-image: php:8.3
+image: shinsenter/php:8.3-frankenphp
 
 variables:
   MYSQL_ROOT_PASSWORD: "root"
 
 services:
-  - name: mariadb:10.5.24
-    alias: mariadb
-    entrypoint: ["docker-entrypoint.sh", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
-    command: ["mysqld", "--log-bin=binlog", "--binlog-format=ROW"]
-    ports:
-      - "3306:3306"
+  - mariadb:10.5.24
 
 before_script:
   - apt-get update -yqq
-  - apt-get install -yqq unzip
-  - apt-get install -yqq git
-  - apt-get install -yqq libicu-dev
-  - docker-php-ext-install intl
-  - docker-php-ext-enable intl
-  - docker-php-ext-install opcache
-  - docker-php-ext-enable opcache
-  - docker-php-ext-install pdo_mysql
+  - apt-get install -yqq unzip git libicu-dev
 
 stages:
   - test
@@ -28,37 +16,59 @@ stages:
 symfony:
   stage: test
   script:
-    - git clone https://github.com/shivammathur/setup-php.git /tmp/setup-php
-    - /tmp/setup-php/run.sh $CI_PROJECT_DIR $PHP_VERSION
     - cd app
     - composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - tools_dirs=$(find $CI_PROJECT_DIR/tools -maxdepth 1 -type d -exec test -e "{}/composer.json" \; -print)
     - for dir in $tools_dirs; do cd $dir && composer install -q --no-ansi --no-interaction --no-scripts --no-progress; done
+  only:
+    - master
+
+composer_check:
+  stage: test
+  needs: ["symfony"]
+  script:
+    - cd app
     - composer validate
     - composer normalize --dry-run
+  only:
+    - master
+
+phpunit:
+  stage: test
+  needs: ["symfony"]
+  script:
+    - cd app
     - php bin/console doctrine:database:create --env=test
-    - php bin/console doctrine:schema:create --env=test
+    - ./vendor/bin/phpunit --coverage-clover=coverage.xml
   artifacts:
     paths:
       - app/coverage.xml
   only:
     - master
 
-code_quality_checks:
+ecs:
   stage: test
+  needs: ["symfony"]
   script:
     - cd app
     - $CI_PROJECT_DIR/tools/ecs/vendor/bin/ecs check --config $CI_PROJECT_DIR/app/ecs.php
-    - $CI_PROJECT_DIR/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=$CI_PROJECT_DIR/rector.php
-    - $CI_PROJECT_DIR/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $CI_PROJECT_DIR/app/phpstan.neon --memory-limit=1G
   only:
     - master
 
-composer_check:
+rector:
   stage: test
+  needs: ["symfony"]
   script:
     - cd app
-    - composer validate
-    - composer normalize --dry-run
+    - $CI_PROJECT_DIR/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=$CI_PROJECT_DIR/rector.php
+  only:
+    - master
+
+phpstan:
+  stage: test
+  needs: ["symfony"]
+  script:
+    - cd app
+    - $CI_PROJECT_DIR/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $CI_PROJECT_DIR/app/phpstan.neon --memory-limit=1G
   only:
     - master
