@@ -36,6 +36,12 @@
     >
     </coverage>
 
+    <source>
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
+
     <!--    <listeners>-->
     <!--        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>-->
     <!--    </listeners>-->
