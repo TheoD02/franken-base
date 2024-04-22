@@ -17,7 +17,7 @@ final class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    protected function configureContainer(ContainerConfigurator $container): void
+    private function configureContainer(ContainerConfigurator $container): void
     {
         $container->import(sprintf('%s/config/{packages}/*.php', $this->getProjectDir()));
         $container->import(sprintf('%s/config/{packages}/%s/*.php', $this->getProjectDir(), $this->environment));
@@ -26,13 +26,13 @@ final class Kernel extends BaseKernel
         $container->import(sprintf('%s/config/{services}/%s/*.php', $this->getProjectDir(), $this->environment));
     }
 
-    protected function configureRoutes(RoutingConfigurator $routes): void
+    private function configureRoutes(RoutingConfigurator $routes): void
     {
         $routes->import(sprintf('%s/config/{routes}/%s/*.php', $this->getProjectDir(), $this->environment));
         $routes->import(sprintf('%s/config/{routes}/*.php', $this->getProjectDir()));
     }
 
-    protected function build(ContainerBuilder $container): void
+    private function build(ContainerBuilder $container): void
     {
         $container->registerAttributeForAutoconfiguration(AsQueryHandler::class, static function (ChildDefinition $definition): void {
             $definition->addTag('messenger.message_handler', [

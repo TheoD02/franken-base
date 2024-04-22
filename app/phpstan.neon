@@ -6,11 +6,12 @@ includes:
     - %rootDir%/../../spaze/phpstan-disallowed-calls/disallowed-loose-calls.neon
     - %rootDir%/../../slam/phpstan-extensions/conf/not-now-rules.neon
     - %rootDir%/../../slam/phpstan-extensions/conf/symfony-rules.neon
+    - phar://phpstan.phar/conf/bleedingEdge.neon
 
 parameters:
-    level: 8
+    level: max
     paths:
-        - src
+        - %currentWorkingDirectory%/src
 #        - tests
     excludePaths:
         - modules/api/src/Resolver/ApiResponseAstResolver.php
@@ -19,17 +20,41 @@ parameters:
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkUninitializedProperties: true
     checkDynamicProperties: true
-    checkImplicitMixed: false
+    checkImplicitMixed: true
+    checkBenevolentUnionTypes: true
     reportAlwaysTrueInLastCondition: true
     reportAnyTypeWideningInVarTag: true
 #    checkMissingOverrideMethodAttribute: true
     checkMissingIterableValueType: true
     checkGenericClassInNonGenericObjectType: true
     checkMissingCallableSignature: true
+#    editorUrl: 'phpstorm://open?file=/home/t/franken-base/%%relFile%%&line=%%line%%'
+    editorUrlTitle: '%%relFile%%:%%line%%'
+#    doctrine: # see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#configuration
+#        ormRepositoryClass: Doctrine\ORM\EntityRepository
+#        odmRepositoryClass: Doctrine\ODM\MongoDB\DocumentRepository
+    sfpPsrLog: # see: https://github.com/struggle-for-php/sfp-phpstan-psr-log?tab=readme-ov-file#rules
+        enableMessageStaticStringRule: true
+        enableContextRequireExceptionKeyRule: true
+        reportContextExceptionLogLevel: 'info'
+        contextKeyOriginalPattern: '#\A[A-Za-z0-9-_]+\z#'
     type_coverage:
-        return_type: 95
-        param_type: 95
-        property_type: 95
+        return_type: 100
+        param_type: 100
+        property_type: 100
+    ergebnis:
+        final:
+            enabled: false
+        noExtends:
+            enabled: false
+        noParameterWithNullDefaultValue:
+            enabled: false
+        noIsset:
+            enabled: false
+        noConstructorParameterWithDefaultValue:
+            enabled: false
+        noParameterWithNullableTypeDeclaration:
+            enabled: false
     todo_by:
         nonIgnorable: false
         referenceTime: "now"

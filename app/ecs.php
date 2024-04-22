@@ -1,11 +1,11 @@
 <?php
 
 declare(strict_types=1);
-use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
 
 use PhpCsFixer\Fixer\ClassNotation\FinalInternalClassFixer;
 use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
 use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestCaseStaticMethodCallsFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestClassRequiresCoversFixer;
 use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;

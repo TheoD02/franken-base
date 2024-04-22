@@ -14,7 +14,7 @@ use function Castor\context;
 function path(?string $path = null, ?Context $context = null): string
 {
     $context ??= context();
-    $currentDirectory = $context->currentDirectory;
+    $currentDirectory = $context->workingDirectory;
 
     if ($path === null) {
         return $currentDirectory;
