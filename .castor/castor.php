@@ -71,6 +71,8 @@ function install(bool $force = false): void
     if (!fingerprint(callback: fn() => npm()->install(), fingerprint: fgp()->npm(), force: $force)) {
         io()->note('NPM dependencies are already installed.');
     }
+
+    npm()->build();
 }
 
 #[AsTask]

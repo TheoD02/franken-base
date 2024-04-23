@@ -32,7 +32,7 @@ final class Kernel extends BaseKernel
         $routes->import(sprintf('%s/config/{routes}/*.php', $this->getProjectDir()));
     }
 
-    private function build(ContainerBuilder $container): void
+    protected function build(ContainerBuilder $container): void
     {
         $container->registerAttributeForAutoconfiguration(AsQueryHandler::class, static function (ChildDefinition $definition): void {
             $definition->addTag('messenger.message_handler', [
