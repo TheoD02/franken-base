@@ -15,7 +15,6 @@ import('composer://theod02/castor-docker');
 
 import(__DIR__);
 
-
 #[AsTask]
 function start(bool $force = false): void
 {
