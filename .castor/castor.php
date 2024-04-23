@@ -6,6 +6,7 @@ use function Castor\context;
 use function Castor\fingerprint;
 use function Castor\import;
 use function Castor\io;
+use function Castor\run;
 use function TheoD02\Castor\Docker\docker;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -34,6 +35,14 @@ function start(bool $force = false): void
     }
 
     docker()->compose(profile: ['app'])->up(detach: true, wait: true);
+
+    if (is_dir(context()->workingDirectory . '/app/vendor') === false) {
+        io()->newLine();
+        io()->note('Project seem to not be installed, consider to run `castor install`');
+        if (io()->confirm('Do you want to run `castor install` now')) {
+            run([$_SERVER['argv'][0], 'install']);
+        }
+    }
 }
 
 #[AsTask]
@@ -50,16 +59,16 @@ function restart(): void
 }
 
 #[AsTask]
-function install(): void
+function install(bool $force = false): void
 {
     io()->title('Installing dependencies');
     io()->section('Composer');
-    if (!fingerprint(callback: fn() => composer()->install(), fingerprint: fgp()->composer())) {
+    if (!fingerprint(callback: fn() => composer()->install(), fingerprint: fgp()->composer(), force: $force)) {
         io()->note('Composer dependencies are already installed.');
     }
 
     io()->section('NPM');
-    if (!fingerprint(callback: fn() => npm()->install(), fingerprint: fgp()->npm())) {
+    if (!fingerprint(callback: fn() => npm()->install(), fingerprint: fgp()->npm(), force: $force)) {
         io()->note('NPM dependencies are already installed.');
     }
 }
