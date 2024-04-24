@@ -95,9 +95,9 @@ export function Header() {
                     </Text>
 
                     <Group h="100%" gap={0} visibleFrom="sm">
-                        <a href="#" className={classes.link}>
+                        <Link to="/" className={classes.link}>
                             Home
-                        </a>
+                        </Link>
                         <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
                             <HoverCard.Target>
                                 <a href="#" className={classes.link}>
