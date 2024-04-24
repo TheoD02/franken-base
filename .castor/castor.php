@@ -75,6 +75,12 @@ function install(bool $force = false): void
     npm()->build();
 }
 
+#[AsTask(name: 'ui:dev')]
+function ui_dev(): void
+{
+    npm()->dev();
+}
+
 #[AsTask]
 function shell(): void
 {

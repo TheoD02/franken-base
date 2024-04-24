@@ -8,9 +8,15 @@ export const Route = createRootRoute({
     component: Outlet,
     notFoundComponent: () => {
         if (window.location.pathname.startsWith('/admin')) {
-            return <AdminLayout isNotFound/>
+            return <>
+                <AdminLayout isNotFound/>
+                <TanStackRouterDevtools />
+            </>
         }
 
-        return <FrontLayout isNotFound/>
+        return <>
+            <FrontLayout isNotFound/>
+            <TanStackRouterDevtools />
+        </>
     }
 })

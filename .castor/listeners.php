@@ -9,7 +9,7 @@ use function Castor\context;
 use function Castor\io;
 use function TheoD02\Castor\Docker\docker;
 
-#[AsListener(BeforeExecuteTaskEvent::class)]
+#[AsListener(BeforeExecuteTaskEvent::class, priority: 1000)]
 function check_deps(BeforeExecuteTaskEvent $event): void
 {
     if ((new ExecutableFinder())->find('docker') === null) {
@@ -21,7 +21,7 @@ function check_deps(BeforeExecuteTaskEvent $event): void
     }
 }
 
-#[AsListener(BeforeExecuteTaskEvent::class)]
+#[AsListener(BeforeExecuteTaskEvent::class, priority: 10)]
 function check_docker_is_running(BeforeExecuteTaskEvent $event): void
 {
     if (in_array($event->task->getName(), ['start', 'stop', 'restart', 'install'])) {
