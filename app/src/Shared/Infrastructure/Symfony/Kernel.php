@@ -17,6 +17,9 @@ final class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     private function configureContainer(ContainerConfigurator $container): void
     {
         $container->import(sprintf('%s/config/{packages}/*.php', $this->getProjectDir()));
@@ -26,6 +29,9 @@ final class Kernel extends BaseKernel
         $container->import(sprintf('%s/config/{services}/%s/*.php', $this->getProjectDir(), $this->environment));
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     private function configureRoutes(RoutingConfigurator $routes): void
     {
         $routes->import(sprintf('%s/config/{routes}/%s/*.php', $this->getProjectDir(), $this->environment));

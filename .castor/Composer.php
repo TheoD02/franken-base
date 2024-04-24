@@ -12,12 +12,13 @@ use function Castor\context;
 class Composer
 {
     use RunnerTrait {
-        __construct as private __runnerConstruct;
+        RunnerTrait::__construct as private __runnerConstruct;
     }
 
     public function __construct(
         Context $context = null,
-    ) {
+    )
+    {
         $this->__runnerConstruct($context ?? context());
     }
 
@@ -35,6 +36,12 @@ class Composer
     public function install(): Process
     {
         return $this->add('install')->runCommand();
+    }
+
+    #[AsTaskMethod]
+    public function update(): Process
+    {
+        return $this->add('update')->runCommand();
     }
 }
 

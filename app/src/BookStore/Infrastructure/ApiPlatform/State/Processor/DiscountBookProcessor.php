@@ -27,10 +27,11 @@ final readonly class DiscountBookProcessor implements ProcessorInterface
     ) {
     }
 
+    /**
+     * @param DiscountBookPayload $data
+     */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): BookResource
     {
-        Assert::isInstanceOf($data, DiscountBookPayload::class);
-
         $bookResource = $context['previous_data'] ?? null;
         Assert::isInstanceOf($bookResource, BookResource::class);
 

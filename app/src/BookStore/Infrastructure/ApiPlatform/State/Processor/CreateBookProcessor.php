@@ -26,10 +26,11 @@ final readonly class CreateBookProcessor implements ProcessorInterface
     ) {
     }
 
+    /**
+     * @param BookResource $data
+     */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): BookResource
     {
-        Assert::isInstanceOf($data, BookResource::class);
-
         Assert::notNull($data->name);
         Assert::notNull($data->description);
         Assert::notNull($data->author);

@@ -24,6 +24,10 @@ abstract class AbstractDoctrineRepository implements RepositoryInterface
 
     private QueryBuilder $queryBuilder;
 
+    /**
+     * @param class-string   $entityClass
+     * @param literal-string $alias
+     */
     public function __construct(
         protected EntityManagerInterface $em,
         string $entityClass,

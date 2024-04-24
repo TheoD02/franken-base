@@ -7,6 +7,7 @@ use TheoD02\Castor\Classes\AsTaskMethod;
 use TheoD02\Castor\Docker\CastorDockerContext;
 use TheoD02\Castor\Docker\RunnerTrait;
 
+use Webmozart\Assert\Assert;
 use function Castor\context;
 use function Castor\finder;
 use function Castor\fingerprint;
@@ -129,5 +130,56 @@ class Qa
         return $this
             ->add('phpmd', '/app/src', 'text', 'codesize,unusedcode')
             ->runCommand();
+    }
+
+    #[AsTaskMethod(aliases: ['qa:update'])]
+    public function update(
+        string $tool = '',
+        bool   $all = false,
+    ): void
+    {
+        if ($tool === '' && !$all) {
+            io()->error('You must specify a tool to update or use the --all option');
+            exit(1);
+        }
+
+        if ($all) {
+            $tools = finder()
+                ->in(qa()->workingDirectory)
+                ->notName(['bin', 'k6'])
+                ->depth(0)
+                ->directories();
+        } else {
+            $tools = finder()
+                ->in(qa()->workingDirectory)
+                ->name($tool)
+                ->depth(0)
+                ->directories();
+        }
+
+        foreach ($tools as $tool) {
+            $toolDirectory = $tool->getPathname();
+            io()->write("{$toolDirectory}...");
+            if (!fs()->exists("{$toolDirectory}/composer.json")) {
+                io()->error("The tool {$toolDirectory} does not contain a composer.json file");
+                exit(1);
+            }
+
+            $needForceInstall = fs()->exists("{$toolDirectory}/vendor") === false;
+
+            /** @var CastorDockerContext $composerDockerContext */
+            $composerDockerContext = context()->data['docker']['composer'] ?? context()->data['docker']['default'];
+            $composerDockerContext->workdir = '/tools/' . $tool->getFilename();
+            $context = qa()
+                ->withQuiet()
+                ->withData([
+                    'docker' => [
+                        'composer' => $composerDockerContext,
+                    ]
+                ]);
+
+            composer($context)->update();
+            io()->writeln(' <info>OK</info>');
+        }
     }
 }

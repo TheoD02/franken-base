@@ -8,7 +8,6 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\BookStore\Application\Command\AnonymizeBooksCommand;
 use App\Shared\Application\Command\CommandBusInterface;
-use Webmozart\Assert\Assert;
 
 /**
  * @implements ProcessorInterface<AnonymizeBooksCommand, null>
@@ -20,10 +19,11 @@ final readonly class AnonymizeBooksProcessor implements ProcessorInterface
     ) {
     }
 
+    /**
+     * @param AnonymizeBooksCommand $data
+     */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): null
     {
-        Assert::isInstanceOf($data, AnonymizeBooksCommand::class);
-
         $this->commandBus->dispatch($data);
 
         return null;

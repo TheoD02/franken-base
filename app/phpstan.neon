@@ -33,28 +33,10 @@ parameters:
 #    doctrine: # see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#configuration
 #        ormRepositoryClass: Doctrine\ORM\EntityRepository
 #        odmRepositoryClass: Doctrine\ODM\MongoDB\DocumentRepository
-    sfpPsrLog: # see: https://github.com/struggle-for-php/sfp-phpstan-psr-log?tab=readme-ov-file#rules
-        enableMessageStaticStringRule: true
-        enableContextRequireExceptionKeyRule: true
-        reportContextExceptionLogLevel: 'info'
-        contextKeyOriginalPattern: '#\A[A-Za-z0-9-_]+\z#'
     type_coverage:
         return_type: 100
         param_type: 100
         property_type: 100
-    ergebnis:
-        final:
-            enabled: false
-        noExtends:
-            enabled: false
-        noParameterWithNullDefaultValue:
-            enabled: false
-        noIsset:
-            enabled: false
-        noConstructorParameterWithDefaultValue:
-            enabled: false
-        noParameterWithNullableTypeDeclaration:
-            enabled: false
     todo_by:
         nonIgnorable: false
         referenceTime: "now"

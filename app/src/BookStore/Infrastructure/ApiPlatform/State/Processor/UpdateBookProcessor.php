@@ -27,10 +27,11 @@ final readonly class UpdateBookProcessor implements ProcessorInterface
     ) {
     }
 
+    /**
+     * @param BookResource $data
+     */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): BookResource
     {
-        Assert::isInstanceOf($data, BookResource::class);
-
         $bookResource = $context['previous_data'] ?? null;
         Assert::isInstanceOf($bookResource, BookResource::class);
 
