@@ -12,27 +12,50 @@ parameters:
     level: max
     paths:
         - %currentWorkingDirectory%/src
-#        - tests
     excludePaths:
         - modules/api/src/Resolver/ApiResponseAstResolver.php
-#    symfony:
-#        containerXmlPath: %currentWorkingDirectory%/var/cache/dev/App_KernelDevDebugContainer.xml
+    symfony:
+        containerXmlPath: %currentWorkingDirectory%/var/cache/dev/App_Shared_Infrastructure_Symfony_KernelDevDebugContainer.xml
+    checkAlwaysTrueCheckTypeFunctionCall: true
+    checkAlwaysTrueInstanceof: true
+    checkAlwaysTrueStrictComparison: true
+    checkBenevolentUnionTypes: true
+    checkDynamicProperties: true
+    checkExplicitMixedMissingReturn: true
+    checkFunctionNameCase: true
+    checkGenericClassInNonGenericObjectType: true
+    checkImplicitMixed: true
+    checkInternalClassCaseSensitivity: true
+    checkMaybeUndefinedVariables: true
+    checkMissingCallableSignature: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkUninitializedProperties: true
-    checkDynamicProperties: true
-    checkImplicitMixed: true
-    checkBenevolentUnionTypes: true
-    reportAlwaysTrueInLastCondition: true
+    inferPrivatePropertyTypeFromConstructor: true
+    polluteScopeWithAlwaysIterableForeach: false
+    polluteScopeWithLoopInitialAssignments: false
+    rememberPossiblyImpureFunctionValues: true
     reportAnyTypeWideningInVarTag: true
-#    checkMissingOverrideMethodAttribute: true
-    checkMissingIterableValueType: true
-    checkGenericClassInNonGenericObjectType: true
-    checkMissingCallableSignature: true
+    reportMaybesInMethodSignatures: true
+    reportMaybesInPropertyPhpDocTypes: true
+    reportStaticMethodSignatures: true
+    reportUnmatchedIgnoredErrors: false
 #    editorUrl: 'phpstorm://open?file=/home/t/franken-base/%%relFile%%&line=%%line%%'
     editorUrlTitle: '%%relFile%%:%%line%%'
 #    doctrine: # see: https://github.com/phpstan/phpstan-doctrine?tab=readme-ov-file#configuration
 #        ormRepositoryClass: Doctrine\ORM\EntityRepository
 #        odmRepositoryClass: Doctrine\ODM\MongoDB\DocumentRepository
+#    exceptions:
+#        uncheckedExceptionClasses:
+#            - 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'
+#            - 'Symfony\Component\Security\Core\Exception\AccessDeniedException'
+#        check:
+#            missingCheckedExceptionInThrows: true
+#            tooWideThrowType: true
+    parallel:
+        jobSize: 20
+        maximumNumberOfProcesses: 32
+        minimumNumberOfJobsPerProcess: 2
+        processTimeout: 300.0
     type_coverage:
         return_type: 100
         param_type: 100
@@ -58,15 +81,6 @@ parameters:
         nonIgnorable: false
         referenceTime: "now"
     shipmonkRules:
-        classSuffixNaming:
-            superclassToSuffixMapping!:
-                \Exception: Exception
-                \PHPUnit\Framework\TestCase: Test
-                \Symfony\Component\Console\Command\Command: Command
-                \Symfony\Bundle\FrameworkBundle\Controller\AbstractController: Controller
-                \Symfony\Component\Form\AbstractType: Type
-                \Symfony\Component\Validator\Constraint: Constraint
-                \Symfony\Component\Validator\ConstraintValidator: ConstraintValidator
         allowComparingOnlyComparableTypes:
             enabled: true
         allowNamedArgumentOnlyInAttributes:
@@ -75,13 +89,13 @@ parameters:
             enabled: false
         enforceClosureParamNativeTypehint:
             enabled: true
-            allowMissingTypeWhenInferred: false
+            allowMissingTypeWhenInferred: true
         enforceEnumMatch:
             enabled: true
         enforceIteratorToArrayPreserveKeys:
             enabled: true
         enforceListReturn:
-            enabled: false
+            enabled: true
         enforceNativeReturnTypehint:
             enabled: true
         enforceReadonlyPublicProperty:
@@ -123,6 +137,7 @@ parameters:
             allowedCheckedExceptionCallables: []
         forbidCheckedExceptionInYieldingMethod:
             enabled: true
+        # https://github.com/shipmonk-rnd/phpstan-rules?tab=readme-ov-file#forbidcustomfunctions-
         forbidCustomFunctions:
             enabled: true
             list: []
@@ -130,6 +145,7 @@ parameters:
             enabled: true
         forbidFetchOnMixed:
             enabled: true
+        # https://github.com/shipmonk-rnd/phpstan-rules?tab=readme-ov-file#forbididenticalclasscomparison
         forbidIdenticalClassComparison:
             enabled: true
             blacklist: ['DateTimeInterface']
@@ -145,6 +161,7 @@ parameters:
         forbidNullInAssignOperations:
             enabled: false
             blacklist: ['??=']
+        # https://github.com/shipmonk-rnd/phpstan-rules?tab=readme-ov-file#forbidnullinbinaryoperations
         forbidNullInBinaryOperations:
             enabled: false
             blacklist: ['===', '!==', '??']
@@ -174,6 +191,9 @@ parameters:
             enabled: true
         uselessPrivatePropertyNullability:
             enabled: true
+    voku:
+        checkForAssignments: true
+        checkYodaConditions: false
     banned_code:
         nodes:
             # enable detection of echo
