@@ -2,6 +2,7 @@
 
 
 use Castor\Attribute\AsListener;
+use Castor\Event\AfterExecuteTaskEvent;
 use Castor\Event\BeforeExecuteTaskEvent;
 
 use Symfony\Component\Process\ExecutableFinder;
@@ -37,9 +38,14 @@ function check_docker_is_running(BeforeExecuteTaskEvent $event): void
 }
 
 #[AsListener(BeforeExecuteTaskEvent::class, priority: 800)]
-function check_projects_deps(BeforeExecuteTaskEvent $event): void
+#[AsListener(AfterExecuteTaskEvent::class, priority: 800)]
+function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event): void
 {
-    if (in_array($event->task->getName(), ['install', 'start', 'stop', 'restart'])) {
+    if ($event instanceof BeforeExecuteTaskEvent && in_array($event->task->getName(), ['start', 'stop', 'restart', 'install'])) {
+        return;
+    }
+
+    if ($event->task->getName() === 'install') {
         return;
     }
 
@@ -57,6 +63,7 @@ function check_projects_deps(BeforeExecuteTaskEvent $event): void
     }
 
     if ($missingDeps !== []) {
+        io()->newLine();
         io()->error('Some dependencies are missing:');
         io()->listing($missingDeps);
 
