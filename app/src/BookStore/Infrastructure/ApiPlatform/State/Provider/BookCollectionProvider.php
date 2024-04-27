@@ -47,7 +47,7 @@ final readonly class BookCollectionProvider implements ProviderInterface
         }
 
         $paginator = $models->paginator();
-        if (null !== $paginator) {
+        if ($paginator !== null) {
             return new Paginator(
                 new \ArrayIterator($resources),
                 (float) $paginator->getCurrentPage(),

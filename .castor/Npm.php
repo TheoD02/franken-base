@@ -21,6 +21,11 @@ class Npm
         $this->__runnerConstruct($context ?? context());
     }
 
+    public function run(string $command): Process
+    {
+        return $this->add('run', $command)->runCommand();
+    }
+
     protected function getBaseCommand(): ?string
     {
         return 'npm';
@@ -35,24 +40,6 @@ class Npm
     public function install(): Process
     {
         return $this->add('install')->runCommand();
-    }
-
-    #[AsTaskMethod]
-    public function build(): Process
-    {
-        return $this->add('run', 'build')->runCommand();
-    }
-
-    #[AsTaskMethod]
-    public function watch(): Process
-    {
-        return $this->add('run', 'watch')->runCommand();
-    }
-
-    #[AsTaskMethod]
-    public function dev(): Process
-    {
-        return $this->add('run', 'dev')->runCommand();
     }
 }
 

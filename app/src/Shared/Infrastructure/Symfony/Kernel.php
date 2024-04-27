@@ -38,7 +38,9 @@ final class Kernel extends BaseKernel
         $routes->import(sprintf('%s/config/{routes}/*.php', $this->getProjectDir()));
     }
 
-    // @phpstan-ignore-next-line
+    /**
+     * @phpstan-ignore-next-line
+     */
     protected function build(ContainerBuilder $container): void
     {
         $container->registerAttributeForAutoconfiguration(AsQueryHandler::class, static function (ChildDefinition $definition): void {
