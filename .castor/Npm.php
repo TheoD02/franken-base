@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Castor\Context;
 use Symfony\Component\Process\Process;
 use TheoD02\Castor\Classes\AsTaskClass;
@@ -15,9 +17,8 @@ class Npm
         __construct as private __runnerConstruct;
     }
 
-    public function __construct(
-        Context $context = null,
-    ) {
+    public function __construct(?Context $context = null)
+    {
         $this->__runnerConstruct($context ?? context());
     }
 

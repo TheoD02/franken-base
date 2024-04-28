@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Castor\Attribute\AsOption;
 use Symfony\Component\Process\Process;
 use TheoD02\Castor\Classes\AsTaskClass;
@@ -7,7 +9,6 @@ use TheoD02\Castor\Classes\AsTaskMethod;
 use TheoD02\Castor\Docker\CastorDockerContext;
 use TheoD02\Castor\Docker\RunnerTrait;
 
-use Webmozart\Assert\Assert;
 use function Castor\context;
 use function Castor\finder;
 use function Castor\fingerprint;
@@ -26,7 +27,7 @@ class Qa
 
     public function __construct()
     {
-        $this->__runnerTraitConstruct(qa());
+        $this->__runnerTraitConstruct(qa_context());
     }
 
     protected function allowRunningUsingDocker(): bool
@@ -36,21 +37,28 @@ class Qa
 
     private function preRunCommand(): void
     {
+        $this->install();
+    }
+
+    #[AsTaskMethod(aliases: ['qa:update'])]
+    public function install(): void
+    {
         if (self::$runOnce) {
             return;
         }
 
         $tools = finder()
-            ->in(qa()->workingDirectory)
+            ->in(qa_context()->workingDirectory)
             ->notName(['bin', 'k6'])
             ->depth(0)
-            ->directories();
+            ->directories()
+        ;
 
         io()->writeln('Checking tools installation');
         foreach ($tools as $tool) {
             $toolDirectory = $tool->getPathname();
             io()->write("{$toolDirectory}...");
-            if (!fs()->exists("{$toolDirectory}/composer.json")) {
+            if (! fs()->exists("{$toolDirectory}/composer.json")) {
                 io()->error("The tool {$toolDirectory} does not contain a composer.json file");
                 exit(1);
             }
@@ -60,13 +68,14 @@ class Qa
             /** @var CastorDockerContext $composerDockerContext */
             $composerDockerContext = context()->data['docker']['composer'] ?? context()->data['docker']['default'];
             $composerDockerContext->workdir = '/tools/' . $tool->getFilename();
-            $context = qa()
+            $context = qa_context()
                 ->withQuiet()
                 ->withData([
                     'docker' => [
                         'composer' => $composerDockerContext,
-                    ]
-                ]);
+                    ],
+                ])
+            ;
 
             fingerprint(
                 callback: static function () use ($context) {
@@ -86,6 +95,55 @@ class Qa
         self::$runOnce = true;
     }
 
+    #[AsTaskMethod(aliases: ['qa:update'])]
+    public function update(string $tool = '', bool $all = false): void
+    {
+        if ($tool === '' && ! $all) {
+            io()->error('You must specify a tool to update or use the --all option');
+            exit(1);
+        }
+
+        if ($all) {
+            $tools = finder()
+                ->in(qa_context()->workingDirectory)
+                ->notName(['bin', 'k6'])
+                ->depth(0)
+                ->directories()
+            ;
+        } else {
+            $tools = finder()
+                ->in(qa_context()->workingDirectory)
+                ->name($tool)
+                ->depth(0)
+                ->directories()
+            ;
+        }
+
+        foreach ($tools as $tool) {
+            $toolDirectory = $tool->getPathname();
+            io()->write("{$toolDirectory}...");
+            if (! fs()->exists("{$toolDirectory}/composer.json")) {
+                io()->error("The tool {$toolDirectory} does not contain a composer.json file");
+                exit(1);
+            }
+
+            /** @var CastorDockerContext $composerDockerContext */
+            $composerDockerContext = context()->data['docker']['composer'] ?? context()->data['docker']['default'];
+            $composerDockerContext->workdir = '/tools/' . $tool->getFilename();
+            $context = qa_context()
+                ->withQuiet()
+                ->withData([
+                    'docker' => [
+                        'composer' => $composerDockerContext,
+                    ],
+                ])
+            ;
+
+            composer($context)->update();
+            io()->writeln(' <info>OK</info>');
+        }
+    }
+
     #[AsTaskMethod]
     public function ecs(#[AsOption(description: 'Fix the issues')] bool $fix = false): Process
     {
@@ -103,7 +161,8 @@ class Qa
 
         return $this
             ->add('phpstan', 'analyse', '--level=8', '--configuration', '/app/phpstan.neon', '--memory-limit=1G')
-            ->runCommand();
+            ->runCommand()
+        ;
     }
 
     #[AsTaskMethod]
@@ -111,7 +170,7 @@ class Qa
     {
         $this->add('rector', 'process', '--clear-cache', '--config', '/app/rector.php');
 
-        $this->addIf(!$fix, '--dry-run');
+        $this->addIf(! $fix, '--dry-run');
 
         return $this->runCommand();
     }
@@ -121,7 +180,8 @@ class Qa
     {
         return $this
             ->add('phparkitect', 'check', '--ansi', '--config', '/app/phparkitect.php')
-            ->runCommand();
+            ->runCommand()
+        ;
     }
 
     #[AsTaskMethod(aliases: ['qa:phpmd'])]
@@ -129,57 +189,12 @@ class Qa
     {
         return $this
             ->add('phpmd', '/app/src', 'text', 'codesize,unusedcode')
-            ->runCommand();
+            ->runCommand()
+        ;
     }
+}
 
-    #[AsTaskMethod(aliases: ['qa:update'])]
-    public function update(
-        string $tool = '',
-        bool   $all = false,
-    ): void
-    {
-        if ($tool === '' && !$all) {
-            io()->error('You must specify a tool to update or use the --all option');
-            exit(1);
-        }
-
-        if ($all) {
-            $tools = finder()
-                ->in(qa()->workingDirectory)
-                ->notName(['bin', 'k6'])
-                ->depth(0)
-                ->directories();
-        } else {
-            $tools = finder()
-                ->in(qa()->workingDirectory)
-                ->name($tool)
-                ->depth(0)
-                ->directories();
-        }
-
-        foreach ($tools as $tool) {
-            $toolDirectory = $tool->getPathname();
-            io()->write("{$toolDirectory}...");
-            if (!fs()->exists("{$toolDirectory}/composer.json")) {
-                io()->error("The tool {$toolDirectory} does not contain a composer.json file");
-                exit(1);
-            }
-
-            $needForceInstall = fs()->exists("{$toolDirectory}/vendor") === false;
-
-            /** @var CastorDockerContext $composerDockerContext */
-            $composerDockerContext = context()->data['docker']['composer'] ?? context()->data['docker']['default'];
-            $composerDockerContext->workdir = '/tools/' . $tool->getFilename();
-            $context = qa()
-                ->withQuiet()
-                ->withData([
-                    'docker' => [
-                        'composer' => $composerDockerContext,
-                    ]
-                ]);
-
-            composer($context)->update();
-            io()->writeln(' <info>OK</info>');
-        }
-    }
+function qa(): Qa
+{
+    return new Qa();
 }

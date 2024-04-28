@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Castor\Attribute\AsContext;
 use Castor\Context;
 use TheoD02\Castor\Docker\CastorDockerContext;
@@ -26,14 +28,15 @@ function default_context(): Context
                 'default' => $defaultDocker,
                 'composer' => $backend,
                 'npm' => $frontend,
-            ]
+            ],
         ]
     );
 }
 
 #[AsContext]
-function qa(): Context
+function qa_context(): Context
 {
     return default_context()
-        ->withWorkingDirectory(ROOT_DIR . '/tools');
+        ->withWorkingDirectory(ROOT_DIR . '/tools')
+    ;
 }

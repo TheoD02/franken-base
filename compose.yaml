@@ -30,6 +30,7 @@ services:
     volumes:
       - ./app:/app
       - ./tools:/tools
+      - ./.castor:/.castor
       - ~/.ssh:/home/www-data/.ssh:ro
       - caddy_data:/data
       - caddy_config:/config

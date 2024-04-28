@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 use Castor\Attribute\AsListener;
 use Castor\Event\AfterExecuteTaskEvent;
 use Castor\Event\BeforeExecuteTaskEvent;
-
 use Symfony\Component\Process\ExecutableFinder;
+
 use function Castor\context;
+use function Castor\finder;
 use function Castor\io;
 use function TheoD02\Castor\Docker\docker;
 
@@ -14,19 +16,15 @@ use function TheoD02\Castor\Docker\docker;
 function check_tool_deps(BeforeExecuteTaskEvent $event): void
 {
     if ((new ExecutableFinder())->find('docker') === null) {
-        io()->error([
-            'Docker is required for running this application',
-            'Check documentation: https://docs.docker.com/engine/install'
-        ]);
+        io()->error(['Docker is required for running this application', 'Check documentation: https://docs.docker.com/engine/install']);
         exit(1);
     }
 }
 
-
 #[AsListener(BeforeExecuteTaskEvent::class, priority: 900)]
 function check_docker_is_running(BeforeExecuteTaskEvent $event): void
 {
-    if (in_array($event->task->getName(), ['start', 'stop', 'restart'])) {
+    if (in_array($event->task->getName(), ['start', 'stop', 'restart'], true)) {
         return;
     }
 
@@ -41,7 +39,7 @@ function check_docker_is_running(BeforeExecuteTaskEvent $event): void
 #[AsListener(AfterExecuteTaskEvent::class, priority: 800)]
 function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event): void
 {
-    if ($event instanceof BeforeExecuteTaskEvent && in_array($event->task->getName(), ['start', 'stop', 'restart', 'install'])) {
+    if ($event instanceof BeforeExecuteTaskEvent && in_array($event->task->getName(), ['start', 'stop', 'restart', 'install'], true)) {
         return;
     }
 
@@ -53,6 +51,18 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
         'Node Modules' => default_context()->workingDirectory . '/app/node_modules',
         'Composer' => default_context()->workingDirectory . '/app/vendor',
     ];
+
+    $qaToolsDirectories = finder()
+        ->directories()
+        ->in(qa_context()->workingDirectory)
+        ->depth(0)
+        ->notName(['bin', 'k6'])
+        ->sortByName()
+    ;
+
+    foreach ($qaToolsDirectories as $directory) {
+        $deps["QA - {$directory->getFilename()}"] = $directory->getPathname() . '/vendor';
+    }
 
     $missingDeps = [];
 

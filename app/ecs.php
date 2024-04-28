@@ -8,6 +8,7 @@ use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitStrictFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestCaseStaticMethodCallsFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestClassRequiresCoversFixer;
+use Symfony\Component\Finder\Finder;
 use Symplify\CodingStandard\Fixer\ArrayNotation\StandaloneLineInMultilineArrayFixer;
 use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
 use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
@@ -16,6 +17,14 @@ use Symplify\CodingStandard\Fixer\Spacing\StandaloneLinePromotedPropertyFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 
 $moduleDirs = glob(__DIR__ . '/modules/*', GLOB_ONLYDIR);
+$toolsDirsFinder = (new Finder())
+    ->files()
+    ->in('/.castor')
+    ->name('*.php') // not in vendor
+    ->notPath('vendor');
+
+$toolsDirs = array_map(fn (\SplFileInfo $fileInfo) => $fileInfo->getPath(), iterator_to_array($toolsDirsFinder));
+
 
 return ECSConfig::configure()
     ->withCache(__DIR__ . '/var/ecs')
@@ -24,6 +33,7 @@ return ECSConfig::configure()
         __DIR__ . '/src',
         __DIR__ . '/tests',
         ...$moduleDirs,
+        ...$toolsDirs,
     ])
     // add a single rule
     ->withRules([
