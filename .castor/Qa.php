@@ -48,10 +48,10 @@ class Qa
         }
 
         $tools = finder()
+            ->directories()
             ->in(qa_context()->workingDirectory)
             ->notName(['bin', 'k6'])
             ->depth(0)
-            ->directories()
         ;
 
         io()->writeln('Checking tools installation');
@@ -105,17 +105,17 @@ class Qa
 
         if ($all) {
             $tools = finder()
+                ->directories()
                 ->in(qa_context()->workingDirectory)
                 ->notName(['bin', 'k6'])
                 ->depth(0)
-                ->directories()
             ;
         } else {
             $tools = finder()
+                ->directories()
                 ->in(qa_context()->workingDirectory)
                 ->name($tool)
                 ->depth(0)
-                ->directories()
             ;
         }
 

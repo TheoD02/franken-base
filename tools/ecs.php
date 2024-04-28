@@ -16,13 +16,13 @@ use Symplify\CodingStandard\Fixer\Spacing\StandaloneLineConstructorParamFixer;
 use Symplify\CodingStandard\Fixer\Spacing\StandaloneLinePromotedPropertyFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 
-$toolsDirsFinder = (new Finder())
+$castorFilesFinder = (new Finder())
     ->files()
     ->in('/.castor')
     ->name('*.php')
     ->notPath('vendor');
 
-$toolsDirs = array_map(static fn(\SplFileInfo $fileInfo) => $fileInfo->getPath(), iterator_to_array($toolsDirsFinder));
+$castorFilePaths = array_map(static fn(\SplFileInfo $fileInfo) => $fileInfo->getPath(), iterator_to_array($castorFilesFinder));
 
 
 return ECSConfig::configure()
@@ -31,7 +31,7 @@ return ECSConfig::configure()
     ->withPaths([
         '/app/src',
         '/app/tests',
-        ...$toolsDirs,
+        ...$castorFilePaths,
     ])
     // add a single rule
     ->withRules([
