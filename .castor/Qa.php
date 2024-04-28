@@ -187,10 +187,14 @@ class Qa
     #[AsTaskMethod(aliases: ['qa:phpmd'])]
     public function phpmd(): Process
     {
-        return $this
+        $process = $this
             ->add('phpmd', '/app/src', 'text', 'codesize')
             ->runCommand()
         ;
+
+        io()->success('PHPMD has been executed successfully');
+
+        return $process;
     }
 
     #[AsTaskMethod]
