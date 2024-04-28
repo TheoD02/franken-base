@@ -9,6 +9,7 @@ use Symfony\Component\Process\ExecutableFinder;
 
 use function Castor\context;
 use function Castor\finder;
+use function Castor\fs;
 use function Castor\io;
 use function TheoD02\Castor\Docker\docker;
 
@@ -32,6 +33,37 @@ function check_docker_is_running(BeforeExecuteTaskEvent $event): void
     if (str_contains(docker($context)->compose()->ps()->getOutput(), 'franken-base-app-1') === false) {
         io()->note('Docker containers are not running. Starting them.');
         start();
+    }
+}
+
+
+#[AsListener(BeforeExecuteTaskEvent::class, priority: 850)]
+#[AsListener(AfterExecuteTaskEvent::class, priority: 800)]
+function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event): void
+{
+    if ($event instanceof BeforeExecuteTaskEvent && in_array($event->task->getName(), ['start'], true)) {
+        return;
+    }
+
+    $destination = default_context()->workingDirectory . '/app';
+    if (is_file("{$destination}/composer.json") === false) {
+        io()->newLine();
+        io()->warning('Symfony seems not to be installed.');
+
+        if (io()->confirm('Do you want to install it now?') === false) {
+            return;
+        }
+
+        $version = io()->ask('What Symfony version do you want to install?', '7.0.*');
+        composer()->add('create-project', "symfony/skeleton:{$version} /app/sf-temp")->runCommand();
+
+        $tempDestination = "{$destination}/sf-temp";
+        io()->newLine();
+        io()->note('Copying files to the destination directory.');
+        fs()->mirror($tempDestination, $destination);
+
+        io()->note('Removing temporary directory.');
+        fs()->remove($tempDestination);
     }
 }
 
