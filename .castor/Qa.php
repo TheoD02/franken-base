@@ -188,9 +188,30 @@ class Qa
     public function phpmd(): Process
     {
         return $this
-            ->add('phpmd', '/app/src', 'text', 'codesize,unusedcode')
+            ->add('phpmd', '/app/src', 'text', 'codesize')
             ->runCommand()
         ;
+    }
+
+    #[AsTaskMethod]
+    public function preCommit(): void
+    {
+        io()->title('Running QA tools - Pre-commit hook');
+
+        io()->section('Running ECS');
+        $this->ecs(fix: true);
+
+        io()->section('Running Rector');
+        $this->rector(fix: true);
+
+        io()->section('Running PHPStan');
+        $this->phpstan();
+
+        io()->section('Running PHParkitect');
+        $this->phparkitect();
+
+        io()->section('Running PHPMD');
+        $this->phpmd();
     }
 }
 

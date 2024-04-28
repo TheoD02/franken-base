@@ -9,7 +9,6 @@ use function Castor\fingerprint;
 use function Castor\import;
 use function Castor\io;
 use function Castor\notify;
-use function Castor\set_notify_title;
 use function TheoD02\Castor\Docker\docker;
 
 require_once __DIR__ . '/vendor/autoload.php';

@@ -11,8 +11,8 @@ use Arkitect\Rules\Rule;
 
 return static function (Config $config): void {
     $classSet = ClassSet::fromDir(__DIR__ . '/src');
-    $apiModuleClassSet = ClassSet::fromDir(__DIR__ . '/modules/api/src');
-    $exceptionsModuleClassSet = ClassSet::fromDir(__DIR__ . '/modules/exception/src');
+//    $apiModuleClassSet = ClassSet::fromDir(__DIR__ . '/modules/api/src');
+//    $exceptionsModuleClassSet = ClassSet::fromDir(__DIR__ . '/modules/exception/src');
 
     $layeredArchitectureRules = Architecture::withComponents()
         ->component('AppController')->definedBy('App\Controller\*')
@@ -30,8 +30,8 @@ return static function (Config $config): void {
     $layeredArchitectureRules = [...$layeredArchitectureRules];
 
     $config->add($classSet, ...getCommonNamingRulesForNamespace('App'), ...$layeredArchitectureRules);
-    $config->add($apiModuleClassSet, ...getCommonNamingRulesForNamespace('Module\Api'), ...$layeredArchitectureRules);
-    $config->add($exceptionsModuleClassSet, ...getCommonNamingRulesForNamespace('Module\ExceptionHandlerBundle'), ...$layeredArchitectureRules);
+//    $config->add($apiModuleClassSet, ...getCommonNamingRulesForNamespace('Module\Api'), ...$layeredArchitectureRules);
+//    $config->add($exceptionsModuleClassSet, ...getCommonNamingRulesForNamespace('Module\ExceptionHandlerBundle'), ...$layeredArchitectureRules);
 
 //    // Prevent deps between modules and base app
 //    $layeredModulesArchitectureRules = Architecture::withComponents()

@@ -23,7 +23,7 @@ $toolsDirsFinder = (new Finder())
     ->name('*.php') // not in vendor
     ->notPath('vendor');
 
-$toolsDirs = array_map(fn (\SplFileInfo $fileInfo) => $fileInfo->getPath(), iterator_to_array($toolsDirsFinder));
+$toolsDirs = array_map(static fn(\SplFileInfo $fileInfo) => $fileInfo->getPath(), iterator_to_array($toolsDirsFinder));
 
 
 return ECSConfig::configure()
