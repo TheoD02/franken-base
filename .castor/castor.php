@@ -68,15 +68,22 @@ function install(bool $force = false): void
         io()->note('NPM dependencies are already installed.');
     }
 
-    npm()->run('build-prod');
+    npm()->run('serve');
 
     notify('Dependencies installed');
+}
+
+#[AsTask(name: 'ui:install')]
+function ui_install(): void
+{
+    npm()->install();
 }
 
 #[AsTask(name: 'ui:dev')]
 function ui_dev(): void
 {
-    npm()->run('dev');
+    $context = context()->withTty();
+    npm($context)->run('dev');
 }
 
 #[AsTask]

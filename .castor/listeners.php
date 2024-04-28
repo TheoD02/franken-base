@@ -11,6 +11,7 @@ use function Castor\context;
 use function Castor\finder;
 use function Castor\fs;
 use function Castor\io;
+use function Castor\request;
 use function TheoD02\Castor\Docker\docker;
 
 #[AsListener(BeforeExecuteTaskEvent::class, priority: 1000)]
@@ -36,7 +37,6 @@ function check_docker_is_running(BeforeExecuteTaskEvent $event): void
     }
 }
 
-
 #[AsListener(BeforeExecuteTaskEvent::class, priority: 850)]
 #[AsListener(AfterExecuteTaskEvent::class, priority: 800)]
 function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event): void
@@ -44,6 +44,27 @@ function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent
     if ($event instanceof BeforeExecuteTaskEvent && in_array($event->task->getName(), ['start'], true)) {
         return;
     }
+
+    $response = request('GET', 'https://symfony.com/releases.json')->toArray();
+    $versions = [
+        substr($response['symfony_versions']['stable'], 0, 3) => 'Latest Stable',
+        substr($response['symfony_versions']['lts'], 0, 3) => 'Latest LTS',
+        substr($response['symfony_versions']['next'], 0, 3) => 'Next',
+    ];
+    $mapping = [
+        substr($response['symfony_versions']['stable'], 0, 3) => substr($response['symfony_versions']['stable'], 0, 3) . '.*',
+        substr($response['symfony_versions']['lts'], 0, 3) => substr($response['symfony_versions']['lts'], 0, 3) . '.*',
+        substr($response['symfony_versions']['next'], 0, 3) => substr($response['symfony_versions']['next'], 0, 3) . '.*-dev',
+    ];
+
+    $diff = array_diff($response['maintained_versions'], array_keys($versions));
+
+    foreach ($diff as $version) {
+        $versions[$version] = "{$version} Maintained";
+        $mapping[$version] = $version . '.*';
+    }
+
+    ksort($versions);
 
     $destination = default_context()->workingDirectory . '/app';
     if (is_file("{$destination}/composer.json") === false) {
@@ -54,7 +75,8 @@ function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent
             return;
         }
 
-        $version = io()->ask('What Symfony version do you want to install?', '7.0.*');
+        $version = io()->choice('Choose Symfony version', $versions, 'Latest Stable');
+        $version = '^' . $mapping[$version];
         composer()->add('create-project', "symfony/skeleton:{$version} /app/sf-temp")->runCommand();
 
         $tempDestination = "{$destination}/sf-temp";
@@ -86,8 +108,8 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
     }
 
     if (
-        is_file(default_context()->workingDirectory . '/package.json') ||
-        is_file(default_context()->workingDirectory . '/yarn.lock')
+        is_file(default_context()->workingDirectory . '/package.json')
+        || is_file(default_context()->workingDirectory . '/yarn.lock')
     ) {
         $deps['Node Modules'] = default_context()->workingDirectory . '/node_modules';
     }

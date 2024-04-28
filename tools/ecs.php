@@ -24,15 +24,19 @@ $castorFilesFinder = (new Finder())
 
 $castorFilePaths = array_map(static fn(\SplFileInfo $fileInfo) => $fileInfo->getPath(), iterator_to_array($castorFilesFinder));
 
+$paths = [
+    '/app/src',
+    ...$castorFilePaths,
+];
+
+if (file_exists('/app/tests')) {
+    $paths[] = '/app/tests';
+}
 
 return ECSConfig::configure()
     ->withCache('/var/tmp/ecs')
     ->withRootFiles()
-    ->withPaths([
-        '/app/src',
-        '/app/tests',
-        ...$castorFilePaths,
-    ])
+    ->withPaths($paths)
     // add a single rule
     ->withRules([
         NoUnusedImportsFixer::class,

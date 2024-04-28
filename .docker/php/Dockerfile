@@ -29,7 +29,6 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | b
 # Install Yarn
 RUN npm install -g yarn
 
-
 # Install PHP extensions
 RUN set -eux; \
     install-php-extensions \
@@ -40,6 +39,9 @@ RUN set -eux; \
         zip \
         pdo_mysql \
         excimer \
+        sqlite3 \
+        redis \
+        pdo_sqlite \
     ;
 
 ENV COMPOSER_ALLOW_SUPERUSER=1

@@ -7,3 +7,5 @@ tools/*/vendor
 .idea/*.iml
 yarn-error.log
 /vendor/
+
+/node_modules/

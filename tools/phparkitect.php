@@ -49,9 +49,9 @@ return static function (Config $config): void {
 //    $config->add($exceptionsModuleClassSet, ...$layeredModulesArchitectureRules);
 
     $domainArchitectureRules = Architecture::withComponents()
-        ->component('User')->definedBy('App\User\*')
+        ->component('UserProvider')->definedBy('App\User\*')
         ->component('Todo')->definedBy('App\Todo\*')
-        ->where('User')->mayDependOnComponents('Todo')
+        ->where('UserProvider')->mayDependOnComponents('Todo')
         ->where('Todo')->shouldNotDependOnAnyComponent()
         ->rules();
 
