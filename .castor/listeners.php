@@ -26,7 +26,7 @@ function check_tool_deps(BeforeExecuteTaskEvent $event): void
 #[AsListener(BeforeExecuteTaskEvent::class, priority: 900)]
 function check_docker_is_running(BeforeExecuteTaskEvent $event): void
 {
-    if (in_array($event->task->getName(), ['start', 'stop', 'restart', 'install'])) {
+    if (in_array($event->task->getName(), ['start', 'stop', 'restart'])) {
         return;
     }
 
