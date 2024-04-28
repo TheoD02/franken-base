@@ -1,4 +1,4 @@
-.castor.stub.php
+.castor/.castor.stub.php
 .idea
 tools/*/vendor
 .idea/workspace.xml

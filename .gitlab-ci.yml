@@ -62,7 +62,7 @@ ecs:
   needs: ["symfony"]
   script:
     - cd app
-    - $CI_PROJECT_DIR/tools/ecs/vendor/bin/ecs check --config $CI_PROJECT_DIR/app/ecs.php
+    - $CI_PROJECT_DIR/tools/ecs/vendor/bin/ecs check --config $CI_PROJECT_DIR/tools/ecs.php
   only:
     - master
 
@@ -71,7 +71,7 @@ rector:
   needs: ["symfony"]
   script:
     - cd app
-    - $CI_PROJECT_DIR/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=$CI_PROJECT_DIR/app/rector.php
+    - $CI_PROJECT_DIR/tools/rector/vendor/bin/rector --dry-run --clear-cache --config=$CI_PROJECT_DIR/tools/rector.php
   only:
     - master
 
@@ -80,7 +80,8 @@ phpstan:
   needs: ["symfony"]
   script:
     - cd app
-    - $CI_PROJECT_DIR/tools/phpstan/vendor/bin/phpstan analyse --level=8 --configuration $CI_PROJECT_DIR/app/phpstan.neon --memory-limit=1G
+    - php bin/console cache:clear
+    - $CI_PROJECT_DIR/tools/phpstan/vendor/bin/phpstan analyse --configuration $CI_PROJECT_DIR/tools/phpstan.neon --memory-limit=1G
   only:
     - master
 
