@@ -27,11 +27,11 @@ $toolsDirs = array_map(static fn(\SplFileInfo $fileInfo) => $fileInfo->getPath()
 
 
 return ECSConfig::configure()
-    ->withCache(__DIR__ . '/var/ecs')
+    ->withCache('/var/tmp/ecs')
     ->withRootFiles()
     ->withPaths([
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
+        '/app/src',
+        '/app/tests',
         ...$moduleDirs,
         ...$toolsDirs,
     ])

@@ -1,4 +1,3 @@
-
 includes:
     - %rootDir%/../../spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
     - %rootDir%/../../spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon

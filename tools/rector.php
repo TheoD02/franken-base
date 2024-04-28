@@ -13,11 +13,10 @@ use Rector\Symfony\Set\SymfonySetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 
 return RectorConfig::configure()
-    ->withCache(__DIR__ . '/var/rector')
+    ->withCache('/var/tmp/rector')
     ->withPaths([
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
-        __DIR__ . '/modules/*/src',
+        '/app/src',
+        '/app/tests',
     ])
     ->withRootFiles()
     ->withPhpSets(php83: true)

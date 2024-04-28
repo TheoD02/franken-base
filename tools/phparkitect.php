@@ -10,7 +10,7 @@ use Arkitect\RuleBuilders\Architecture\Architecture;
 use Arkitect\Rules\Rule;
 
 return static function (Config $config): void {
-    $classSet = ClassSet::fromDir(__DIR__ . '/src');
+    $classSet = ClassSet::fromDir('/app/src');
 //    $apiModuleClassSet = ClassSet::fromDir(__DIR__ . '/modules/api/src');
 //    $exceptionsModuleClassSet = ClassSet::fromDir(__DIR__ . '/modules/exception/src');
 

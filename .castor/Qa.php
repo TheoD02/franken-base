@@ -147,7 +147,7 @@ class Qa
     #[AsTaskMethod]
     public function ecs(#[AsOption(description: 'Fix the issues')] bool $fix = false): Process
     {
-        $this->add('ecs', 'check', '--clear-cache', '--ansi', '--config', '/app/ecs.php');
+        $this->add('ecs', 'check', '--clear-cache', '--ansi', '--config', '/tools/ecs.php');
 
         $this->addIf($fix, '--fix');
 
@@ -160,7 +160,7 @@ class Qa
         $this->add('phpstan', 'clear-result-cache')->runCommand();
 
         return $this
-            ->add('phpstan', 'analyse', '--level=8', '--configuration', '/app/phpstan.neon', '--memory-limit=1G')
+            ->add('phpstan', 'analyse', '--level=8', '--configuration', '/tools/phpstan.neon', '--memory-limit=1G')
             ->runCommand()
         ;
     }
@@ -168,7 +168,7 @@ class Qa
     #[AsTaskMethod]
     public function rector(#[AsOption(description: 'Fix the issues')] bool $fix = false): Process
     {
-        $this->add('rector', 'process', '--clear-cache', '--config', '/app/rector.php');
+        $this->add('rector', 'process', '--clear-cache', '--config', '/tools/rector.php');
 
         $this->addIf(! $fix, '--dry-run');
 
@@ -179,7 +179,7 @@ class Qa
     public function phparkitect(): Process
     {
         return $this
-            ->add('phparkitect', 'check', '--ansi', '--config', '/app/phparkitect.php')
+            ->add('phparkitect', 'check', '--ansi', '--config', '/tools/phparkitect.php')
             ->runCommand()
         ;
     }
