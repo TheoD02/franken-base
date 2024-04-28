@@ -47,10 +47,18 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
         return;
     }
 
-    $deps = [
-        'Node Modules' => default_context()->workingDirectory . '/app/node_modules',
-        'Composer' => default_context()->workingDirectory . '/app/vendor',
-    ];
+    $deps = [];
+
+    if (is_file(default_context()->workingDirectory . '/composer.json')) {
+        $deps['Composer'] = default_context()->workingDirectory . '/vendor';
+    }
+
+    if (
+        is_file(default_context()->workingDirectory . '/package.json') ||
+        is_file(default_context()->workingDirectory . '/yarn.lock')
+    ) {
+        $deps['Node Modules'] = default_context()->workingDirectory . '/node_modules';
+    }
 
     $qaToolsDirectories = finder()
         ->directories()
