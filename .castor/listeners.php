@@ -9,6 +9,7 @@ use Symfony\Component\Process\ExecutableFinder;
 
 use function Castor\context;
 use function Castor\finder;
+use function Castor\fingerprint_exists;
 use function Castor\fs;
 use function Castor\io;
 use function Castor\request;
@@ -138,6 +139,30 @@ function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event
         io()->newLine();
         io()->error('Some dependencies are missing:');
         io()->listing($missingDeps);
+
+        if (io()->confirm('Do you want to install them now?') === false) {
+            io()->note('Run `castor install` to install them.');
+            exit(1);
+        }
+
+        install();
+    }
+
+    // Check if deps is latest
+    $outdatedDeps = [];
+
+    if (fingerprint_exists(fgp()->npm()) === false) {
+        $outdatedDeps[] = 'Node Modules';
+    }
+
+    if (fingerprint_exists(fgp()->composer()) === false) {
+        $outdatedDeps[] = 'Composer';
+    }
+
+    if ($outdatedDeps !== []) {
+        io()->newLine();
+        io()->error('Some dependencies are outdated:');
+        io()->listing($outdatedDeps);
 
         if (io()->confirm('Do you want to install them now?') === false) {
             io()->note('Run `castor install` to install them.');

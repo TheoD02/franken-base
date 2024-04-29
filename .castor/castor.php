@@ -68,7 +68,7 @@ function install(bool $force = false): void
         io()->note('NPM dependencies are already installed.');
     }
 
-    npm()->run('serve');
+    npm()->run('build');
 
     notify('Dependencies installed');
 }
