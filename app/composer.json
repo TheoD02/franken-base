@@ -1,5 +1,7 @@
 {
     "type": "project",
+    "name": "theod02/franken-base",
+    "description": "A Symfony boilerplate for API projects",
     "license": "proprietary",
     "minimum-stability": "dev",
     "prefer-stable": true,
