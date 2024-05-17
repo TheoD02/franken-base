@@ -12,12 +12,14 @@ use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 
+$paths = ['/app/src'];
+if (file_exists('/app/tests')) {
+    $paths[] = '/app/tests';
+}
+
 return RectorConfig::configure()
     ->withCache('/var/tmp/rector')
-    ->withPaths([
-        '/app/src',
-        '/app/tests',
-    ])
+    ->withPaths($paths)
     ->withRootFiles()
     ->withPhpSets(php83: true)
     ->withAttributesSets(

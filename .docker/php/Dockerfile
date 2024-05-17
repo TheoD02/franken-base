@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:1-php8.3.4 as frankenphp
+FROM dunglas/frankenphp:latest-php8.3.7 as frankenphp
 
 WORKDIR /app
 USER root
@@ -73,8 +73,8 @@ RUN apt-get update && apt-get install -y fish
 # Install Xdebug
 RUN set -eux; \
     install-php-extensions \
-#        xdebug \
-        pcov \
+        xdebug \
+#        pcov \
     ;
 
 RUN echo "xdebug.mode=debug,develop,profile" >> $PHP_INI_DIR/conf.d/.docker-php-ext-xdebug.ini \

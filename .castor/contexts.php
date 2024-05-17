@@ -8,6 +8,12 @@ use TheoD02\Castor\Docker\CastorDockerContext;
 
 define('ROOT_DIR', dirname(__DIR__));
 
+#[AsContext]
+function root_context(): Context
+{
+    return new Context(workingDirectory: ROOT_DIR);
+}
+
 #[AsContext(default: true)]
 function default_context(): Context
 {
@@ -22,15 +28,17 @@ function default_context(): Context
     $backend = clone $defaultDocker;
     $frontend = clone $defaultDocker;
 
-    return new Context(
-        data: [
+    return root_context()
+        ->withData([
             'docker' => [
                 'default' => $defaultDocker,
+                'php' => $defaultDocker,
                 'composer' => $backend,
                 'npm' => $frontend,
             ],
-        ]
-    );
+        ])
+        ->withWorkingDirectory(ROOT_DIR . '/app')
+    ;
 }
 
 #[AsContext]

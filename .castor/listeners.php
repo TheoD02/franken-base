@@ -11,8 +11,9 @@ use function Castor\context;
 use function Castor\finder;
 use function Castor\fingerprint_exists;
 use function Castor\fs;
+use function Castor\http_request;
+use function Castor\input;
 use function Castor\io;
-use function Castor\request;
 use function TheoD02\Castor\Docker\docker;
 
 #[AsListener(BeforeExecuteTaskEvent::class, priority: 1000)]
@@ -32,9 +33,13 @@ function check_docker_is_running(BeforeExecuteTaskEvent $event): void
     }
 
     $context = context()->withQuiet();
-    if (str_contains(docker($context)->compose()->ps()->getOutput(), 'franken-base-app-1') === false) {
+    if (str_contains(docker($context)->compose()->ps()->getOutput(), context()->data['docker']['php']->container) === false) {
         io()->note('Docker containers are not running. Starting them.');
         start();
+    } else {
+        if (fingerprint_exists(fgp()->php_docker()) === false) {
+            io()->note('Some docker related files seems to has been changed. Please consider to restart the containers.');
+        }
     }
 }
 
@@ -46,29 +51,29 @@ function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent
         return;
     }
 
-    $response = request('GET', 'https://symfony.com/releases.json')->toArray();
-    $versions = [
-        substr($response['symfony_versions']['stable'], 0, 3) => 'Latest Stable',
-        substr($response['symfony_versions']['lts'], 0, 3) => 'Latest LTS',
-        substr($response['symfony_versions']['next'], 0, 3) => 'Next',
-    ];
-    $mapping = [
-        substr($response['symfony_versions']['stable'], 0, 3) => substr($response['symfony_versions']['stable'], 0, 3) . '.*',
-        substr($response['symfony_versions']['lts'], 0, 3) => substr($response['symfony_versions']['lts'], 0, 3) . '.*',
-        substr($response['symfony_versions']['next'], 0, 3) => substr($response['symfony_versions']['next'], 0, 3) . '.*-dev',
-    ];
-
-    $diff = array_diff($response['maintained_versions'], array_keys($versions));
-
-    foreach ($diff as $version) {
-        $versions[$version] = "{$version} Maintained";
-        $mapping[$version] = $version . '.*';
-    }
-
-    ksort($versions);
-
-    $destination = default_context()->workingDirectory . '/app';
+    $destination = default_context()->workingDirectory;
     if (is_file("{$destination}/composer.json") === false) {
+        $response = http_request('GET', 'https://symfony.com/releases.json')->toArray();
+        $versions = [
+            substr($response['symfony_versions']['stable'], 0, 3) => 'Latest Stable',
+            substr($response['symfony_versions']['lts'], 0, 3) => 'Latest LTS',
+            substr($response['symfony_versions']['next'], 0, 3) => 'Next',
+        ];
+        $mapping = [
+            substr($response['symfony_versions']['stable'], 0, 3) => substr($response['symfony_versions']['stable'], 0, 3) . '.*',
+            substr($response['symfony_versions']['lts'], 0, 3) => substr($response['symfony_versions']['lts'], 0, 3) . '.*',
+            substr($response['symfony_versions']['next'], 0, 3) => substr($response['symfony_versions']['next'], 0, 3) . '.*-dev',
+        ];
+
+        $diff = array_diff($response['maintained_versions'], array_keys($versions));
+
+        foreach ($diff as $version) {
+            $versions[$version] = "{$version} Maintained";
+            $mapping[$version] = $version . '.*';
+        }
+
+        ksort($versions);
+
         io()->newLine();
         io()->warning('Symfony seems not to be installed.');
 
@@ -78,7 +83,7 @@ function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent
 
         $version = io()->choice('Choose Symfony version', $versions, 'Latest Stable');
         $version = '^' . $mapping[$version];
-        composer()->add('create-project', "symfony/skeleton:{$version} /app/sf-temp")->runCommand();
+        composer()->add('create-project', "symfony/skeleton:{$version} sf-temp")->runCommand();
 
         $tempDestination = "{$destination}/sf-temp";
         io()->newLine();
@@ -94,6 +99,10 @@ function check_symfony_installation(BeforeExecuteTaskEvent|AfterExecuteTaskEvent
 #[AsListener(AfterExecuteTaskEvent::class, priority: 800)]
 function check_projects_deps(BeforeExecuteTaskEvent|AfterExecuteTaskEvent $event): void
 {
+    if (input()->hasOption('no-check') && input()->getOption('no-check') === true) {
+        return;
+    }
+
     if ($event instanceof BeforeExecuteTaskEvent && in_array($event->task->getName(), ['start', 'stop', 'restart', 'install'], true)) {
         return;
     }

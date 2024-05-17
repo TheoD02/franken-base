@@ -22,7 +22,7 @@ $castorFilesFinder = (new Finder())
     ->name('*.php')
     ->notPath('vendor');
 
-$castorFilePaths = array_map(static fn(\SplFileInfo $fileInfo) => $fileInfo->getPath(), iterator_to_array($castorFilesFinder));
+$castorFilePaths = array_map(static fn(\SplFileInfo $fileInfo) => $fileInfo->getRealPath(), iterator_to_array($castorFilesFinder));
 
 $paths = [
     '/app/src',

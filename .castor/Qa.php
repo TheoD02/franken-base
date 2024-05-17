@@ -12,6 +12,7 @@ use TheoD02\Castor\Docker\RunnerTrait;
 use function Castor\context;
 use function Castor\finder;
 use function Castor\fingerprint;
+use function Castor\fingerprint_save;
 use function Castor\fs;
 use function Castor\hasher;
 use function Castor\io;
@@ -38,6 +39,15 @@ class Qa
     private function preRunCommand(): void
     {
         $this->install();
+    }
+
+    private function getHash(string $toolDirectory): string
+    {
+        return hasher()
+            ->writeFile("{$toolDirectory}/composer.json")
+            ->writeFile("{$toolDirectory}/composer.lock")
+            ->finish()
+        ;
     }
 
     #[AsTaskMethod(aliases: ['qa:update'])]
@@ -82,12 +92,10 @@ class Qa
                     io()->write(' Installing...');
                     composer($context)->install();
                 },
-                fingerprint: hasher()
-                    ->writeFile("{$toolDirectory}/composer.json")
-                    ->writeFile("{$toolDirectory}/composer.lock")
-                    ->finish(),
+                fingerprint: $this->getHash($toolDirectory),
                 force: $needForceInstall
             );
+            fingerprint_save($this->getHash($toolDirectory)); // Due to composer.lock changes
             io()->writeln(' <info>OK</info>');
         }
         io()->newLine();

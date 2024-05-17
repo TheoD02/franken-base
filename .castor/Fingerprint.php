@@ -11,7 +11,7 @@ class Fingerprint
     public function php_docker(): string
     {
         return hasher()
-            ->writeWithFinder(finder()->files()->in(path('.docker/php')))
+            ->writeWithFinder(finder()->files()->in(path('.docker/php', root_context())))
             ->finish()
         ;
     }
@@ -19,7 +19,7 @@ class Fingerprint
     public function composer(): string
     {
         return hasher()
-            ->writeWithFinder(finder()->files()->in(path('app'))->name(['composer.json', 'composer.lock', 'symfony.lock']))
+            ->writeWithFinder(finder()->files()->in(path())->name(['composer.json', 'composer.lock', 'symfony.lock']))
             ->finish()
         ;
     }
@@ -27,7 +27,7 @@ class Fingerprint
     public function npm(): string
     {
         return hasher()
-            ->writeWithFinder(finder()->files()->in(path('app'))->name(['package.json']))
+            ->writeWithFinder(finder()->files()->in(path())->name(['package.json']))
             ->finish()
         ;
     }

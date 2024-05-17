@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use Castor\Attribute\AsOption;
 use Castor\Attribute\AsTask;
 
 use function Castor\context;
 use function Castor\fingerprint;
+use function Castor\fingerprint_save;
 use function Castor\import;
 use function Castor\io;
 use function Castor\notify;
@@ -57,6 +59,8 @@ function install(bool $force = false): void
     $forceVendor = $force || ! is_dir(context()->workingDirectory . '/app/vendor');
     if (! fingerprint(callback: static fn () => composer()->install(), fingerprint: fgp()->composer(), force: $forceVendor || $force)) {
         io()->note('Composer dependencies are already installed.');
+    } else {
+        fingerprint_save(fgp()->composer()); // Due to composer.lock changes
     }
 
     io()->section('QA tools');
@@ -66,6 +70,8 @@ function install(bool $force = false): void
     $forceNodeModules = $force || ! is_dir(context()->workingDirectory . '/app/node_modules');
     if (! fingerprint(callback: static fn () => npm()->install(), fingerprint: fgp()->npm(), force: $forceNodeModules || $force)) {
         io()->note('NPM dependencies are already installed.');
+    } else {
+        fingerprint_save(fgp()->npm()); // Due to package.json changes
     }
 
     npm()->run('build');
@@ -87,8 +93,10 @@ function ui_dev(): void
 }
 
 #[AsTask]
-function shell(): void
-{
+function shell(
+    #[AsOption(name: 'no-check', description: 'Don\'t check the dependencies')]
+    bool $noCheck = false // Not used here, but used in listeners.php
+): void {
     $context = context()->withTty();
     docker($context)->compose()->exec(service: 'app', args: ['fish'], user: 'www-data');
 }
