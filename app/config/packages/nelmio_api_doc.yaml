@@ -1,0 +1,24 @@
+nelmio_api_doc:
+  documentation:
+    info:
+      title: My App
+      description: API for My App
+      version: 1.0.0
+      contact:
+        name: API Support
+        url: 'http://www.example.com/support'
+        email: 'test@test.fr'
+      x-api-id: cb11e005-e20d-4f31-90f9-9ec023a425d5 # see: https://opensource.zalando.com/restful-api-guidelines/#215
+      x-audience: company-internal # see: https://opensource.zalando.com/restful-api-guidelines/#219
+    components:
+      securitySchemes:
+        Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+    security:
+      - Bearer: [ ]
+  areas: # to filter documented areas
+    default:
+      disable_default_routes: true
+

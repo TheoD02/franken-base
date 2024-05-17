@@ -1,7 +1,5 @@
 {
     "type": "project",
-    "name": "theod02/franken-base",
-    "description": "A Symfony boilerplate for API projects",
     "license": "proprietary",
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -9,23 +7,17 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/doctrine-bundle": "^2.12",
-        "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^3.1",
-        "nelmio/cors-bundle": "^2.4",
-        "pentatrion/vite-bundle": "^6.4",
-        "rekalogika/api-lite": "^0.6.1",
+        "nelmio/api-doc-bundle": "^4.26",
         "symfony/asset": "7.1.*",
         "symfony/console": "7.1.*",
         "symfony/dotenv": "7.1.*",
-        "symfony/expression-language": "7.1.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.1.*",
         "symfony/runtime": "7.1.*",
         "symfony/twig-bundle": "7.1.*",
-        "symfony/uid": "7.1.*",
-        "symfony/validator": "7.1.*",
-        "symfony/yaml": "7.1.*"
+        "symfony/yaml": "7.1.*",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
     },
     "config": {
         "allow-plugins": {
@@ -37,7 +29,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Module\\Api\\": "modules/api/src/"
         }
     },
     "autoload-dev": {
@@ -75,8 +68,5 @@
             "allow-contrib": false,
             "require": "7.1.*"
         }
-    },
-    "require-dev": {
-        "symfony/maker-bundle": "^1.59"
     }
 }

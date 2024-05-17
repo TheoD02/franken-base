@@ -66,17 +66,17 @@ function install(bool $force = false): void
     io()->section('QA tools');
     qa()->install();
 
-    io()->section('NPM');
-    $forceNodeModules = $force || ! is_dir(context()->workingDirectory . '/app/node_modules');
-    if (! fingerprint(callback: static fn () => npm()->install(), fingerprint: fgp()->npm(), force: $forceNodeModules || $force)) {
-        io()->note('NPM dependencies are already installed.');
-    } else {
-        fingerprint_save(fgp()->npm()); // Due to package.json changes
-    }
+    //    io()->section('NPM');
+    //    $forceNodeModules = $force || ! is_dir(context()->workingDirectory . '/app/node_modules');
+    //    if (! fingerprint(callback: static fn () => npm()->install(), fingerprint: fgp()->npm(), force: $forceNodeModules || $force)) {
+    //        io()->note('NPM dependencies are already installed.');
+    //    } else {
+    //        fingerprint_save(fgp()->npm()); // Due to package.json changes
+    //    }
+    //
+    //    npm()->run('build');
 
-    npm()->run('build');
-
-    notify('Dependencies installed');
+    //    notify('Dependencies installed');
 }
 
 #[AsTask(name: 'ui:install')]
